@@ -280,6 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Registration.ico" />
+    <Content Include="Trash\Git.txt" />
     <None Include="InheritanceMainForm\ClassDiagramFormMain.cd" />
     <None Include="Resources\StopSave.png" />
     <None Include="Resources\StopSave2.png" />
