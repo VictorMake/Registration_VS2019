@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4B2DC45A-A4D6-41E7-A18F-8181C581099D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BaseFormKT</RootNamespace>
+    <AssemblyName>BaseFormKT</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>BaseFormKT.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>BaseFormKT.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MDBControlLibrary, Version=1.0.5954.27688, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TestControls\MDBControlLibrary\bin\Release\MDBControlLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="MDIWindowManager, Version=2.1.6178.18826, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CodePlex\mdiwinman-99885\MDIWindowManager\MDIWindowManager\bin\Release\MDIWindowManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\Registration\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.900.148\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\Registration\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.900.148\lib\net40\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Design, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\Registration\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.900.148\lib\net40\Microsoft.ReportViewer.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\Registration\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.900.148\lib\net40\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\Registration\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.900.148\lib\net40\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\Registration\packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="NationalInstruments.Common, Version=19.0.40.49152, Culture=neutral, PublicKeyToken=dc6ad606294fc298, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.UI, Version=19.0.45.49154, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.UI.WindowsForms, Version=19.0.45.49154, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TaskClientServerLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TaskClientServerLibrary\TaskClientServerLibrary\bin\Release\TaskClientServerLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="NationalInstruments" />
+    <Import Include="NationalInstruments.UI" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AllGridSaving.vb" />
+    <Compile Include="Components\DataGridViewCellExHelper.vb" />
+    <Compile Include="Components\DataGridViewHelper.vb" />
+    <Compile Include="Components\DataGridViewImageCellEx.vb" />
+    <Compile Include="Components\DataGridViewTextBoxCellEx.vb" />
+    <Compile Include="Components\ISpannedCell.vb" />
+    <Compile Include="Components\SpanDataGridViewCellStyle.vb" />
+    <Compile Include="DataGridExcelBook.vb" />
+    <Compile Include="ReportDialog.Designer.vb">
+      <DependentUpon>ReportDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ReportDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAxesAdvanced.Designer.vb">
+      <DependentUpon>FormAxesAdvanced.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormAxesAdvanced.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseFormDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseFormDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BaseFormDataSet.vb">
+      <DependentUpon>BaseFormDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ConversionUnit.vb" />
+    <Compile Include="CreateExcelBook.vb" />
+    <Compile Include="CustomerManager.vb" />
+    <Compile Include="CustomControls\DbListView.Designer.vb">
+      <DependentUpon>DbListView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\DbListView.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Field.vb" />
+    <Compile Include="FormBuildQuery.Designer.vb">
+      <DependentUpon>FormBuildQuery.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBuildQuery.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirectoryNode.vb" />
+    <Compile Include="CustomControls\DoubleTextBox.Designer.vb">
+      <DependentUpon>DoubleTextBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\DoubleTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormFindChannel.Designer.vb">
+      <DependentUpon>FormFindChannel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormFindChannel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormGraf.Designer.vb">
+      <DependentUpon>FormGraf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormGraf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormHierarchicalTable.designer.vb">
+      <DependentUpon>FormHierarchicalTable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormHierarchicalTable.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMeasurementParameters.designer.vb">
+      <DependentUpon>FormMeasurementParameters.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormMeasurementParameters.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMessageBox.Designer.vb">
+      <DependentUpon>FormMessageBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormMessageBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBaseKT.Designer.vb">
+      <DependentUpon>frmBaseKT.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmBaseKT.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCalculatedParameters.designer.vb">
+      <DependentUpon>FormCalculatedParameters.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormCalculatedParameters.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditorBounds.designer.vb">
+      <DependentUpon>FormEditorBounds.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditorBounds.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMeasurementKT.designer.vb">
+      <DependentUpon>FormMeasurementKT.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormMeasurementKT.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IClassCalculation.vb" />
+    <Compile Include="CustomControls\IntegerTextBox.Designer.vb">
+      <DependentUpon>IntegerTextBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\IntegerTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ManagerGrids.vb" />
+    <Compile Include="modControls.vb" />
+    <Compile Include="ModuleGlobal.vb" />
+    <Compile Include="Module_KBPR.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="NativeInterop.vb" />
+    <Compile Include="ProjectManager.vb" />
+    <Compile Include="CustomControls\RegExTextBox.Designer.vb">
+      <DependentUpon>RegExTextBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\RegExTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ReportManager.vb" />
+    <Compile Include="Reports.vb" />
+    <Compile Include="CustomControls\StageEdit.Designer.vb">
+      <DependentUpon>StageEdit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\StageEdit.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\StageGrid.Designer.vb">
+      <DependentUpon>StageGrid.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\StageGrid.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GraphBounds.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Report1.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportDialog.resx">
+      <DependentUpon>ReportDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAxesAdvanced.resx">
+      <DependentUpon>FormAxesAdvanced.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBuildQuery.resx">
+      <DependentUpon>FormBuildQuery.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFindChannel.resx">
+      <DependentUpon>FormFindChannel.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormGraf.resx">
+      <DependentUpon>FormGraf.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormHierarchicalTable.resx">
+      <DependentUpon>FormHierarchicalTable.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMeasurementParameters.resx">
+      <DependentUpon>FormMeasurementParameters.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMessageBox.resx">
+      <DependentUpon>FormMessageBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmBaseKT.resx">
+      <DependentUpon>frmBaseKT.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCalculatedParameters.resx">
+      <DependentUpon>FormCalculatedParameters.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditorBounds.resx">
+      <DependentUpon>FormEditorBounds.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMeasurementKT.resx">
+      <DependentUpon>FormMeasurementKT.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\StageEdit.resx">
+      <DependentUpon>StageEdit.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\StageGrid.resx">
+      <DependentUpon>StageGrid.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="BaseFormDataSet.xsc">
+      <DependentUpon>BaseFormDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="BaseFormDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BaseFormDataSet.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BaseFormDataSet.xss">
+      <DependentUpon>BaseFormDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\DataSources\Reports.datasource" />
+    <None Include="My Project\DataSources\Reports1.datasource" />
+    <None Include="My Project\DataSources\Reports11.datasource" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CustomControls\StageGrid.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Установщик Windows 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

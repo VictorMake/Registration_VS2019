@@ -1,0 +1,160 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+DataTreeViewDLL
+</name>
+</assembly>
+<members>
+<member name="T:DataTreeViewDLL.My.Resources.Resources">
+<summary>
+  Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
+</summary>
+</member>
+<member name="P:DataTreeViewDLL.My.Resources.Resources.ResourceManager">
+<summary>
+  Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
+</summary>
+</member>
+<member name="P:DataTreeViewDLL.My.Resources.Resources.Culture">
+<summary>
+  Перезаписывает свойство CurrentUICulture текущего потока для всех
+  обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
+</summary>
+</member>
+<member name="T:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView">
+ <summary>
+ Связывание с данными в иерархическом tree view контроле.
+ </summary>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.#ctor">
+ <summary>
+ Конструктор по умолчанию.
+ </summary>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.Dispose(System.Boolean)">
+ <summary>
+ Очистка любых ресурсов.
+ </summary>
+</member>
+<member name="T:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataTreeViewNode">
+ <summary>
+ Tree node с добавленной информацией реляционных данных.
+ </summary>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataTreeViewNode.#ctor(System.Int32)">
+ <summary>
+ Конструктор узла по умолчанию.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataTreeViewNode.ID">
+ <summary>
+ Идентификатор узла.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataTreeViewNode.ParentID">
+ <summary>
+ Идентификатор родительского узла.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataTreeViewNode.IsChannel">
+ <summary>
+ Является ли запись нижним уровнем - канал.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataTreeViewNode.Position">
+ <summary>
+ Позиция в текущем currency manager.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataSource">
+ <summary>
+ Источник данных для дерева.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.DataMember">
+ <summary>
+ Член источника данных для дерева.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.IDColumn">
+ <summary>
+ Идинтификатор члена, в общем случае первичный ключ, для колонки таблицы.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.NameColumn">
+ <summary>
+ Имя члена. Проимечание: редактирование этой колонки доступно только с типом поддерживающим конвертацию из строки.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.ParentIDColumn">
+ <summary>
+ Идентификатор родителя. Примечание: этот член обязан иметь тот же тип как идентификатор колонки.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.IsChannelColumn">
+ <summary>
+ Идентификатор принадлежности к типу канал. Примечание: этот член обязан иметь тот же тип как идентификатор колонки.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.ValueColumn">
+ <summary>
+ Значение члена. Значение члена будет взято из этой колонки.
+ </summary>
+</member>
+<member name="P:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.Value">
+ <summary>
+ Получить значение текущего выделенного элемента.
+ </summary>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.DataTreeView.CreateNode(System.Windows.Forms.CurrencyManager,System.Int32)">
+ <summary>
+ Создать DataTreeViewNode с текущим менеджером и позицией.
+ </summary>
+ <param name="currencyManager"></param>
+ <param name="position"></param>
+ <returns></returns>
+</member>
+<member name="T:DataTreeViewDLL.Chaliy.Windows.Forms.Design.DropDownTypeEditor">
+ <summary>
+ Базовый класс для простого drop down редактора типа.
+ </summary>	
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.Design.DropDownTypeEditor.GetEditStyle(System.ComponentModel.ITypeDescriptorContext)">
+ <summary>
+ Переопределяет установку редактора стиля в DropDown.
+ </summary>
+ <param name="context">Type descriptor context.</param>
+ <returns>Style of the editor.</returns>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.Design.DropDownTypeEditor.FillListBox(System.Windows.Forms.ListBox,System.ComponentModel.ITypeDescriptorContext,System.Object)">
+ <summary>
+ Реализовать эту процедуру заполнения listBox.Items.
+ </summary>
+ <param name="listBox">ListBox control to fill.</param>
+ <param name="context">Type descriptor context.</param>
+ <param name="value">Current value.</param>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.Design.DropDownTypeEditor.GetValueFromListItem(System.ComponentModel.ITypeDescriptorContext,System.Object)">
+ <summary>
+ Переопределить функцию для изменения выходного значения.
+ </summary>
+ <param name="context">Type descriptor context.</param>
+ <param name="value">Value to change.</param>
+ <returns>Changed value.</returns>
+</member>
+<member name="T:DataTreeViewDLL.Chaliy.Windows.Forms.Design.FieldTypeEditor">
+ <summary>
+Редактор полей членов.
+ </summary>
+</member>
+<member name="M:DataTreeViewDLL.Chaliy.Windows.Forms.Design.FieldTypeEditor.FillListBox(System.Windows.Forms.ListBox,System.ComponentModel.ITypeDescriptorContext,System.Object)">
+ <summary>
+ Заполнить list box полями текущего источника данных.
+ </summary>
+ <param name="listBox">ListBox control to fill.</param>
+ <param name="context">Type descriptor context.</param>
+ <param name="value">Current value.</param>
+</member>
+</members>
+</doc>

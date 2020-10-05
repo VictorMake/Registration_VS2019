@@ -1,0 +1,1296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B62A8CA9-6AC5-4D24-8DEC-D83FC7D0CD94}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>Registration.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Registration</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionStrict>Off</OptionStrict>
+    <RootNamespace>Registration</RootNamespace>
+    <StartupObject>Sub Main</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <OptionInfer>On</OptionInfer>
+    <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>http://localhost/Registration/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperComponentsLocation>Relative</BootstrapperComponentsLocation>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DocumentationFile>Registration.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>Win32 = True</DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DocumentationFile>Registration.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>Win32 = True, Nkompressor=True</DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
+    <DebugType>none</DebugType>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>Win32 = True</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>Registration.xml</DocumentationFile>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>Nkompressor=True</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>Registration.xml</DocumentationFile>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <COMReference Include="AxCW3DGraphLib">
+      <Guid>{C02A7541-5364-11D2-9373-00A02411EBE6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="CW3DGraphLib">
+      <Guid>{C02A7541-5364-11D2-9373-00A02411EBE6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <Reference Include="BarometersBRS1M">
+      <HintPath>DLL\BarometersBRS1M.dll</HintPath>
+    </Reference>
+    <Reference Include="BaseForm, Version=1.0.4849.16252, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BaseForm\BaseForm\bin\Release\BaseForm.dll</HintPath>
+    </Reference>
+    <Reference Include="BaseFormKT, Version=1.0.4228.28654, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BaseFormKT\bin\Release\BaseFormKT.dll</HintPath>
+    </Reference>
+    <Reference Include="DataTreeViewDLL">
+      <HintPath>DLL\DataTreeViewDLL.dll</HintPath>
+    </Reference>
+    <Reference Include="I7565CPM_Net">
+      <HintPath>DLL\I7565CPM_Net.dll</HintPath>
+    </Reference>
+    <Reference Include="jscriptutil, Version=0.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\jscriptutil.dll</HintPath>
+    </Reference>
+    <Reference Include="MathematicalLibrary">
+      <HintPath>..\MathematicalLibrary\MathematicalLibrary\bin\Release\MathematicalLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="MDIWindowManager, Version=2.1.6178.18826, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CodePlex\mdiwinman-99885\MDIWindowManager\MDIWindowManager\bin\Release\MDIWindowManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Microsoft Office\Office16\DCF\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Multimedia, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Multimedia.dll</HintPath>
+    </Reference>
+    <Reference Include="NationalInstruments.Analysis.Enterprise, Version=19.0.45.49152, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.Common, Version=19.0.40.49152, Culture=neutral, PublicKeyToken=dc6ad606294fc298, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.DAQmx, Version=19.0.45.2, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.Net, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=x86" />
+    <Reference Include="NationalInstruments.Tdms, Version=19.0.45.49153, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.UI, Version=19.0.45.49154, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NationalInstruments.UI.WindowsForms, Version=19.0.45.49154, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Microsoft Office\Office16\DCF\office.dll</HintPath>
+    </Reference>
+    <Reference Include="PulseButton">
+      <HintPath>..\PulseButton\bin\Release\PulseButton.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <COMReference Include="AxSHDocVw">
+      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+    </COMReference>
+    <Reference Include="TaskClientServerLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TaskClientServerLibrary\TaskClientServerLibrary\bin\Release\TaskClientServerLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="NationalInstruments" />
+    <Import Include="NationalInstruments.UI" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Registration.ico" />
+    <None Include="InheritanceMainForm\ClassDiagramFormMain.cd" />
+    <None Include="Resources\StopSave.png" />
+    <None Include="Resources\StopSave2.png" />
+    <None Include="Resources\3floppy_unmount.png" />
+    <None Include="Resources\RunSave.png" />
+    <None Include="Resources\player_play.png" />
+    <None Include="Resources\player_pause.png" />
+    <None Include="packages.config" />
+    <None Include="Resources\move.cur" />
+    <None Include="Metrology\ChannelsChassisData.xsc">
+      <DependentUpon>ChannelsChassisData.xsd</DependentUpon>
+    </None>
+    <None Include="Metrology\ChannelsChassisData.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ChannelsChassisData.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Metrology\ChannelsChassisData.xss">
+      <DependentUpon>ChannelsChassisData.xsd</DependentUpon>
+    </None>
+    <None Include="Resources\Analysis_9699_32.bmp" />
+    <None Include="Resources\BuildStyle_169_32.bmp" />
+    <None Include="Resources\back.png" />
+    <None Include="Resources\forward.png" />
+    <None Include="Resources\ledCornerRed.bmp" />
+    <None Include="Resources\ledCornerOrange.bmp" />
+    <None Include="Resources\ledCornerGreen.bmp" />
+    <None Include="Resources\ledCornerGray.bmp" />
+    <None Include="Resources\1385_Disable_16x16_7211.png" />
+    <None Include="Resources\command_link_16x1611.png" />
+    <None Include="bin\Promt.txt" />
+    <None Include="ServiceBases\ChannelsNDataSet.xsc">
+      <DependentUpon>ChannelsNDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ServiceBases\ChannelsNDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ChannelsNDataSet.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ServiceBases\ChannelsNDataSet.xss">
+      <DependentUpon>ChannelsNDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ServiceBases\Channels_cfg_lmzDataSet.xsc">
+      <DependentUpon>Channels_cfg_lmzDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ServiceBases\Channels_cfg_lmzDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Channels_cfg_lmzDataSet.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ServiceBases\Channels_cfg_lmzDataSet.xss">
+      <DependentUpon>Channels_cfg_lmzDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Resources\down.png" />
+    <None Include="Resources\up.png" />
+    <None Include="app.config" />
+    <Content Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </Content>
+    <None Include="My Project\app.manifest" />
+    <None Include="Resources\Пила.png" />
+    <None Include="Resources\Меандр.png" />
+    <None Include="Resources\Синус.png" />
+    <None Include="ServiceBases\ChannelsDigitalOutputDataSet.xsc">
+      <DependentUpon>ChannelsDigitalOutputDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ServiceBases\ChannelsDigitalOutputDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ChannelsDigitalOutputDataSet.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ServiceBases\ChannelsDigitalOutputDataSet.xss">
+      <DependentUpon>ChannelsDigitalOutputDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Resources\EXE.png" />
+    <None Include="Resources\OPENFOLD.png" />
+    <None Include="Resources\CLSDFOLD.png" />
+    <None Include="Resources\35FLOPPY.BMP" />
+    <None Include="Resources\DOC.BMP" />
+    <None Include="My Project\Settings.settings">
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="Resources\kiconedit.png" />
+    <None Include="Resources\CustomWiz.ico" />
+    <None Include="Resources\Underline.JPG" />
+    <None Include="Resources\Italics.JPG" />
+    <None Include="Resources\Bold.JPG" />
+    <None Include="Resources\Image1.jpg" />
+    <None Include="Resources\binary1.png" />
+    <None Include="Resources\recycled1.png" />
+    <None Include="Resources\binary.png" />
+    <None Include="Resources\recycled.png" />
+    <Compile Include="Analysis\Analysis.vb" />
+    <Compile Include="CalculationModule\PassportModule.vb" />
+    <Compile Include="DigitalPort\Port.vb" />
+    <Compile Include="FindSnapshot\ModuleXmlLinq.vb" />
+    <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="InheritanceMainForm\Creator.vb" />
+    <Compile Include="InheritanceMainForm\CreatorRegistrationClient.vb" />
+    <Compile Include="InheritanceMainForm\CreatorRegistrationSCXI.vb" />
+    <Compile Include="InheritanceMainForm\CreatorRegistrationTCP.vb" />
+    <Compile Include="InheritanceMainForm\CreatorSnapshotPhotograph.vb" />
+    <Compile Include="InheritanceMainForm\CreatorSnapshotViewingDiagram.vb" />
+    <Compile Include="InheritanceMainForm\FactoryFormExaminationManager.vb" />
+    <Compile Include="Analysis\AnalysisManager.vb" />
+    <Compile Include="Analysis\AnalysisModule.vb" />
+    <Compile Include="Analysis\AnalysisБыстродействиеНАКВДприВключенииСУНАпоКнопкеБК.vb" />
+    <Compile Include="Analysis\AnalysisБыстродействиеРСприВключенииСУНАпоКнопкеБК.vb" />
+    <Compile Include="Analysis\AnalysisВключениеКОнаN290.vb" />
+    <Compile Include="Analysis\AnalysisВключениеКОнаРУД115.vb" />
+    <Compile Include="Analysis\AnalysisВключениеСУНАНаN290ПоКнопкеБК.vb" />
+    <Compile Include="Analysis\AnalysisВключениеФорсажаРУД67_РУД115.vb" />
+    <Compile Include="Analysis\AnalysisВключениеФорсажаРУД67РУД115изд39.vb" />
+    <Compile Include="Analysis\AnalysisВождениеА1А2N1N2.vb" />
+    <Compile Include="Analysis\AnalysisВыключениеФорсажаРУД115РУД67изд39.vb" />
+    <Compile Include="Analysis\AnalysisГорячийЗапуск.vb" />
+    <Compile Include="Analysis\AnalysisЛожныйЗапуск.vb" />
+    <Compile Include="Analysis\AnalysisПлавноеРезкоеДросселирование.vb" />
+    <Compile Include="Analysis\AnalysisПовторноеВключениеФорсажаРУД67РУД115изд39.vb" />
+    <Compile Include="Analysis\AnalysisПовторноеВыключениеФорсажаРУД115РУД67изд39.vb" />
+    <Compile Include="Analysis\AnalysisОтладочныйРежим.vb" />
+    <Compile Include="Analysis\AnalysisРегистратор.vb" />
+    <Compile Include="Analysis\AnalysisПриемистостьАИ222.vb" />
+    <Compile Include="Analysis\AnalysisПриемистостьМГ_N290.vb" />
+    <Compile Include="Analysis\AnalysisПриемистостьМГ_N295сКРД99Б.vb" />
+    <Compile Include="Analysis\AnalysisПриемистостьМГ_РУД67.vb" />
+    <Compile Include="Analysis\AnalysisПриемистостьсФорсажомМГ_РУД115.vb" />
+    <Compile Include="Analysis\AnalysisСбросN295_МГ.vb" />
+    <Compile Include="Analysis\AnalysisСбросАИ222.vb" />
+    <Compile Include="Analysis\AnalysisСбросРУД115_МГ.vb" />
+    <Compile Include="Analysis\AnalysisСбросРУД67_МГ.vb" />
+    <Compile Include="CustomControls\DbListView.Designer.vb">
+      <DependentUpon>DbListView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\DbListView.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\NativeInterop.vb" />
+    <Compile Include="DecodingSnapshot\EngineManager.vb" />
+    <Compile Include="DecodingSnapshot\KRDsManager.vb" />
+    <Compile Include="DecodingSnapshot\Engine.vb" />
+    <Compile Include="DecodingSnapshot\FormAdjustment.Designer.vb">
+      <DependentUpon>FormAdjustment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DecodingSnapshot\FormAdjustment.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DecodingSnapshot\frmСечения.Designer.vb">
+      <DependentUpon>frmСечения.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DecodingSnapshot\frmСечения.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DecodingSnapshot\KRD.vb" />
+    <Compile Include="DecodingSnapshot\ДлительностьЗабросаПровала.vb" />
+    <Compile Include="DecodingSnapshot\ДлительностьОтИндексаДоСтабильногоРоста.vb" />
+    <Compile Include="DecodingSnapshot\ДлительностьФронтаОтИндексаДоN1Уст_2.vb" />
+    <Compile Include="DecodingSnapshot\ДлительностьФронтаСпада.vb" />
+    <Compile Include="DecodingSnapshot\ДлительностьФронтаСпадаОтИндексаДоУровня.vb" />
+    <Compile Include="DecodingSnapshot\ДлительностьФронтаСпадаПрОборотов.vb" />
+    <Compile Include="DecodingSnapshot\ЗабросN1ОтносительноУстановившегося.vb" />
+    <Compile Include="DecodingSnapshot\ЗначениеПараметраВИндексе.vb" />
+    <Compile Include="DecodingSnapshot\МинимальноеМаксимальноеЗначениеПараметра.vb" />
+    <Compile Include="DecodingSnapshot\ПровалN1ОтносительноУстановившегося.vb" />
+    <Compile Include="DecodingSnapshot\ПровалЗаНП96.vb" />
+    <Compile Include="DecodingSnapshot\РискиНастроекПараметров.vb" />
+    <Compile Include="FindSnapshot\FormDeleteCondition.Designer.vb">
+      <DependentUpon>FormDeleteCondition.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FindSnapshot\FormDeleteCondition.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GraphByParameter\FormEditiorGraphByParameter.Designer.vb">
+      <DependentUpon>FormEditiorGraphByParameter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GraphByParameter\FormEditiorGraphByParameter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GraphByParameter\MathMethods.vb" />
+    <Compile Include="FunctionalPanel\About.Designer.vb">
+      <DependentUpon>About.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\About.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\AboutBoxFunctionPanel.Designer.vb">
+      <DependentUpon>AboutBoxFunctionPanel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\AboutBoxFunctionPanel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\ascSearchEngine.vb" />
+    <Compile Include="FunctionalPanel\frmBatchReplace.Designer.vb">
+      <DependentUpon>frmBatchReplace.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\frmBatchReplace.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\frmRegularExpressionsReplace.Designer.vb">
+      <DependentUpon>frmRegularExpressionsReplace.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\frmRegularExpressionsReplace.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationClient.Designer.vb">
+      <DependentUpon>FormRegistrationClient.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationClient.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationTCP.Designer.vb">
+      <DependentUpon>FormRegistrationTCP.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationTCP.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormSnapshotBase.Designer.vb">
+      <DependentUpon>FormSnapshotBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormSnapshotBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationBase.Designer.vb">
+      <DependentUpon>FormRegistrationBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationSCXI.Designer.vb">
+      <DependentUpon>FormRegistrationSCXI.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationSCXI.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormSnapshotPhotograph.Designer.vb">
+      <DependentUpon>FormSnapshotPhotograph.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormSnapshotPhotograph.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormSnapshotViewingDiagram.Designer.vb">
+      <DependentUpon>FormSnapshotViewingDiagram.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormSnapshotViewingDiagram.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\IMdiChildrenWindow.vb" />
+    <Compile Include="InheritanceMainForm\TaskRecordStartStop.vb" />
+    <Compile Include="InheritanceTuningForm\FormTuningSelectiveBase.Designer.vb">
+      <DependentUpon>FormTuningSelectiveBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningSelectiveBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\IUpdateSelectiveControls.vb" />
+    <Compile Include="InheritanceTuningForm\ParameterForVisualization.vb" />
+    <Compile Include="InheritanceTuningForm\SettingSelectedParameters.vb" />
+    <Compile Include="MainWindows\CreaterCursor.vb" />
+    <Compile Include="MainWindows\FormParameterInRange.Designer.vb">
+      <DependentUpon>FormParameterInRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormParameterInRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormTextControl.Designer.vb">
+      <DependentUpon>FormTextControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormTextControl.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningSelectiveList.Designer.vb">
+      <DependentUpon>FormTuningSelectiveList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningSelectiveList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\FormNormTU.Designer.vb">
+      <DependentUpon>FormNormTU.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\FormNormTU.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomControls\listviewEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MainWindows\NativeMethods.vb" />
+    <Compile Include="Metrology\ChannelsChassisData.Designer.vb">
+      <DependentUpon>ChannelsChassisData.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Metrology\FormSettingProtocolMetrological.Designer.vb">
+      <DependentUpon>FormSettingProtocolMetrological.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Metrology\FormSettingProtocolMetrological.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Metrology\SelectChannelDialogForm.Designer.vb">
+      <DependentUpon>SelectChannelDialogForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Metrology\SelectChannelDialogForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\ChannelsNDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChannelsNDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\Channels_cfg_lmzDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Channels_cfg_lmzDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Crypto\FormAbout.Designer.vb">
+      <DependentUpon>FormAbout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Crypto\FormAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\NormTuDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NormTuDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="TcpClient\ConnectionInfoClient.vb" />
+    <Compile Include="TcpClient\Net.vb" />
+    <Compile Include="Trash\RudimentaryMultiValuedDictionary.vb" />
+    <Compile Include="TypeConverterForProperty\AllTypeConverterChannelAndFormulaEditor.vb" />
+    <Compile Include="AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormAxesAdvanced.Designer.vb">
+      <DependentUpon>FormAxesAdvanced.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormAxesAdvanced.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\BasicHostLoader.vb" />
+    <Compile Include="TypeConverterForProperty\FormChannelEditor.designer.vb">
+      <DependentUpon>FormChannelEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TypeConverterForProperty\FormChannelEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\ChannelsDigitalOutputDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChannelsDigitalOutputDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\ChannelsDigitalOutputDataSet.vb">
+      <DependentUpon>ChannelsDigitalOutputDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Crypto\CheckCrypto.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormChildAux.Designer.vb">
+      <DependentUpon>FormChildAux.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormChildAux.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\CodeDomHostLoader.vb" />
+    <Compile Include="GraphByParameter\GraphsOfParameters.vb" />
+    <Compile Include="MainWindows\CollectionArrow.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindows\ConvertColorForGraph.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextEditor\FormFindAndReplace.Designer.vb">
+      <DependentUpon>FormFindAndReplace.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor\FormFindAndReplace.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormWebBrowser.Designer.vb">
+      <DependentUpon>FormWebBrowser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormWebBrowser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\FormChannel.Designer.vb">
+      <DependentUpon>FormChannel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\FormChannel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextEditor\FormFind.Designer.vb">
+      <DependentUpon>FormFind.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor\FormFind.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\FormFindChannel.Designer.vb">
+      <DependentUpon>FormFindChannel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\FormFindChannel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormSplash.Designer.vb">
+      <DependentUpon>FormSplash.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormSplash.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormSetting.Designer.vb">
+      <DependentUpon>FormSetting.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormSetting.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningVisibleTail.Designer.vb">
+      <DependentUpon>FormTuningVisibleTail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningVisibleTail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormGraphControl.Designer.vb">
+      <DependentUpon>FormGraphControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormGraphControl.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClientServer\FormClient.Designer.vb">
+      <DependentUpon>FormClient.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ClientServer\FormClient.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CalculationModule\FormConfigurationModuleAcquisitionKT.Designer.vb">
+      <DependentUpon>FormConfigurationModuleAcquisitionKT.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CalculationModule\FormConfigurationModuleAcquisitionKT.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningRegime.Designer.vb">
+      <DependentUpon>FormTuningRegime.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningRegime.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Metrology\FormMetrologyGroup.Designer.vb">
+      <DependentUpon>FormMetrologyGroup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Metrology\FormMetrologyGroup.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\FormTuningChannel.Designer.vb">
+      <DependentUpon>FormTuningChannel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\FormTuningChannel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningGraphControl.Designer.vb">
+      <DependentUpon>FormTuningGraphControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceTuningForm\FormTuningGraphControl.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormTestChannel.Designer.vb">
+      <DependentUpon>FormTestChannel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormTestChannel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormMDITabPanel.Designer.vb">
+      <DependentUpon>FormMDITabPanel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormMDITabPanel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormMessageBox.Designer.vb">
+      <DependentUpon>FormMessageBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormMessageBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClientServer\FormServer.Designer.vb">
+      <DependentUpon>FormServer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ClientServer\FormServer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindSnapshot\FormConditionFind.Designer.vb">
+      <DependentUpon>FormConditionFind.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FindSnapshot\FormConditionFind.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormNavigatorSnapshot.Designer.vb">
+      <DependentUpon>FormNavigatorSnapshot.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormNavigatorSnapshot.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TcpClient\ManagerChannels.vb" />
+    <Compile Include="TcpClient\PingClient.vb" />
+    <Compile Include="MainWindows\FormDialogRangeEditor.Designer.vb">
+      <DependentUpon>FormDialogRangeEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormDialogRangeEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomControls\RangeEditorUI.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainWindows\RegistrationEventLog.vb" />
+    <Compile Include="TcpClient\FormConfigChannelServer.Designer.vb">
+      <DependentUpon>FormConfigChannelServer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TcpClient\FormConfigChannelServer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\TdmsFileProcessor.vb" />
+    <Compile Include="MainWindows\UtilityHelper.vb" />
+    <Compile Include="CalculationModule\KTCalculationModuleManager.vb" />
+    <Compile Include="CalculationModule\CalculationModuleManager.vb" />
+    <Compile Include="MainWindows\GraphPrinter.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindows\GraphSave.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Crypto\Symbol.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DigitalPort\DirectoryTreeView.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TypeConverterForProperty\DynamicPropertyFilterAttribute.vb" />
+    <Compile Include="DigitalPort\FileListView.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormsPanelManager.vb" />
+    <Compile Include="GraphByParameter\FormFormulaEditor.designer.vb">
+      <DependentUpon>FormFormulaEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GraphByParameter\FormFormulaEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CalculationModule\FormConfigurationSolveModule.Designer.vb">
+      <DependentUpon>FormConfigurationSolveModule.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CalculationModule\FormConfigurationSolveModule.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\HostControl.designer.vb">
+      <DependentUpon>HostControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\HostControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\HostSurfaceManager.vb" />
+    <Compile Include="FunctionalPanel\FormEditorPanelMotorist.designer.vb">
+      <DependentUpon>FormEditorPanelMotorist.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormEditorPanelMotorist.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DigitalPort\ModuleExplorer.vb" />
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormsCollection.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DigitalPort\FormDigitalPort.designer.vb">
+      <DependentUpon>FormDigitalPort.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DigitalPort\FormDigitalPort.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormMain.Designer.vb">
+      <DependentUpon>FormMain.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormMainMDI.Designer.vb">
+      <DependentUpon>FormMainMDI.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormMainMDI.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextEditor\FormTextEditor.designer.vb">
+      <DependentUpon>FormTextEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor\FormTextEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServiceBases\FormServiceBases.Designer.vb">
+      <DependentUpon>FormServiceBases.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceBases\FormServiceBases.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormSelectSnapshotDBase.Designer.vb">
+      <DependentUpon>FormSelectSnapshotDBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormSelectSnapshotDBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindows\FormProtocol.Designer.vb">
+      <DependentUpon>FormProtocol.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindows\FormProtocol.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Metrology\FormTarir.designer.vb">
+      <DependentUpon>FormTarir.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Metrology\FormTarir.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GraphByParameter\FormPatternGraphByParameter.designer.vb">
+      <DependentUpon>FormPatternGraphByParameter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GraphByParameter\FormPatternGraphByParameter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomControls\GraphicMenu.vb" />
+    <Compile Include="Modules\ItemDigitalInput.vb" />
+    <Compile Include="Metrology\ModuleTarir.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\NameCreationService.vb" />
+    <Compile Include="FunctionalPanel\FormBasePanelMotorist.designer.vb">
+      <DependentUpon>FormBasePanelMotorist.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\FormBasePanelMotorist.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectResources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\PropertiesControls.vb" />
+    <Compile Include="MainWindows\ReadWriteIni.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\StringIntObject.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Trash\TaggedValue.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Trash\TaggedValues.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\Toolbox.designer.vb">
+      <DependentUpon>Toolbox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionalPanel\Toolbox.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FunctionalPanel\ToolboxItemCollection.vb" />
+    <Compile Include="FunctionalPanel\ToolboxTabCollection.vb" />
+    <Compile Include="FunctionalPanel\ToolboxUIManagerVS.vb" />
+    <Compile Include="GraphByParameter\CurveGraph.vb" />
+    <Compile Include="FindSnapshot\FrameCondition.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\MainModule.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextEditor\ModuleTextEditor.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DigitalModule.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Trash\Отстой.vb" />
+    <Compile Include="DecodingSnapshot\ПостроениеНаклонной.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\DigitalInput.vb" />
+    <Compile Include="MainWindows\Arrow.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FindSnapshot\Condition.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FindSnapshot\ConditionCollection.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="DecodingSnapshot\FormAdjustment.resx">
+      <DependentUpon>FormAdjustment.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DecodingSnapshot\frmСечения.resx">
+      <DependentUpon>frmСечения.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindSnapshot\FormDeleteCondition.resx">
+      <DependentUpon>FormDeleteCondition.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GraphByParameter\FormEditiorGraphByParameter.resx">
+      <DependentUpon>FormEditiorGraphByParameter.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\About.resx">
+      <DependentUpon>About.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\AboutBoxFunctionPanel.resx">
+      <DependentUpon>AboutBoxFunctionPanel.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\frmBatchReplace.resx">
+      <DependentUpon>frmBatchReplace.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\frmRegularExpressionsReplace.resx">
+      <DependentUpon>frmRegularExpressionsReplace.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InheritanceTuningForm\FormTuningSelectiveBase.resx">
+      <DependentUpon>FormTuningSelectiveBase.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormParameterInRange.resx">
+      <DependentUpon>FormParameterInRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Crypto\FormAbout.resx">
+      <DependentUpon>FormAbout.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormAxesAdvanced.resx">
+      <DependentUpon>FormAxesAdvanced.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceBases\FormNormTU.resx">
+      <DependentUpon>FormNormTU.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Metrology\SelectChannelDialogForm.resx">
+      <DependentUpon>SelectChannelDialogForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="Resources\Bullet.bmp" />
+    <EmbeddedResource Include="Resources\BulletEmpty.bmp" />
+    <EmbeddedResource Include="TypeConverterForProperty\FormChannelEditor.resx">
+      <DependentUpon>FormChannelEditor.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Checkmark.bmp" />
+    <EmbeddedResource Include="FunctionalPanel\FormChildAux.resx">
+      <DependentUpon>FormChildAux.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormTextControl.resx">
+      <DependentUpon>FormTextControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InheritanceTuningForm\FormTuningSelectiveList.resx">
+      <DependentUpon>FormTuningSelectiveList.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Metrology\FormSettingProtocolMetrological.resx">
+      <DependentUpon>FormSettingProtocolMetrological.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextEditor\FormFindAndReplace.resx">
+      <DependentUpon>FormFindAndReplace.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormWebBrowser.resx">
+      <DependentUpon>FormWebBrowser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceBases\FormChannel.resx">
+      <DependentUpon>FormChannel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextEditor\FormFind.resx">
+      <DependentUpon>FormFind.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceBases\FormFindChannel.resx">
+      <DependentUpon>FormFindChannel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormSplash.resx">
+      <DependentUpon>FormSplash.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormSetting.resx">
+      <DependentUpon>FormSetting.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InheritanceTuningForm\FormTuningVisibleTail.resx">
+      <DependentUpon>FormTuningVisibleTail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormGraphControl.resx">
+      <DependentUpon>FormGraphControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClientServer\FormClient.resx">
+      <DependentUpon>FormClient.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CalculationModule\FormConfigurationModuleAcquisitionKT.resx">
+      <DependentUpon>FormConfigurationModuleAcquisitionKT.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DigitalPort\DirectoryTreeView.resx">
+      <DependentUpon>DirectoryTreeView.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DigitalPort\FileListView.resx">
+      <DependentUpon>FileListView.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GraphByParameter\FormFormulaEditor.resx">
+      <DependentUpon>FormFormulaEditor.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DigitalPort\FormDigitalPort.resx">
+      <DependentUpon>FormDigitalPort.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InheritanceMainForm\FormMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormMainMDI.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormMainMDI.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextEditor\FormTextEditor.resx">
+      <DependentUpon>FormTextEditor.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceBases\FormServiceBases.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormServiceBases.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormSelectSnapshotDBase.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormSelectSnapshotDBase.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CalculationModule\FormConfigurationSolveModule.resx">
+      <DependentUpon>FormConfigurationSolveModule.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InheritanceTuningForm\FormTuningRegime.resx">
+      <DependentUpon>FormTuningRegime.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Metrology\FormMetrologyGroup.resx">
+      <DependentUpon>FormMetrologyGroup.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceBases\FormTuningChannel.resx">
+      <DependentUpon>FormTuningChannel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InheritanceTuningForm\FormTuningGraphControl.resx">
+      <DependentUpon>FormTuningGraphControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormTestChannel.resx">
+      <DependentUpon>FormTestChannel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormMessageBox.resx">
+      <DependentUpon>FormMessageBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormProtocol.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormProtocol.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClientServer\FormServer.resx">
+      <DependentUpon>FormServer.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Metrology\FormTarir.resx">
+      <DependentUpon>FormTarir.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindSnapshot\FormConditionFind.resx">
+      <DependentUpon>FormConditionFind.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormNavigatorSnapshot.resx">
+      <DependentUpon>FormNavigatorSnapshot.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GraphByParameter\FormPatternGraphByParameter.resx">
+      <DependentUpon>FormPatternGraphByParameter.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\GraphicMenu.bmp" />
+    <EmbeddedResource Include="CustomControls\GraphicMenu.resx">
+      <DependentUpon>GraphicMenu.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\HostControl.resx">
+      <DependentUpon>HostControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\FormEditorPanelMotorist.resx">
+      <DependentUpon>FormEditorPanelMotorist.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\FormMDITabPanel.resx">
+      <DependentUpon>FormMDITabPanel.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <SubType>Designer</SubType>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\FormBasePanelMotorist.resx">
+      <DependentUpon>FormBasePanelMotorist.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectResources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProjectResources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindows\FormDialogRangeEditor.resx">
+      <DependentUpon>FormDialogRangeEditor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\RangeEditorUI.resx">
+      <DependentUpon>RangeEditorUI.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TcpClient\FormConfigChannelServer.resx">
+      <DependentUpon>FormConfigChannelServer.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalPanel\Toolbox.resx">
+      <DependentUpon>Toolbox.vb</DependentUpon>
+    </EmbeddedResource>
+    <None Include="ServiceBases\NormTuDataSet.xsc">
+      <DependentUpon>NormTuDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ServiceBases\NormTuDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>NormTuDataSet.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="ServiceBases\NormTuDataSet.xss">
+      <DependentUpon>NormTuDataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>Клиентский профиль .NET Framework 3.5 с пакетом обновления 1 %28SP1%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Установщик Windows 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DLL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\vb\Humanizer.dll" />
+    <Analyzer Include="packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\vb\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\vb\Microsoft.CodeQuality.VisualBasic.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\vb\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\vb\Microsoft.NetCore.VisualBasic.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\vb\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\vb\Microsoft.NetFramework.VisualBasic.Analyzers.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
+</Project>
