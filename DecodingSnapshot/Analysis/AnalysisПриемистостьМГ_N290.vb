@@ -39,16 +39,16 @@ Friend Class AnalysisПриемистостьМГ_N290
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
         'находим время приемистости
-        параметр = conаРУД
+        parameter = conаРУД
         '************************************************
         'время восстановления по Руд минус 2%
-        Dim clsДлительностьФронтаОтИндексаДоРУДУст_2 As New ДлительностьФронтаОтИндексаДоN1Уст_2(параметр,
+        Dim clsДлительностьФронтаОтИндексаДоРУДУст_2 As New ДлительностьФронтаОтИндексаДоN1Уст_2(parameter,
                                                                                                  Parent.FrequencyBackgroundSnapshot,
                                                                                                  Parent.MeasuredValues,
                                                                                                  Parent.SnapshotSmallParameters,
@@ -59,7 +59,7 @@ Friend Class AnalysisПриемистостьМГ_N290
             .Расчет()
         End With
 
-        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(параметр,
+        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(parameter,
                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                       Parent.MeasuredValues,
                                                                       Parent.SnapshotSmallParameters,
@@ -71,11 +71,11 @@ Friend Class AnalysisПриемистостьМГ_N290
             .Расчет()
         End With
 
-        If clsДлительностьФронтаСпада.Ошибка = True Then
+        If clsДлительностьФронтаСпада.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьФронтаСпада.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьФронтаСпада.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьФронтаСпада
@@ -85,13 +85,13 @@ Friend Class AnalysisПриемистостьМГ_N290
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
             End With
         End If
 
-        параметр = conПомпаж
-        Dim clsДлительностьЗабросаПровалаПомпаж As New ДлительностьЗабросаПровала(параметр,
+        parameter = conПомпаж
+        Dim clsДлительностьЗабросаПровалаПомпаж As New ДлительностьЗабросаПровала(parameter,
                                                                                   Parent.FrequencyBackgroundSnapshot,
                                                                                   Parent.MeasuredValues,
                                                                                   Parent.SnapshotSmallParameters,
@@ -103,11 +103,11 @@ Friend Class AnalysisПриемистостьМГ_N290
             .Расчет()
         End With
 
-        If clsДлительностьЗабросаПровалаПомпаж.Ошибка = True Then
+        If clsДлительностьЗабросаПровалаПомпаж.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьЗабросаПровалаПомпаж.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьЗабросаПровалаПомпаж.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьЗабросаПровалаПомпаж
@@ -117,15 +117,12 @@ Friend Class AnalysisПриемистостьМГ_N290
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
             End With
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

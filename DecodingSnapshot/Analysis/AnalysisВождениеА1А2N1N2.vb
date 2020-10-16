@@ -54,9 +54,9 @@ Friend Class AnalysisВождениеА1А2N1N2
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
         Dim КоэПриведения As Double = System.Math.Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin))
         Dim J As Integer
         'J=1 для 99 изделия, J=2 для 39 изделия
@@ -181,8 +181,8 @@ Friend Class AnalysisВождениеА1А2N1N2
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
 
         'находим заброс N1 относительно установившегося
-        параметр = conN1
-        Dim clsЗабросN1ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
+        parameter = conN1
+        Dim clsЗабросN1ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -193,11 +193,11 @@ Friend Class AnalysisВождениеА1А2N1N2
             .Расчет()
         End With
 
-        If clsЗабросN1ОтносительноУстановившегося.Ошибка = True Then
+        If clsЗабросN1ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросN1ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsЗабросN1ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsЗабросN1ОтносительноУстановившегося
@@ -208,13 +208,13 @@ Friend Class AnalysisВождениеА1А2N1N2
                 Parent.XAxisTime.Range.Maximum,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " %")
+                parameter & ":уст.=" & Round(.Аконечное, 2) & " %")
                 'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
                 'End If
             End With
             '************************************************
             'нахождение минимального и максимального значения параметра N1
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраN1 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+            Dim clsМинимальноеМаксимальноеЗначениеПараметраN1 As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                                               Parent.MeasuredValues,
                                                                                                               Parent.SnapshotSmallParameters,
@@ -224,11 +224,11 @@ Friend Class AnalysisВождениеА1А2N1N2
                 '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
                 .Расчет()
             End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраN1.Ошибка = True Then
+            If clsМинимальноеМаксимальноеЗначениеПараметраN1.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраN1.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsМинимальноеМаксимальноеЗначениеПараметраN1.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsМинимальноеМаксимальноеЗначениеПараметраN1
@@ -241,7 +241,7 @@ Friend Class AnalysisВождениеА1А2N1N2
                     .ТМинимальногоЗначения,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
                     ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " %")
+                    parameter & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " %")
                     Protocol(4, 2) = "привед.min=" & Round(МинимальноеПриведенноеЗначениеN1, 2) & " %"
                     Protocol(5, 2) = "привед.max=" & Round(МаксимальноеПриведенноеЗначениеN1, 2) & " %"
                 End With
@@ -249,8 +249,8 @@ Friend Class AnalysisВождениеА1А2N1N2
         End If
 
         'находим заброс N2 относительно установившегося
-        параметр = conN2
-        Dim clsЗабросN2ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
+        parameter = conN2
+        Dim clsЗабросN2ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -261,11 +261,11 @@ Friend Class AnalysisВождениеА1А2N1N2
             .Расчет()
         End With
 
-        If clsЗабросN2ОтносительноУстановившегося.Ошибка = True Then
+        If clsЗабросN2ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросN2ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsЗабросN2ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsЗабросN2ОтносительноУстановившегося
@@ -276,13 +276,13 @@ Friend Class AnalysisВождениеА1А2N1N2
                 Parent.XAxisTime.Range.Maximum,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " %")
+                parameter & ":уст.=" & Round(.Аконечное, 2) & " %")
                 'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
                 'End If
             End With
             '************************************************
             'нахождение минимального и максимального значения параметра N2
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраN2 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+            Dim clsМинимальноеМаксимальноеЗначениеПараметраN2 As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                                               Parent.MeasuredValues,
                                                                                                               Parent.SnapshotSmallParameters,
@@ -292,11 +292,11 @@ Friend Class AnalysisВождениеА1А2N1N2
                 '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
                 .Расчет()
             End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраN2.Ошибка = True Then
+            If clsМинимальноеМаксимальноеЗначениеПараметраN2.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраN2.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsМинимальноеМаксимальноеЗначениеПараметраN2.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsМинимальноеМаксимальноеЗначениеПараметраN2
@@ -309,7 +309,7 @@ Friend Class AnalysisВождениеА1А2N1N2
                     .ТМинимальногоЗначения,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
                     ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " %")
+                    parameter & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " %")
                     Protocol(8, 2) = "привед.min=" & Round(МинимальноеПриведенноеЗначениеN2, 2) & " %"
                     Protocol(9, 2) = "привед.max=" & Round(МаксимальноеПриведенноеЗначениеN2, 2) & " %"
                 End With
@@ -317,8 +317,8 @@ Friend Class AnalysisВождениеА1А2N1N2
         End If
 
         'находим заброс a1 относительно установившегося
-        параметр = cona1
-        Dim clsЗабросa1ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
+        parameter = cona1
+        Dim clsЗабросa1ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -329,11 +329,11 @@ Friend Class AnalysisВождениеА1А2N1N2
             .Расчет()
         End With
 
-        If clsЗабросa1ОтносительноУстановившегося.Ошибка = True Then
+        If clsЗабросa1ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросa1ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsЗабросa1ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsЗабросa1ОтносительноУстановившегося
@@ -344,13 +344,13 @@ Friend Class AnalysisВождениеА1А2N1N2
                 Parent.XAxisTime.Range.Maximum,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " дел.")
+                parameter & ":уст.=" & Round(.Аконечное, 2) & " дел.")
                 'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
                 'End If
             End With
             '************************************************
             'нахождение минимального и максимального значения параметра a1
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраa1 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+            Dim clsМинимальноеМаксимальноеЗначениеПараметраa1 As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                                               Parent.MeasuredValues,
                                                                                                               Parent.SnapshotSmallParameters,
@@ -360,11 +360,11 @@ Friend Class AnalysisВождениеА1А2N1N2
                 '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
                 .Расчет()
             End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраa1.Ошибка = True Then
+            If clsМинимальноеМаксимальноеЗначениеПараметраa1.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраa1.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsМинимальноеМаксимальноеЗначениеПараметраa1.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsМинимальноеМаксимальноеЗначениеПараметраa1
@@ -374,7 +374,7 @@ Friend Class AnalysisВождениеА1А2N1N2
                     .ТМинимальногоЗначения,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
                     ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел.")
+                    parameter & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел.")
                     Protocol(6, 2) = Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел."
 
                     МинимальноеПриведенноеЗначениеА1 = ПромежуточныеОборотыПриведАльфа(МинимальноеПриведенноеЗначениеN1, arrТочкиА1)
@@ -387,8 +387,8 @@ Friend Class AnalysisВождениеА1А2N1N2
         End If
 
         'находим заброс a2 относительно установившегося
-        параметр = cona2
-        Dim clsЗабросa2ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
+        parameter = cona2
+        Dim clsЗабросa2ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -399,11 +399,11 @@ Friend Class AnalysisВождениеА1А2N1N2
             .Расчет()
         End With
 
-        If clsЗабросa2ОтносительноУстановившегося.Ошибка = True Then
+        If clsЗабросa2ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросa2ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsЗабросa2ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsЗабросa2ОтносительноУстановившегося
@@ -414,13 +414,13 @@ Friend Class AnalysisВождениеА1А2N1N2
                 Parent.XAxisTime.Range.Maximum,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " дел.")
+                parameter & ":уст.=" & Round(.Аконечное, 2) & " дел.")
                 'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
                 'End If
             End With
             '************************************************
             'нахождение минимального и максимального значения параметра a2
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраa2 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+            Dim clsМинимальноеМаксимальноеЗначениеПараметраa2 As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                                               Parent.MeasuredValues,
                                                                                                               Parent.SnapshotSmallParameters,
@@ -430,11 +430,11 @@ Friend Class AnalysisВождениеА1А2N1N2
                 '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
                 .Расчет()
             End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраa2.Ошибка = True Then
+            If clsМинимальноеМаксимальноеЗначениеПараметраa2.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраa2.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsМинимальноеМаксимальноеЗначениеПараметраa2.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsМинимальноеМаксимальноеЗначениеПараметраa2
@@ -444,7 +444,7 @@ Friend Class AnalysisВождениеА1А2N1N2
                     .ТМинимальногоЗначения,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
                     ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел.")
+                    parameter & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел.")
                     Protocol(10, 2) = Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел."
 
                     МинимальноеПриведенноеЗначениеА2 = ПромежуточныеОборотыПриведАльфа(МинимальноеПриведенноеЗначениеN2, arrТочкиА2)
@@ -456,10 +456,7 @@ Friend Class AnalysisВождениеА1А2N1N2
             End If
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

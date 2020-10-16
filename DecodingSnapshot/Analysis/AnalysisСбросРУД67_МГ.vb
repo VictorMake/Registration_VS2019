@@ -42,14 +42,14 @@ Friend Class AnalysisСбросРУД67_МГ
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
         'находим время приемистости
-        параметр = conаРУД
-        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(параметр,
+        parameter = conаРУД
+        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(parameter,
                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                       Parent.MeasuredValues,
                                                                       Parent.SnapshotSmallParameters,
@@ -61,11 +61,11 @@ Friend Class AnalysisСбросРУД67_МГ
             .Расчет()
         End With
 
-        If clsДлительностьФронтаСпада.Ошибка = True Then
+        If clsДлительностьФронтаСпада.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьФронтаСпада.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьФронтаСпада.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьФронтаСпада
@@ -75,13 +75,13 @@ Friend Class AnalysisСбросРУД67_МГ
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
             End With
             '************************************************
             'вычисление время первой форсажной приемистости
-            параметр = conN1
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровня As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            parameter = conN1
+            Dim clsДлительностьФронтаСпадаОтИндексаДоУровня As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                             Parent.FrequencyBackgroundSnapshot,
                                                                                                             Parent.MeasuredValues,
                                                                                                             Parent.SnapshotSmallParameters,
@@ -92,11 +92,11 @@ Friend Class AnalysisСбросРУД67_МГ
                 .Аконечное = 43
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровня.Ошибка = True Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровня.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровня.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровня.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsДлительностьФронтаСпадаОтИндексаДоУровня
@@ -106,16 +106,13 @@ Friend Class AnalysisСбросРУД67_МГ
                     .Тконечное,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                     ArrowType.Horizontal,
-                    параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                    parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                     Protocol(7, 2) = Round(.Тдлительность, 2) & " сек."
                 End With
             End If
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

@@ -42,15 +42,15 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
 
         'находим время спада
-        параметр = conаРУД
-        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(параметр,
+        parameter = conаРУД
+        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(parameter,
                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                       Parent.MeasuredValues,
                                                                       Parent.SnapshotSmallParameters,
@@ -62,11 +62,11 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
             .Расчет()
         End With
 
-        If clsДлительностьФронтаСпада.Ошибка = True Then
+        If clsДлительностьФронтаСпада.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьФронтаСпада.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьФронтаСпада.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьФронтаСпада
@@ -76,14 +76,14 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
             End With
         End If
 
         'находим провал N1относительно установившегося
-        параметр = conN1
-        Dim clsПровалN1ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(параметр,
+        parameter = conN1
+        Dim clsПровалN1ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -94,11 +94,11 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
             .Расчет()
         End With
 
-        If clsПровалN1ОтносительноУстановившегося.Ошибка = True Then
+        If clsПровалN1ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsПровалN1ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsПровалN1ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsПровалN1ОтносительноУстановившегося
@@ -108,14 +108,14 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Vertical,
-                параметр & ":провал=" & Round(.DeltaA, 2) & " %")
-                Protocol(6, 2) = параметр & ":уст. провал=" & Round(.DeltaA, 2) & " %"
+                parameter & ":провал=" & Round(.DeltaA, 2) & " %")
+                Protocol(6, 2) = parameter & ":уст. провал=" & Round(.DeltaA, 2) & " %"
             End With
         End If
 
         'находим провал N2относительно установившегося
-        параметр = conN2
-        Dim clsПровалN2ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(параметр,
+        parameter = conN2
+        Dim clsПровалN2ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -126,11 +126,11 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
             .Расчет()
         End With
 
-        If clsПровалN2ОтносительноУстановившегося.Ошибка = True Then
+        If clsПровалN2ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsПровалN2ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsПровалN2ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsПровалN2ОтносительноУстановившегося
@@ -140,15 +140,12 @@ Friend Class AnalysisВыключениеФорсажаРУД115РУД67изд39
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Vertical,
-                параметр & ":уст. провал=" & Round(.DeltaA, 2) & " %")
-                Protocol(7, 2) = параметр & ":уст. провал=" & Round(.DeltaA, 2) & " %"
+                parameter & ":уст. провал=" & Round(.DeltaA, 2) & " %")
+                Protocol(7, 2) = parameter & ":уст. провал=" & Round(.DeltaA, 2) & " %"
             End With
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

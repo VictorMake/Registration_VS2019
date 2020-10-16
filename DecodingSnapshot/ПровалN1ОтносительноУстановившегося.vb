@@ -4,8 +4,8 @@
     Dim mАначальное, mАконечное As Double
     Dim mDeltaA As Double
     Dim mВремяОсреднения As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrЗначения(,) As Double
     Dim mmyTypeList() As TypeSmallParameter
     Dim mGraphMinimum, mGraphMaximum As Short
@@ -73,15 +73,15 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
@@ -129,7 +129,7 @@
         marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
         mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         mВремяОсреднения = 2 'по умолчанию
         GraphMinimum = Minimum
         GraphMaximum = Maximum
@@ -137,8 +137,8 @@
 
     Public Sub Расчет()
         Dim I, J, N As Integer
-        Dim параметрНайден, минимумНайден As Boolean
-        Dim количество As Integer
+        Dim success, минимумНайден As Boolean
+        Dim count As Integer
         Dim минимальноеЗначение As Double = Double.MaxValue
         Dim максимальноеЗначение As Double = Double.MinValue
         Dim индексМаксимальногоЗначения, индексМинимальногоЗначения As Integer
@@ -149,14 +149,14 @@
         For J = 1 To UBound(mmyTypeList)
             If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
                 mИндексПараметра = J - 1
-                параметрНайден = True
+                success = True
                 Exit For
             End If
-        Next J
+        Next
 
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If Not success Then
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
@@ -164,10 +164,10 @@
         'находим среднее за последние 2 сек
         For I = N - CInt(mВремяОсреднения / mДлительностьТакта) To N
             mАконечное += marrЗначения(mИндексПараметра, I)
-            количество += 1
-        Next I
+            count += 1
+        Next
 
-        mАконечное /= количество
+        mАконечное /= count
 
         'находим первый максимум 
         For I = mИндексТначальное To N
@@ -176,7 +176,7 @@
                 максимальноеЗначение = marrЗначения(mИндексПараметра, I)
                 индексМаксимальногоЗначения = I
             End If
-        Next I
+        Next
 
         If (индексМаксимальногоЗначения - mИндексТначальное) * mДлительностьТакта > 10 Then
             'если максимальное значение отстоит от mИндексТначальное более 10 сек то от него ищем локальный минимум
@@ -188,14 +188,14 @@
                     ИндексПервогоПревышенияСреднего = I
                     Exit For
                 End If
-            Next I
+            Next
 
             For I = индексМаксимальногоЗначения To mИндексТначальное Step -1
                 If marrЗначения(mИндексПараметра, I) < mАконечное Then
                     ИндексПоследнегоПревышенияСреднего = I
                     Exit For
                 End If
-            Next I
+            Next
 
             If ИндексПервогоПревышенияСреднего < ИндексПоследнегоПревышенияСреднего Then
                 For I = ИндексПервогоПревышенияСреднего To ИндексПоследнегоПревышенияСреднего
@@ -205,7 +205,7 @@
                         индексМинимальногоЗначения = I
                         минимумНайден = True
                     End If
-                Next I
+                Next
             End If
 
             'For I = mИндексМаксимальногоЗначения To mИндексТначальное Step -1
@@ -240,7 +240,7 @@
                             Exit For
                         End If
                     End If
-                Next I
+                Next
             End If
 
             If минимумНайден = False Then
@@ -250,7 +250,7 @@
                         минимальноеЗначение = marrЗначения(mИндексПараметра, I)
                         индексМинимальногоЗначения = I
                     End If
-                Next I
+                Next
             End If
         Else
             'находим минимум начиная с mИндексМаксимальногоЗначения
@@ -260,7 +260,7 @@
                     минимальноеЗначение = marrЗначения(mИндексПараметра, I)
                     индексМинимальногоЗначения = I
                 End If
-            Next I
+            Next
         End If
 
         mИндексТконечное = N
@@ -272,8 +272,8 @@
         mDeltaA = mАконечное - mАначальное
 
         If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное и Тконечное равны" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
         End If
     End Sub
 End Class

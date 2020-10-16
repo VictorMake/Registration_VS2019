@@ -45,9 +45,9 @@ Friend Class AnalysisСбросАИ222
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
 
         Dim strДобавка As String = "ПМГ"
         Dim ЗначениеУровняNвдпр As Double = 67.5
@@ -55,8 +55,8 @@ Friend Class AnalysisСбросАИ222
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
         'находим время приемистости
-        параметр = conаРУДАИ222
-        Dim clsДлительностьФронтаСпадаРУДАИ222 As New ДлительностьФронтаСпада(параметр,
+        parameter = conаРУДАИ222
+        Dim clsДлительностьФронтаСпадаРУДАИ222 As New ДлительностьФронтаСпада(parameter,
                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                               Parent.MeasuredValues,
                                                                               Parent.SnapshotSmallParameters,
@@ -68,11 +68,11 @@ Friend Class AnalysisСбросАИ222
             .Расчет()
         End With
 
-        If clsДлительностьФронтаСпадаРУДАИ222.Ошибка = True Then
+        If clsДлительностьФронтаСпадаРУДАИ222.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьФронтаСпадаРУДАИ222.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьФронтаСпадаРУДАИ222.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьФронтаСпадаРУДАИ222
@@ -82,13 +82,13 @@ Friend Class AnalysisСбросАИ222
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
             End With
             '************************************************
             'находим значение conЗемляАИ222 в начале движения Руд
-            параметр = conЗемляАИ222
-            clsЗначениеПараметраЗемляАИ222ВИндексе = New ЗначениеПараметраВИндексе(параметр,
+            parameter = conЗемляАИ222
+            clsЗначениеПараметраЗемляАИ222ВИндексе = New ЗначениеПараметраВИндексе(parameter,
                                                                                    Parent.FrequencyBackgroundSnapshot,
                                                                                    Parent.MeasuredValues,
                                                                                    Parent.SnapshotSmallParameters,
@@ -98,11 +98,11 @@ Friend Class AnalysisСбросАИ222
                 .ИндексТначальное = clsДлительностьФронтаСпадаРУДАИ222.ИндексТначальное
                 .Расчет()
             End With
-            If clsЗначениеПараметраЗемляАИ222ВИндексе.Ошибка = True Then
+            If clsЗначениеПараметраЗемляАИ222ВИндексе.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsЗначениеПараметраЗемляАИ222ВИндексе.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsЗначениеПараметраЗемляАИ222ВИндексе.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsЗначениеПараметраЗемляАИ222ВИндексе
@@ -112,7 +112,7 @@ Friend Class AnalysisСбросАИ222
                     .Тначальное,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .ЗначениеПараметра + 0.5),
                     ArrowType.Inclined,
-                    параметр & "=" & Round(.ЗначениеПараметра, 2))
+                    parameter & "=" & Round(.ЗначениеПараметра, 2))
                     'параметр & "=" & Round(.ЗначениеПараметра, 2) & " дел.")
                     'Protocol(7, 2) = Round(.ЗначениеПараметра, 2) & " дел."
                     If .ЗначениеПараметра >= 1 Then
@@ -138,8 +138,8 @@ Friend Class AnalysisСбросАИ222
             End If
 
             'вычисление время сброса от начала спада Руд до conGтопливаАИ222 = 360
-            параметр = conGтопливаАИ222
-            Dim clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            parameter = conGтопливаАИ222
+            Dim clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                                           Parent.FrequencyBackgroundSnapshot,
                                                                                                                           Parent.MeasuredValues,
                                                                                                                           Parent.SnapshotSmallParameters,
@@ -150,11 +150,11 @@ Friend Class AnalysisСбросАИ222
                 .Аконечное = 360
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня.Ошибка = True Then
+            If clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsДлительностьФронтаСпадаGтопливаАИ2222ОтИндексаДоУровня
@@ -164,15 +164,15 @@ Friend Class AnalysisСбросАИ222
                     .Тконечное,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                     ArrowType.Horizontal,
-                    параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                    parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                     Protocol(7, 2) = Round(.Тдлительность, 2) & " сек."
                 End With
             End If
         End If
 
         'находим время провала conNвдпрАИ222 от уровня ЗначениеУровняNвдпр
-        параметр = conNвдпрАИ222
-        Dim clsДлительностьЗабросаПровалаNвдпрАИ222 As New ДлительностьЗабросаПровала(параметр,
+        parameter = conNвдпрАИ222
+        Dim clsДлительностьЗабросаПровалаNвдпрАИ222 As New ДлительностьЗабросаПровала(parameter,
                                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                                       Parent.MeasuredValues,
                                                                                       Parent.SnapshotSmallParameters,
@@ -184,11 +184,11 @@ Friend Class AnalysisСбросАИ222
             .Расчет()
         End With
 
-        If clsДлительностьЗабросаПровалаNвдпрАИ222.Ошибка = True Then
+        If clsДлительностьЗабросаПровалаNвдпрАИ222.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьЗабросаПровалаNвдпрАИ222.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьЗабросаПровалаNвдпрАИ222.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьЗабросаПровалаNвдпрАИ222
@@ -198,8 +198,8 @@ Friend Class AnalysisСбросАИ222
                 .ТМинимальногоЗначения,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
                 ArrowType.Vertical,
-                параметр & strДобавка & ":провал=" & Round(.Апорога - .МинимальноеЗначение, 2) & " %")
-                Protocol(6, 2) = параметр & strДобавка & ":провал=" & Round(.Апорога - .МинимальноеЗначение, 2) & "% от уровня " & ЗначениеУровняNвдпр
+                parameter & strДобавка & ":провал=" & Round(.Апорога - .МинимальноеЗначение, 2) & " %")
+                Protocol(6, 2) = parameter & strДобавка & ":провал=" & Round(.Апорога - .МинимальноеЗначение, 2) & "% от уровня " & ЗначениеУровняNвдпр
 
                 If .МинимальноеЗначение < ЗначениеУровняNвдпр Then
                     'строим стрелки
@@ -209,17 +209,14 @@ Friend Class AnalysisСбросАИ222
                         .Тконечное,
                         Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
                         ArrowType.Horizontal,
-                        параметр & strДобавка & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                        parameter & strДобавка & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                     'Protocol(9, 2) = Round(.Тдлительность, 2) & " сек."
                 End If
 
             End With
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

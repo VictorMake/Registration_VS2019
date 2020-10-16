@@ -42,9 +42,9 @@ Friend Class AnalysisГорячийЗапуск
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
         Dim arrТзапускаВерх(3), arrТзапускаНиз(3) As PointF
         Dim strТзапускаВерх As String = Nothing
         Dim strТзапускаНиз As String = Nothing
@@ -80,8 +80,8 @@ Friend Class AnalysisГорячийЗапуск
         Protocol(7, 3) = sngТзапуска.ToString & " сек."
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
-        параметр = conN2
-        Dim clsДлительностьФронтаСпадаПрОборотов As New ДлительностьФронтаСпадаПрОборотов(параметр,
+        parameter = conN2
+        Dim clsДлительностьФронтаСпадаПрОборотов As New ДлительностьФронтаСпадаПрОборотов(parameter,
                                                                                           Parent.FrequencyBackgroundSnapshot,
                                                                                           Parent.MeasuredValues,
                                                                                           Parent.SnapshotSmallParameters,
@@ -94,11 +94,11 @@ Friend Class AnalysisГорячийЗапуск
             .Расчет()
         End With
 
-        If clsДлительностьФронтаСпадаПрОборотов.Ошибка = True Then
+        If clsДлительностьФронтаСпадаПрОборотов.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьФронтаСпадаПрОборотов.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьФронтаСпадаПрОборотов.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьФронтаСпадаПрОборотов
@@ -108,13 +108,13 @@ Friend Class AnalysisГорячийЗапуск
             .Тконечное,
             Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
             ArrowType.Horizontal,
-            параметр & ":53физ-67пр dT=" & Round(.Тдлительность, 2) & " сек.")
+            parameter & ":53физ-67пр dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
                 Protocol(5, 3) = "От " & strТзапускаНиз & " до " & strТзапускаВерх & " сек."
             End With
 
-            параметр = conЗапуск
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            parameter = conЗапуск
+            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                                   Parent.FrequencyBackgroundSnapshot,
                                                                                                                   Parent.MeasuredValues,
                                                                                                                   Parent.SnapshotSmallParameters,
@@ -125,11 +125,11 @@ Friend Class AnalysisГорячийЗапуск
                 .Аконечное = 4
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск.Ошибка = True Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск
@@ -139,13 +139,13 @@ Friend Class AnalysisГорячийЗапуск
                     clsДлительностьФронтаСпадаПрОборотов.Тконечное,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, clsДлительностьФронтаСпадаПрОборотов.ИндексПараметра + 1, clsДлительностьФронтаСпадаПрОборотов.Аконечное),
                     ArrowType.Horizontal,
-                    параметр & ":dT=" & Round(clsДлительностьФронтаСпадаПрОборотов.Тконечное - .Тконечное, 2) & " сек.")
+                    parameter & ":dT=" & Round(clsДлительностьФронтаСпадаПрОборотов.Тконечное - .Тконечное, 2) & " сек.")
                     Protocol(7, 2) = Round(clsДлительностьФронтаСпадаПрОборотов.Тконечное - .Тконечное, 2) & " сек."
                 End With
 
-                параметр = conТ4
+                parameter = conТ4
                 'параметр = "N2>53%" 'проба
-                Dim clsЗначениеПараметраТ4ВИндексе As New ЗначениеПараметраВИндексе(параметр,
+                Dim clsЗначениеПараметраТ4ВИндексе As New ЗначениеПараметраВИндексе(parameter,
                                                                                     Parent.FrequencyBackgroundSnapshot,
                                                                                     Parent.MeasuredValues,
                                                                                     Parent.SnapshotSmallParameters,
@@ -155,16 +155,16 @@ Friend Class AnalysisГорячийЗапуск
                     .ИндексТначальное = clsДлительностьФронтаСпадаОтИндексаДоУровняЗапуск.ИндексТконечное
                     .Расчет()
                 End With
-                If clsЗначениеПараметраТ4ВИндексе.Ошибка = True Then
+                If clsЗначениеПараметраТ4ВИндексе.IsErrors Then
                     'анализируем для последующих построений
                     'накапливаем ошибку
-                    общаяОшибка = True
-                    общийТекстОшибок += clsЗначениеПараметраТ4ВИндексе.ТекстОшибки & vbCrLf
+                    IsTotalErrors = True
+                    totalErrorsMessage += clsЗначениеПараметраТ4ВИндексе.ErrorsMessage & vbCrLf
                 Else
                     ''строим стрелки
                 End If
 
-                Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТ4 As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+                Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТ4 As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                                   Parent.FrequencyBackgroundSnapshot,
                                                                                                                   Parent.MeasuredValues,
                                                                                                                   Parent.SnapshotSmallParameters,
@@ -175,18 +175,18 @@ Friend Class AnalysisГорячийЗапуск
                     .Аконечное = clsЗначениеПараметраТ4ВИндексе.ЗначениеПараметра + 5 'начало стабильного роста Т4
                     .Расчет()
                 End With
-                If clsДлительностьФронтаСпадаОтИндексаДоУровняТ4.Ошибка = True Then
+                If clsДлительностьФронтаСпадаОтИндексаДоУровняТ4.IsErrors Then
                     'анализируем для последующих построений
                     'накапливаем ошибку
-                    общаяОшибка = True
-                    общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровняТ4.ТекстОшибки & vbCrLf
+                    IsTotalErrors = True
+                    totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняТ4.ErrorsMessage & vbCrLf
                 Else
                     ''строим стрелки
                 End If
 
                 'вычисляем длительность заброса первого спада после максимума
-                параметр = conРтОК1К
-                Dim clsДлительностьЗабросаПровалаОК1К As New ДлительностьЗабросаПровала(параметр,
+                parameter = conРтОК1К
+                Dim clsДлительностьЗабросаПровалаОК1К As New ДлительностьЗабросаПровала(parameter,
                                                                                         Parent.FrequencyBackgroundSnapshot,
                                                                                         Parent.MeasuredValues,
                                                                                         Parent.SnapshotSmallParameters,
@@ -198,11 +198,11 @@ Friend Class AnalysisГорячийЗапуск
                     .Расчет()
                 End With
 
-                If clsДлительностьЗабросаПровалаОК1К.Ошибка = True Then
+                If clsДлительностьЗабросаПровалаОК1К.IsErrors Then
                     'анализируем для последующих построений
                     'накапливаем ошибку
-                    общаяОшибка = True
-                    общийТекстОшибок += clsДлительностьЗабросаПровалаОК1К.ТекстОшибки & vbCrLf
+                    IsTotalErrors = True
+                    totalErrorsMessage += clsДлительностьЗабросаПровалаОК1К.ErrorsMessage & vbCrLf
                 Else
                     ''строим стрелки
                 End If
@@ -224,10 +224,7 @@ Friend Class AnalysisГорячийЗапуск
             End If
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

@@ -855,6 +855,8 @@ Friend Class FormSetting
         Dim limit As Integer = CInt(65536 / 1800) ' arraysize = 1800
         Dim stepDivide As Integer
 
+        ComboIntervalSnapshot.Items.Clear()
+
         Select Case inFrequency
             Case "1"
                 FrequencyBackground = 1
@@ -875,6 +877,7 @@ Friend Class FormSetting
                 RefreshScreen = 1
                 RefreshDataToNetwork = 1
                 stepDivide = 2
+                ComboIntervalSnapshot.Items.Add("15") ' при "15" LimitAddExel=1
                 Exit Select
             Case "5"
                 FrequencyBackground = 5
@@ -885,6 +888,7 @@ Friend Class FormSetting
                 RefreshScreen = 1
                 RefreshDataToNetwork = 1
                 stepDivide = 5
+                ComboIntervalSnapshot.Items.AddRange({"6", "12"}) ' при "6" LimitAddExel=1
                 Exit Select
             Case "10"
                 FrequencyBackground = 10
@@ -895,6 +899,7 @@ Friend Class FormSetting
                 RefreshScreen = 1
                 RefreshDataToNetwork = 1
                 stepDivide = 10
+                ComboIntervalSnapshot.Items.AddRange({"3", "6", "9", "15"}) ' при "3" LimitAddExel=1
                 Exit Select
             Case "20"
                 FrequencyBackground = 20
@@ -905,6 +910,7 @@ Friend Class FormSetting
                 RefreshScreen = 2
                 RefreshDataToNetwork = 1
                 stepDivide = 10
+                ComboIntervalSnapshot.Items.AddRange({"3", "6", "9"})
                 Exit Select
             Case "50"
                 FrequencyBackground = 50
@@ -940,7 +946,6 @@ Friend Class FormSetting
         LabelDiscreditFact.Text = CStr(LevelOversampling)
         TextFrequencySamplingChannel.Text = CStr(FrequencyBackground * LevelOversampling)
 
-        ComboIntervalSnapshot.Items.Clear()
         For I = 0 To limit Step stepDivide
             If I = 0 Then Continue For
             ComboIntervalSnapshot.Items.Add((TimeFrame * I) / 60)

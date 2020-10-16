@@ -2,8 +2,8 @@
     Dim mИндексПараметра, mИндексТначальное, mИндексТконечное As Integer
     Dim mДлительностьТакта, mТначальное, mТконечное, mТдлительность As Double
     Dim mАначальное, mАконечное, mТемпература As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrЗначения(,) As Double
     Dim mmyTypeList() As TypeSmallParameter
     Dim mGraphMinimum, mGraphMaximum As Short
@@ -68,15 +68,15 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
@@ -109,15 +109,15 @@
 
     Public Sub New(ByVal ИмяПараметра As String,
                    ByVal ЧастотаКадра As Integer,
-                   ByVal arrЗначенияПараметров(,) As Double,
+                   ByVal ЗначенияПараметров(,) As Double,
                    ByVal myTypeList() As TypeSmallParameter,
                    ByVal Minimum As Double, ByVal Maximum As Double)
 
         mИмяПараметра = ИмяПараметра
-        marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
+        marrЗначения = CType(ЗначенияПараметров.Clone, Double(,))
         mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         GraphMinimum = Minimum
         GraphMaximum = Maximum
     End Sub
@@ -130,8 +130,8 @@
 
         'проверка на корректность введенныы параметров
         If mАначальное = mАконечное Then
-            mОшибка = True
-            mТекстОшибки += "Не введены Аначальное или Аконечное" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Не введены Аначальное или Аконечное" & vbCrLf
             Exit Sub
         End If
 
@@ -145,8 +145,8 @@
         Next
 
         If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
@@ -211,18 +211,18 @@
         mАконечное = mАконечноеФиз
 
         If Not индексТначальноеНайден OrElse mИндексТначальное = mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное не найдено" & vbCrLf
         End If
 
         If Not индексТконечноеНайден OrElse mИндексТконечное = mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тконечное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тконечное не найдено" & vbCrLf
         End If
 
         If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное и Тконечное равны" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
         End If
     End Sub
 End Class

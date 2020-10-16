@@ -1,8 +1,8 @@
 ﻿Friend Class РискиНастроекПараметров
     Dim mИндексПараметра, mИндексТначальное, mИндексТконечное As Integer
     Dim mДлительностьТакта, mТначальное, mТконечное As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrПараметрыЛиста() As TypeSmallParameter
     Dim mGraphMinimum, mGraphMaximum As Short
 
@@ -14,7 +14,7 @@
         mИмяПараметра = ИмяПараметра
         marrПараметрыЛиста = CType(arrПараметрыЛиста.Clone, TypeSmallParameter())
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         GraphMinimum = Minimum
         GraphMaximum = Maximum
     End Sub
@@ -73,34 +73,33 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
     Public Sub Расчет()
-        Dim J As Integer
-        Dim параметрНайден As Boolean
+        Dim success As Boolean
 
         'находим индекс параметра
-        For J = 1 To UBound(marrПараметрыЛиста)
+        For J As Integer = 1 To UBound(marrПараметрыЛиста)
             If marrПараметрыЛиста(J).NameParameter = mИмяПараметра AndAlso marrПараметрыЛиста(J).IsVisible Then
                 mИндексПараметра = J - 1
-                параметрНайден = True
+                success = True
                 Exit For
             End If
-        Next J
+        Next
 
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If Not success Then
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 

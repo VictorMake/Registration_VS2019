@@ -57,23 +57,23 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
 
         Dim mfrmРегулировка As New FormAdjustment(Parent.TypeKRDinSnapshot)
         mfrmРегулировка.ShowDialog()
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
 
         'риски настройки КРД параметра N1
-        параметр = conN1
-        Dim clsРискиНастроекПараметровN1 As New РискиНастроекПараметров(параметр,
+        parameter = conN1
+        Dim clsРискиНастроекПараметровN1 As New РискиНастроекПараметров(parameter,
                                                                         Parent.FrequencyBackgroundSnapshot,
                                                                         Parent.SnapshotSmallParameters,
                                                                         Parent.XAxisTime.Range.Minimum,
                                                                         Parent.XAxisTime.Range.Maximum)
         clsРискиНастроекПараметровN1.Расчет()
-        If clsРискиНастроекПараметровN1.Ошибка = False Then
+        If clsРискиНастроекПараметровN1.IsErrors = False Then
             'строим стрелки
             With clsРискиНастроекПараметровN1
                 Parent.TracingDecodingArrow(
@@ -87,14 +87,14 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
         End If
 
         'риски настройки КРД параметра N2
-        параметр = conN2
-        Dim clsРискиНастроекПараметровN2 As New РискиНастроекПараметров(параметр,
+        parameter = conN2
+        Dim clsРискиНастроекПараметровN2 As New РискиНастроекПараметров(parameter,
                                                                         Parent.FrequencyBackgroundSnapshot,
                                                                         Parent.SnapshotSmallParameters,
                                                                         Parent.XAxisTime.Range.Minimum,
                                                                         Parent.XAxisTime.Range.Maximum)
         clsРискиНастроекПараметровN2.Расчет()
-        If clsРискиНастроекПараметровN2.Ошибка = False Then
+        If clsРискиНастроекПараметровN2.IsErrors = False Then
             'строим стрелки
             With clsРискиНастроекПараметровN2
                 Parent.TracingDecodingArrow(
@@ -108,14 +108,14 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
         End If
 
         'риски настройки КРД параметра Т4
-        параметр = conТ4
-        Dim clsРискиНастроекПараметровТ4 As New РискиНастроекПараметров(параметр,
+        parameter = conТ4
+        Dim clsРискиНастроекПараметровТ4 As New РискиНастроекПараметров(parameter,
                                                                         Parent.FrequencyBackgroundSnapshot,
                                                                         Parent.SnapshotSmallParameters,
                                                                         Parent.XAxisTime.Range.Minimum,
                                                                         Parent.XAxisTime.Range.Maximum)
         clsРискиНастроекПараметровТ4.Расчет()
-        If clsРискиНастроекПараметровТ4.Ошибка = False Then
+        If clsРискиНастроекПараметровТ4.IsErrors = False Then
             'строим стрелки
             With clsРискиНастроекПараметровТ4
                 Parent.TracingDecodingArrow(
@@ -129,8 +129,8 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
         End If
 
         'находим время приемистости
-        параметр = conаРУД
-        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(параметр,
+        parameter = conаРУД
+        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(parameter,
                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                       Parent.MeasuredValues,
                                                                       Parent.SnapshotSmallParameters,
@@ -142,11 +142,11 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             .Расчет()
         End With
 
-        If clsДлительностьФронтаСпада.Ошибка = True Then
+        If clsДлительностьФронтаСпада.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьФронтаСпада.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьФронтаСпада.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьФронтаСпада
@@ -156,19 +156,19 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
             End With
             '************************************************
             'вычисление время первой форсажной приемистости
-            параметр = conТокJправый
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            parameter = conТокJправый
+            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                                                                       Parent.MeasuredValues,
                                                                                                                       Parent.SnapshotSmallParameters,
                                                                                                                       Parent.XAxisTime.Range.Minimum,
                                                                                                                       Parent.XAxisTime.Range.Maximum)
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраТокJправый As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+            Dim clsМинимальноеМаксимальноеЗначениеПараметраТокJправый As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                                       Parent.FrequencyBackgroundSnapshot,
                                                                                                                       Parent.MeasuredValues,
                                                                                                                       Parent.SnapshotSmallParameters,
@@ -179,11 +179,11 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .Аконечное = 60
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.Ошибка = True Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.ErrorsMessage & vbCrLf
             Else
                 '************************************************
                 'нахождение минимального и максимального значения параметра ТокJправый
@@ -194,14 +194,14 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             End If
             '************************************************
             'находим наибольшее
-            параметр = conТокJлевый
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            parameter = conТокJлевый
+            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                                      Parent.FrequencyBackgroundSnapshot,
                                                                                                                      Parent.MeasuredValues,
                                                                                                                      Parent.SnapshotSmallParameters,
                                                                                                                      Parent.XAxisTime.Range.Minimum,
                                                                                                                      Parent.XAxisTime.Range.Maximum)
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраТокJлевый As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+            Dim clsМинимальноеМаксимальноеЗначениеПараметраТокJлевый As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                                      Parent.FrequencyBackgroundSnapshot,
                                                                                                                      Parent.MeasuredValues,
                                                                                                                      Parent.SnapshotSmallParameters,
@@ -212,11 +212,11 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .Аконечное = 60
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.Ошибка = True Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.ErrorsMessage & vbCrLf
             Else
                 '************************************************
                 'нахождение минимального и максимального значения параметра ТокJправый
@@ -225,7 +225,7 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                     .Расчет()
                 End With
             End If
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.Ошибка = False And clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.Ошибка = False Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.IsErrors = False And clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.IsErrors = False Then
                 If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.Тдлительность <= clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.Тдлительность Then
                     'строим(стрелки)
                     With clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый
@@ -235,7 +235,7 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                         .Тконечное,
                         Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                         ArrowType.Horizontal,
-                        параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                        parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                         Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
                     End With
                     Protocol(8, 2) = Round(clsМинимальноеМаксимальноеЗначениеПараметраТокJправый.МаксимальноеЗначение, 2) & " мка."
@@ -248,7 +248,7 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                         .Тконечное,
                         Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                         ArrowType.Horizontal,
-                        параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                        parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                         Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
                     End With
                     Protocol(8, 2) = Round(clsМинимальноеМаксимальноеЗначениеПараметраТокJлевый.МаксимальноеЗначение, 2) & " мка."
@@ -256,8 +256,8 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             End If
             '************************************************
             'вычисление время второй форсажной приемистости
-            параметр = conПолныйФорсаж
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            parameter = conПолныйФорсаж
+            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                                Parent.FrequencyBackgroundSnapshot,
                                                                                                                Parent.MeasuredValues,
                                                                                                                Parent.SnapshotSmallParameters,
@@ -268,11 +268,11 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .Аконечное = 4
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ.Ошибка = True Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ.ErrorsMessage & vbCrLf
             Else
                 'строим стрелки
                 With clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ
@@ -282,15 +282,15 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                     .Тконечное,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                     ArrowType.Horizontal,
-                    параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                    parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                     Protocol(7, 2) = Round(.Тдлительность, 2) & " сек."
                 End With
             End If
         End If
 
         'вычисляем заброс N1
-        параметр = conN1
-        Dim clsДлительностьЗабросаПровалаN1 As New ДлительностьЗабросаПровала(параметр,
+        parameter = conN1
+        Dim clsДлительностьЗабросаПровалаN1 As New ДлительностьЗабросаПровала(parameter,
                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                               Parent.MeasuredValues,
                                                                               Parent.SnapshotSmallParameters,
@@ -302,7 +302,7 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             .Расчет()
         End With
 
-        If clsДлительностьЗабросаПровалаN1.Ошибка = True Then
+        If clsДлительностьЗабросаПровалаN1.IsErrors Then
             'анализируем для последующих построений
         Else
             'строим стрелки
@@ -313,14 +313,14 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .ТМаксимальногоЗначения,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
                 ArrowType.Vertical,
-                параметр & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %")
-                Protocol(9, 2) = параметр & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %"
+                parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %")
+                Protocol(9, 2) = parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %"
             End With
         End If
 
         'вычисляем заброс N2
-        параметр = conN2
-        Dim clsДлительностьЗабросаПровалаN2 As New ДлительностьЗабросаПровала(параметр,
+        parameter = conN2
+        Dim clsДлительностьЗабросаПровалаN2 As New ДлительностьЗабросаПровала(parameter,
                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                               Parent.MeasuredValues,
                                                                               Parent.SnapshotSmallParameters,
@@ -332,7 +332,7 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             .Расчет()
         End With
 
-        If clsДлительностьЗабросаПровалаN2.Ошибка = True Then
+        If clsДлительностьЗабросаПровалаN2.IsErrors Then
             'анализируем для последующих построений
         Else
             'строим стрелки
@@ -343,14 +343,14 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .ТМаксимальногоЗначения,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
                 ArrowType.Vertical,
-                параметр & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %")
-                Protocol(11, 2) = параметр & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %"
+                parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %")
+                Protocol(11, 2) = parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %"
             End With
         End If
 
         'вычисляем заброс Т4
-        параметр = conТ4
-        Dim clsДлительностьЗабросаПровалаТ4 As New ДлительностьЗабросаПровала(параметр,
+        parameter = conТ4
+        Dim clsДлительностьЗабросаПровалаТ4 As New ДлительностьЗабросаПровала(parameter,
                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                               Parent.MeasuredValues,
                                                                               Parent.SnapshotSmallParameters,
@@ -362,7 +362,7 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             .Расчет()
         End With
 
-        If clsДлительностьЗабросаПровалаТ4.Ошибка = True Then
+        If clsДлительностьЗабросаПровалаТ4.IsErrors Then
             'анализируем для последующих построений
         Else
             'строим стрелки
@@ -377,15 +377,15 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                     .ТМаксимальногоЗначения,
                     Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
                     ArrowType.Vertical,
-                    параметр & ":заброс=" & dblЗабросT4 & " гр.")
+                    parameter & ":заброс=" & dblЗабросT4 & " гр.")
                 End If
-                Protocol(12, 2) = параметр & ":заброс=" & dblЗабросT4 & " гр."
+                Protocol(12, 2) = parameter & ":заброс=" & dblЗабросT4 & " гр."
             End With
         End If
 
         'находим провал N1относительно установившегося
-        параметр = conN1
-        Dim clsПровалN1ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(параметр,
+        parameter = conN1
+        Dim clsПровалN1ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(parameter,
                                                                                               Parent.FrequencyBackgroundSnapshot,
                                                                                               Parent.MeasuredValues,
                                                                                               Parent.SnapshotSmallParameters,
@@ -396,11 +396,11 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
             .Расчет()
         End With
 
-        If clsПровалN1ОтносительноУстановившегося.Ошибка = True Then
+        If clsПровалN1ОтносительноУстановившегося.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsПровалN1ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsПровалN1ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsПровалN1ОтносительноУстановившегося
@@ -410,14 +410,11 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
                 ArrowType.Vertical,
-                параметр & ":провал=" & Round(.DeltaA, 2) & " %")
-                Protocol(10, 2) = параметр & ":провал=" & Round(.DeltaA, 2) & " %"
+                parameter & ":провал=" & Round(.DeltaA, 2) & " %")
+                Protocol(10, 2) = parameter & ":провал=" & Round(.DeltaA, 2) & " %"
             End With
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class

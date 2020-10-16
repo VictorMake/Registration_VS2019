@@ -3,8 +3,8 @@
     Dim mДлительностьТакта, mТначальное, mТконечное, mТдлительность As Double
     Dim mАначальное, mАконечное As Double
     Dim mВремяОсреднения, mПроцент As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrЗначения(,) As Double
     Dim mmyTypeList() As TypeSmallParameter
     Dim mGraphMinimum, mGraphMaximum As Short
@@ -72,15 +72,15 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
@@ -134,7 +134,7 @@
 
         'marrИндексыПараметров = VB6.CopyArray(arrИндексыПараметров)
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         mВремяОсреднения = 2 'по умолчанию
         mПроцент = 2 'по умолчанию
         GraphMinimum = Minimum
@@ -143,21 +143,21 @@
 
     Public Sub Расчет()
         Dim I, J, N As Integer
-        Dim параметрНайден, индексТконечноеНайден As Boolean
-        Dim количество As Integer
+        Dim success, индексТконечноеНайден As Boolean
+        Dim count As Integer
 
         'находим индекс параметра
         For J = 1 To UBound(mmyTypeList)
             If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
                 mИндексПараметра = J - 1
-                параметрНайден = True
+                success = True
                 Exit For
             End If
         Next
 
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If Not success Then
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
@@ -166,10 +166,10 @@
         'находим среднее за последние 2 сек
         For I = N - CInt(mВремяОсреднения / mДлительностьТакта) To N
             mАконечное += marrЗначения(mИндексПараметра, I)
-            количество += 1
+            count += 1
         Next
 
-        mАконечное = mАконечное / количество - mПроцент 'минус 2 %
+        mАконечное = mАконечное / count - mПроцент 'минус 2 %
 
         If mАначальное < mАконечное Then
             'если фронт
@@ -197,18 +197,18 @@
         mТдлительность = mТконечное - mТначальное
 
         If mИндексТначальное <= mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное не найдено" & vbCrLf
         End If
 
         If Not индексТконечноеНайден OrElse mИндексТконечное = mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тконечное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тконечное не найдено" & vbCrLf
         End If
 
         If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное и Тконечное равны" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
         End If
     End Sub
 End Class

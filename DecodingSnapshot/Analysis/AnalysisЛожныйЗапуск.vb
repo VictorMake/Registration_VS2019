@@ -45,14 +45,14 @@ Friend Class AnalysisЛожныйЗапуск
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
+        Dim totalErrorsMessage As String = Nothing
+        Dim IsTotalErrors As Boolean
+        Dim parameter As String
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
         'вычисляем длительность заброса
-        параметр = conРтОК1К
-        Dim clsДлительностьЗабросаПровала As New ДлительностьЗабросаПровала(параметр,
+        parameter = conРтОК1К
+        Dim clsДлительностьЗабросаПровала As New ДлительностьЗабросаПровала(parameter,
                                                                             Parent.FrequencyBackgroundSnapshot,
                                                                             Parent.MeasuredValues,
                                                                             Parent.SnapshotSmallParameters,
@@ -64,11 +64,11 @@ Friend Class AnalysisЛожныйЗапуск
             .Расчет()
         End With
 
-        If clsДлительностьЗабросаПровала.Ошибка = True Then
+        If clsДлительностьЗабросаПровала.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьЗабросаПровала.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsДлительностьЗабросаПровала.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsДлительностьЗабросаПровала
@@ -78,7 +78,7 @@ Friend Class AnalysisЛожныйЗапуск
                 .Тконечное,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
                 Protocol(8, 2) = Round(.Тдлительность, 2) & " сек."
             End With
             'рисуем риску максимального значения
@@ -89,13 +89,13 @@ Friend Class AnalysisЛожныйЗапуск
                 .ТМаксимальногоЗначения,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение + 2),
                 ArrowType.Inclined,
-                параметр & ":максимум=" & Round(.МаксимальноеЗначение, 2) & " кг")
+                parameter & ":максимум=" & Round(.МаксимальноеЗначение, 2) & " кг")
                 Protocol(6, 2) = "максимум=" & Round(.МаксимальноеЗначение, 2) & " кг"
             End With
 
             '************************************************
             'вычисление время первого спада ниже уровня 1
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровня As New ДлительностьФронтаСпадаОтИндексаДоУровня(параметр,
+            Dim clsДлительностьФронтаСпадаОтИндексаДоУровня As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
                                                                                                             Parent.FrequencyBackgroundSnapshot,
                                                                                                             Parent.MeasuredValues,
                                                                                                             Parent.SnapshotSmallParameters,
@@ -106,13 +106,13 @@ Friend Class AnalysisЛожныйЗапуск
                 .Аконечное = 1
                 .Расчет()
             End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровня.Ошибка = True Then
+            If clsДлительностьФронтаСпадаОтИндексаДоУровня.IsErrors Then
                 'анализируем для последующих построений
                 'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsДлительностьФронтаСпадаОтИндексаДоУровня.ТекстОшибки & vbCrLf
+                IsTotalErrors = True
+                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровня.ErrorsMessage & vbCrLf
             Else
-                Dim clsЗначениеПараметраВИндексе As New ЗначениеПараметраВИндексе(параметр,
+                Dim clsЗначениеПараметраВИндексе As New ЗначениеПараметраВИндексе(parameter,
                                                                                   Parent.FrequencyBackgroundSnapshot,
                                                                                   Parent.MeasuredValues,
                                                                                   Parent.SnapshotSmallParameters,
@@ -122,11 +122,11 @@ Friend Class AnalysisЛожныйЗапуск
                     .ИндексТначальное = clsДлительностьФронтаСпадаОтИндексаДоУровня.ИндексТконечное - 5 * Parent.FrequencyBackgroundSnapshot
                     .Расчет()
                 End With
-                If clsЗначениеПараметраВИндексе.Ошибка = True Then
+                If clsЗначениеПараметраВИндексе.IsErrors Then
                     'анализируем для последующих построений
                     'накапливаем ошибку
-                    общаяОшибка = True
-                    общийТекстОшибок += clsЗначениеПараметраВИндексе.ТекстОшибки & vbCrLf
+                    IsTotalErrors = True
+                    totalErrorsMessage += clsЗначениеПараметраВИндексе.ErrorsMessage & vbCrLf
                 Else
                     'строим стрелки
                     With clsЗначениеПараметраВИндексе
@@ -136,7 +136,7 @@ Friend Class AnalysisЛожныйЗапуск
                         .Тначальное,
                         Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .ЗначениеПараметра + 2),
                         ArrowType.Inclined,
-                        параметр & "=" & Round(.ЗначениеПараметра, 2) & " кг")
+                        parameter & "=" & Round(.ЗначениеПараметра, 2) & " кг")
                         Protocol(7, 2) = Round(.ЗначениеПараметра, 2) & " кг"
                     End With
                 End If
@@ -144,8 +144,8 @@ Friend Class AnalysisЛожныйЗапуск
         End If
         '************************************************
         'нахождение минимального и максимального значения параметра N2
-        параметр = conN2
-        Dim clsМинимальноеМаксимальноеЗначениеПараметра As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
+        parameter = conN2
+        Dim clsМинимальноеМаксимальноеЗначениеПараметра As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
                                                                                                         Parent.FrequencyBackgroundSnapshot,
                                                                                                         Parent.MeasuredValues,
                                                                                                         Parent.SnapshotSmallParameters,
@@ -155,11 +155,11 @@ Friend Class AnalysisЛожныйЗапуск
             '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
             .Расчет()
         End With
-        If clsМинимальноеМаксимальноеЗначениеПараметра.Ошибка = True Then
+        If clsМинимальноеМаксимальноеЗначениеПараметра.IsErrors Then
             'анализируем для последующих построений
             'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметра.ТекстОшибки & vbCrLf
+            IsTotalErrors = True
+            totalErrorsMessage += clsМинимальноеМаксимальноеЗначениеПараметра.ErrorsMessage & vbCrLf
         Else
             'строим стрелки
             With clsМинимальноеМаксимальноеЗначениеПараметра
@@ -169,14 +169,12 @@ Friend Class AnalysisЛожныйЗапуск
                 .ТМаксимальногоЗначения,
                 Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение + 2),
                 ArrowType.Inclined,
-                параметр & ":максимум=" & Round(.МаксимальноеЗначение, 2) & " %")
+                parameter & ":максимум=" & Round(.МаксимальноеЗначение, 2) & " %")
                 Protocol(5, 2) = "максимум=" & Round(.МаксимальноеЗначение, 2) & " %"
             End With
         End If
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
 

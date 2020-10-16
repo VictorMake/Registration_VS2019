@@ -378,6 +378,7 @@
     <Compile Include="DecodingSnapshot\Analysis\Analysis.vb" />
     <Compile Include="DecodingSnapshot\Analysis\CreatorAnalysis.vb" />
     <Compile Include="CalculationModule\PassportModule.vb" />
+    <Compile Include="DecodingSnapshot\Analysis\ShowTotalErrorsMessage.vb" />
     <Compile Include="DigitalPort\Port.vb" />
     <Compile Include="FindSnapshot\ModuleXmlLinq.vb" />
     <Compile Include="GlobalSuppressions.vb" />

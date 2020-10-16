@@ -1215,8 +1215,9 @@ Friend MustInherit Class FormRegistrationBase
 
             gTdmsFileProcessor.AppendData(MeasuredValues)
 
-            If isCloseTDMSFile Then ' прекращение записи покнопке "Запись", закрытие окна
+            If isCloseTDMSFile Then ' прекращение записи по кнопке "Запись", закрытие окна
                 ' прерванный снимок - закрыть файл
+                gTdmsFileProcessor.IsCloseTDMSFile = True
                 gTdmsFileProcessor.CloseTDMSFile()
                 ' там вызов TdmsFilePr_ClosedTDMSFileEven в котором isRecordingSnapshot = False
             End If
@@ -1225,11 +1226,9 @@ Friend MustInherit Class FormRegistrationBase
 
             Dim maximum As Double
             Dim strTime As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
-            Dim descriptionFrame As String
+            Dim descriptionFrame As String = "Фоновая запись - прерванный снимок"
 
-            If xNewPos <> 0 Then
-                descriptionFrame = "Фоновая запись - прерванный снимок"
-            Else
+            If xNewPos = 0 Then
                 countFrameRegistrator += 1
                 descriptionFrame = "Фоновая запись " & Str(countFrameRegistrator)
             End If
@@ -1336,22 +1335,20 @@ Friend MustInherit Class FormRegistrationBase
         ' присвоить Cancel = True, установить флаг что в событии _ClosedTDMSFileEvent после записи надо закрыть форму
         ' далее дождаться _ClosedTDMSFileEvent и если флаг установлен на закрытие окна, то после записи в базу заново инициировать закрытие окна,
         ' но наверно будет проблема, если закрывается приложение - наверно в родительском окне надо тоже что-то отслеживать
-        Dim descriptionFrame As String = String.Empty
+        Dim descriptionFrame As String = "Фоновая запись - прерванный снимок"
 
-        If e.IsSnapshotComplete = True Then
+        If e.IsSnapshotComplete Then
             countFrameRegistrator += 1
-            descriptionFrame = "Фоновая запись " & Str(countFrameRegistrator)
-        Else
-            descriptionFrame = "Фоновая запись - прерванный снимок"
+            If IsRecordEnable Then descriptionFrame = "Фоновая запись " & Str(countFrameRegistrator)
         End If
 
-        'If e.RowsCount = 0 Then
-        '    'Stop
-        '    ' значит сработал лишнее событие и был создан пустой файл, который нужно удалить
-        '    DeleteTextFile(e.PathFile)
-        '    DeleteTextFile(e.PathFile & "_index")
-        'Else
-        RecordSnapshotFrameToDBase("INSERT INTO БазаСнимков (НомерИзделия, Дата, ВремяНачалаСбора, Тбокса, ТипКРД, Режим, СтрокаКонфигурации, КолСтрок, КолСтолбцов, ЧастотаОпроса, НачалоОсиХ, КонецОсиХ, ПутьНаДиске, ТаблицаКаналов, Примечание) VALUES (" &
+            'If e.RowsCount = 0 Then
+            '    'Stop
+            '    ' значит сработал лишнее событие и был создан пустой файл, который нужно удалить
+            '    DeleteTextFile(e.PathFile)
+            '    DeleteTextFile(e.PathFile & "_index")
+            'Else
+            RecordSnapshotFrameToDBase("INSERT INTO БазаСнимков (НомерИзделия, Дата, ВремяНачалаСбора, Тбокса, ТипКРД, Режим, СтрокаКонфигурации, КолСтрок, КолСтолбцов, ЧастотаОпроса, НачалоОсиХ, КонецОсиХ, ПутьНаДиске, ТаблицаКаналов, Примечание) VALUES (" &
                 NumberEngine.ToString & ",'" &
                 e.DateTimeToday & "'," &
                 e.TimeStartCollect & "," &

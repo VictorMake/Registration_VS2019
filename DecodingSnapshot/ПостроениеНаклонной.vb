@@ -7,8 +7,8 @@
     Dim mВремяОсреднения As Double
     Dim mПревышениеНадСредним As Double
     Dim mАначальноеПлюс5, mТМаксимальногоЗначения, mBx, mУровень2Линии As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrЗначения(,) As Double
     Dim mGraphMinimum, mGraphMaximum As Short
     Dim mmyTypeList() As TypeSmallParameter
@@ -76,15 +76,15 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
@@ -180,7 +180,7 @@
         marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
         mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         mВремяОсреднения = 2 'по умолчанию
         mПревышениеНадСредним = 2
         mУровень2Линии = 5
@@ -191,8 +191,8 @@
 
     Public Sub Расчет()
         Dim I, J, N As Integer
-        Dim параметрНайден, индексТначальноеНайден, индексТконечноеНайден As Boolean
-        Dim количество As Integer
+        Dim success, индексТначальноеНайден, индексТконечноеНайден As Boolean
+        Dim count As Integer
         Dim Ax, Ay, Bx, By, Cx, Cy, Dx, Dy, Ky As Double
         Dim текущееВремя1, текущееВремя2 As Double
         Dim A1, B1, C1, A2, B2, C2 As Double
@@ -201,14 +201,14 @@
         For J = 1 To UBound(mmyTypeList)
             If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
                 mИндексПараметра = J - 1
-                параметрНайден = True
+                success = True
                 Exit For
             End If
-        Next J
+        Next
 
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If Not success Then
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
@@ -216,10 +216,10 @@
         'находим среднее за первые 2 сек 
         For I = mGraphMinimum To mGraphMinimum + CInt(mВремяОсреднения / mДлительностьТакта)
             mАначальное += marrЗначения(mИндексПараметра, I)
-            количество += 1
-        Next I
+            count += 1
+        Next
 
-        mАначальное = mАначальное / количество + mПревышениеНадСредним
+        mАначальное = mАначальное / count + mПревышениеНадСредним
 
         'поиск максимального до конца
         For I = mGraphMinimum To N
@@ -227,7 +227,7 @@
                 mМаксимальноеЗначение = marrЗначения(mИндексПараметра, I)
                 mИндексМаксимальногоЗначения = I
             End If
-        Next I
+        Next
 
         'находим первое значение где значение больше среднего плюс порог
         For I = mGraphMinimum To mИндексМаксимальногоЗначения
@@ -236,7 +236,7 @@
                 индексТначальноеНайден = True
                 Exit For
             End If
-        Next I
+        Next
 
         mТМаксимальногоЗначения = mИндексМаксимальногоЗначения * mДлительностьТакта
         mАначальное = marrЗначения(mИндексПараметра, mИндексТначальное)
@@ -263,10 +263,10 @@
                     индексТконечноеНайден = True
                     Exit For
                 End If
-            Next J
+            Next
 
             If индексТконечноеНайден Then Exit For
-        Next I
+        Next
 
         'надо найти пересечение прямых (Ax,Ay,Bx,By) и (Ax,mАначальноеПлюс5,mТМаксимальногоЗначения,АначальноеПлюс5)
         УравнениеПрямой(Ax, Ay, Bx, By, A1, B1, C1)
@@ -280,18 +280,18 @@
         mТдлительность = mТконечное - mТначальное
 
         If Not индексТначальноеНайден Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное не найдено" & vbCrLf
         End If
 
         If Not индексТконечноеНайден OrElse mИндексТконечное = mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тконечное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тконечное не найдено" & vbCrLf
         End If
 
         If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное и Тконечное равны" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
         End If
     End Sub
 

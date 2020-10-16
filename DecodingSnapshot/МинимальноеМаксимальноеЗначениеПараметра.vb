@@ -3,8 +3,8 @@
     Dim mДлительностьТакта As Double
     Dim mМаксимальноеЗначение, mМинимальноеЗначение As Double
     Dim mИндексМаксимальногоЗначения, mИндексМинимальногоЗначения As Integer
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrЗначения(,) As Double
     Dim mmyTypeList() As TypeSmallParameter
     Dim mGraphMinimum, mGraphMaximum As Short
@@ -87,15 +87,15 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
@@ -110,7 +110,7 @@
         marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
         mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         mМинимальноеЗначение = Double.MaxValue
         mМаксимальноеЗначение = Double.MinValue
         GraphMinimum = Minimum
@@ -119,20 +119,20 @@
 
     Public Sub Расчет()
         Dim I, J, N, стартовыйИндекс, стоповыйИндекс As Integer
-        Dim параметрНайден As Boolean
+        Dim success As Boolean
 
         'находим индекс параметра
         For J = 1 To UBound(mmyTypeList)
             If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
                 mИндексПараметра = J - 1
-                параметрНайден = True
+                success = True
                 Exit For
             End If
-        Next J
+        Next
 
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If Not success Then
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
@@ -156,6 +156,6 @@
                 mМинимальноеЗначение = marrЗначения(mИндексПараметра, I)
                 mИндексМинимальногоЗначения = I
             End If
-        Next I
+        Next
     End Sub
 End Class

@@ -729,7 +729,7 @@ Friend MustInherit Class FormSnapshotBase
 
             If arraysizeSnapshot = 0 Then
                 cn.Close()
-                MessageBox.Show("Количество зписей с снимке равно 0" & vbCrLf & "Загрузите следующий снимок.", "Загрузка", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show($"Количество записей с снимке равно 0.{vbCrLf}Вероятно до этого был прерванный снимок.{vbCrLf}Загрузите следующий снимок.", "Загрузка", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 

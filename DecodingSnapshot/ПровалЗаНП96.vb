@@ -4,8 +4,8 @@
     Dim mАначальное, mАконечное As Double
     Dim mВремяОсреднения As Double
     Dim mУменьшитьСреднее As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
+    Dim mIsErrors As Boolean
+    Dim mИмяПараметра, mErrorsMessage As String
     Dim marrЗначения(,) As Double
     Dim marrПараметрыЛиста() As TypeSmallParameter
     Dim mGraphMinimum, mGraphMaximum As Short
@@ -20,7 +20,7 @@
         marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
         marrПараметрыЛиста = CType(arrПараметрыЛиста.Clone, TypeSmallParameter())
         mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
+        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
         mВремяОсреднения = 2 'по умолчанию
         mУменьшитьСреднее = 2
         GraphMinimum = Minimum
@@ -90,15 +90,15 @@
         End Get
     End Property
 
-    Public ReadOnly Property Ошибка() As Boolean
+    Public ReadOnly Property IsErrors() As Boolean
         Get
-            Return mОшибка
+            Return mIsErrors
         End Get
     End Property
 
-    Public ReadOnly Property ТекстОшибки() As String
+    Public ReadOnly Property ErrorsMessage() As String
         Get
-            Return mТекстОшибки
+            Return mErrorsMessage
         End Get
     End Property
 
@@ -140,21 +140,21 @@
 
     Public Sub Расчет()
         Dim I, J, N, стартовыйИндекс As Integer
-        Dim параметрНайден, индексТначальноеНайден, индексТконечноеНайден As Boolean
-        Dim количество As Integer
+        Dim success, индексТначальноеНайден, индексТконечноеНайден As Boolean
+        Dim count As Integer
 
         'находим индекс параметра
         For J = 1 To UBound(marrПараметрыЛиста)
             If marrПараметрыЛиста(J).NameParameter = mИмяПараметра AndAlso marrПараметрыЛиста(J).IsVisible Then
                 mИндексПараметра = J - 1
-                параметрНайден = True
+                success = True
                 Exit For
             End If
-        Next J
+        Next
 
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If Not success Then
+            mIsErrors = True
+            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
@@ -169,10 +169,10 @@
 
         For I = стартовыйИндекс To mИндексТначальное
             mАначальное += marrЗначения(mИндексПараметра, I)
-            количество += 1
-        Next I
+            count += 1
+        Next
 
-        mАначальное = mАначальное / количество - mУменьшитьСреднее 'начало спада на 2 меньше среднего
+        mАначальное = mАначальное / count - mУменьшитьСреднее 'начало спада на 2 меньше среднего
         'находим первое значение где значение меньше mАначальное -это начало спада параметра
         For I = mИндексТначальное To N
             If marrЗначения(mИндексПараметра, I) < mАначальное Then
@@ -180,7 +180,7 @@
                 индексТначальноеНайден = True
                 Exit For
             End If
-        Next I
+        Next
 
         'находим значение меньшее mАконечное для точной фиксации прохождения провала
         For I = mИндексТначальное To N
@@ -188,7 +188,7 @@
                 стартовыйИндекс = I
                 Exit For
             End If
-        Next I
+        Next
 
         'находим значение большее mАконечное
         For I = стартовыйИндекс To N
@@ -197,7 +197,7 @@
                 индексТконечноеНайден = True
                 Exit For
             End If
-        Next I
+        Next
 
         mАначальное = marrЗначения(mИндексПараметра, mИндексТначальное)
         mТначальное = mИндексТначальное * mДлительностьТакта
@@ -205,18 +205,18 @@
         mТдлительность = mТконечное - mТначальное
 
         If Not индексТначальноеНайден OrElse mИндексТначальное = mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное не найдено" & vbCrLf
         End If
 
         If Not индексТконечноеНайден OrElse mИндексТконечное = mGraphMinimum Then
-            mОшибка = True
-            mТекстОшибки += "Тконечное не найдено" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тконечное не найдено" & vbCrLf
         End If
 
         If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное и Тконечное равны" & vbCrLf
+            mIsErrors = True
+            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
         End If
     End Sub
 End Class
