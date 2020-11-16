@@ -293,7 +293,7 @@ Friend Class DigitalInput
 
         '9 в событии измерения если работа с Расчет данные из DigitalInputValue дополняют массив
 
-        '                If arrПараметры(arrСписокПараметров(vKey)).blnВидимость Or myTypeList(vKey).blnВидимость Then
+        '                If arrПараметры(arrСписокПараметров(vKey)).blnВидимость Or inTypeSmallParameter(vKey).blnВидимость Then
         '                    arrСреднееПересчитанный(J, 0) = ПриведениеКОсиЭталона(номерПараметраОсиЭталона, vKey, dblСреднее) 'массив приведен к какой-то шкале
         '                End If
         '

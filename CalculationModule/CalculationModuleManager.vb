@@ -145,7 +145,7 @@ Friend Class CalculationModuleManager
                 If itemPassport.Enable Then
                     Dim assemblyName As String = Path.Combine(pathCatalogModules, itemPassport.NameModule & ".dll")
                     Dim tempBaseForm_frmBase As FrmBase
-                    Dim inheritsBaseFormAssembly As Reflection.Assembly = System.Reflection.Assembly.LoadFrom(assemblyName)
+                    Dim inheritsBaseFormAssembly As Reflection.Assembly = Reflection.Assembly.LoadFrom(assemblyName)
 
                     ' получить из имени файла DLL строку имени класса и имени визуально наследуемой формы
                     Dim className As String = itemPassport.NameModule & ".FrmMain"
@@ -171,7 +171,7 @@ Friend Class CalculationModuleManager
             Dim I As Integer
             For Each itemBaseForm As FrmBase In mCalculationModuleDictionary.Values
                 For Each itemRow As BaseFormDataSet.РасчетныеПараметрыRow In itemBaseForm.Manager.CalculatedDataTable.Rows
-                    itemRow.ИндексКаналаИзмерения = CShort(I) ' на самом деле индекс с 0 элемента в массива arrЗначенияПараметровРасчета
+                    itemRow.ИндексКаналаИзмерения = CShort(I) ' на самом деле индекс с 0 элемента в массива inMeasuredValuesРасчета
                     CalculationParameters.Add(itemRow.ИмяПараметра)
                     I += 1
                 Next

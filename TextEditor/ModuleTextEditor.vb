@@ -81,7 +81,7 @@ Module ModuleTextEditor
         Windows.Forms.Cursor.Current = Cursors.WaitCursor
         Try
             fs = New FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read)
-            sr = New StreamReader(fs, System.Text.UnicodeEncoding.Default)
+            sr = New StreamReader(fs, Text.Encoding.Default)
             TextEditorForm.txtNote.Text = sr.ReadToEnd
             TextEditorForm.Text = "Мой блокнот - " & UCase(FileName)
         Catch ex As Exception
@@ -100,7 +100,7 @@ Module ModuleTextEditor
 
     Sub SaveFileAs(ByVal FileName As String)
         Dim fs As FileStream = New FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write)
-        Dim myStream As StreamWriter = New StreamWriter(fs, System.Text.UnicodeEncoding.Default)
+        Dim myStream As StreamWriter = New StreamWriter(fs, Text.Encoding.Default)
 
         Windows.Forms.Cursor.Current = Cursors.WaitCursor
         Try

@@ -13,68 +13,41 @@ Friend Class AnalysisСбросN295_МГ
 
     Private Sub AllocateProtocol()
         EngineDefineTU()
-        'ReDim_Protocol(5, 3)
         Re.Dim(Protocol, 5, 3)
-        Protocol(1, 1) = "Контрольный лист №"
-        Protocol(2, 1) = "Кадр предъявляется"
-        Protocol(3, 1) = "Температура бокса"
-        Protocol(4, 1) = "Охлаждение сработало"
-        Protocol(5, 1) = "t руд"
-
-        Protocol(1, 2) = CStr(Parent.NumberProductionSnapshot)
-        Protocol(2, 2) = "п/заказчика"
-        Protocol(3, 2) = TemperatureOfBox & "град."
-        Protocol(4, 2) = "По ТУ"
-        Protocol(5, 2) = "сек в ТУ"
-
-        Protocol(1, 3) = ""
-        Protocol(2, 3) = ""
-        Protocol(3, 3) = ""
-        Protocol(4, 3) = ""
-        Protocol(5, 3) = ""
+        PopulateProtocol(1, {"Контрольный лист №", CStr(Parent.NumberProductionSnapshot), ""})
+        PopulateProtocol(2, {"Кадр предъявляется", "п/заказчика", ""})
+        PopulateProtocol(3, {"Температура бокса", TemperatureOfBox & "град.", ""})
+        PopulateProtocol(4, {"Охлаждение сработало", "По ТУ", ""})
+        PopulateProtocol(5, {"t руд", "сек в ТУ", ""})
     End Sub
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim totalErrorsMessage As String = Nothing
-        Dim IsTotalErrors As Boolean
-        Dim parameter As String
-
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
-        'вначале нахожу конец(начало) спада РУД
+        ' конец(начало) спада РУД
         parameter = conаРУД
-        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(parameter,
-                                                                      Parent.FrequencyBackgroundSnapshot,
-                                                                      Parent.MeasuredValues,
-                                                                      Parent.SnapshotSmallParameters,
-                                                                      Parent.XAxisTime.Range.Minimum,
-                                                                      Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьФронтаСпада
-            .Аначальное = 48
-            .Аконечное = 17
-            .Расчет()
-        End With
-
-        If clsДлительностьФронтаСпада.IsErrors Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            IsTotalErrors = True
-            totalErrorsMessage += clsДлительностьФронтаСпада.ErrorsMessage & vbCrLf
-        Else
-            'строим стрелки
-            With clsДлительностьФронтаСпада
+        Dim mДлительностьФронтаСпадаРУД = CType(mFiguresManager(EnumFigures.ДлительностьФронтаСпада, parameter), ДлительностьФронтаСпада)
+        With mДлительностьФронтаСпадаРУД
+            .Astart = 48
+            .Astop = 17
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений, накапливаем ошибку
+                IsTotalErrors = True
+                totalErrorsMessage += .ErrorsMessage & vbCrLf
+            Else
+                ' отрисовать стрелки
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Horizontal,
-                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
-            End With
-        End If
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, .Astart),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Horizontal,
+                    $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                Protocol(5, 2) = $"{Round(.TimeDuration, 2)} сек."
+            End If
+        End With
 
         ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
-

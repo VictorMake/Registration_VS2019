@@ -309,7 +309,7 @@ Friend MustInherit Class FormMain
     ''' <summary>
     ''' Массив размахов для приведения значения параметра в нормированный диапазон на графике
     ''' </summary>
-    Protected RangesOfDeviation As Double(,)
+    Protected Friend RangesOfDeviation As Double(,)
     ''' <summary>
     ''' Средние значения всех каналов за время сбора в кадре приведенных в нормированный диапазон
     ''' arrСреднееПересчитанный
@@ -502,7 +502,7 @@ Friend MustInherit Class FormMain
         'CheckVersionOs()
         'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
-        coefficientBringingTBoxing = Math.Sqrt(Const288 / (TemperatureOfBox + Kelvin))
+        coefficientBringingTBoxing = Sqrt(Const288 / (TemperatureOfBox + Kelvin))
         isSlantingLine = False
         isUsePens = False
         IsDataBaseChanged = False ' при повторном открытии окна сбросить по умолчанию
@@ -574,7 +574,7 @@ Friend MustInherit Class FormMain
 
         ' получить графический контекст
         Dim hwnd As New IntPtr
-        hwnd = MyBase.Handle
+        hwnd = Handle
         g = Graphics.FromHwnd(hwnd)
         FillItemsComboBoxSelectiveList(ComboBoxSelectiveList)
 

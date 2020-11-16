@@ -408,7 +408,6 @@ Friend Class FormTuningSelectiveBase
     ''' Заполнить лист источник
     ''' </summary>
     Private Sub PopulateSourceListView()
-        Dim I, J As Integer
         Dim ImageIndex As Integer
         Dim nameParameter As String
 
@@ -417,7 +416,7 @@ Friend Class FormTuningSelectiveBase
         ListViewReceiver.Items.Clear()
 
         ' заполнить первый лист
-        For I = 1 To UBound(parameters)
+        For I As Integer = 1 To UBound(parameters)
             nameParameter = parameters(I).NameParameter
 
             If CBool(InStr(1, UnitOfMeasureString, parameters(I).UnitOfMeasure)) Then
@@ -430,7 +429,7 @@ Friend Class FormTuningSelectiveBase
             newLVWItem.SubItems.Add(parameters(I).Description)
             ListViewSource.Items.Add(newLVWItem)
 
-            For J = 1 To UBound(indexesOfParameter)
+            For J As Integer = 1 To UBound(indexesOfParameter)
                 ' проверить на совпадение номеров и пометить параметр который есть в конфигурации
                 If indexesOfParameter(J) = I Then
                     ListViewSource.Items(I - 1).ForeColor = Color.Black ' черный

@@ -35,9 +35,9 @@ Module DigitalModule
         SnapshotPhotograph = 16
 
         <Description(c_RegistrationBase)>
-        RegistrationBase = FormExamination.RegistrationSCXI Or FormExamination.RegistrationClient Or FormExamination.RegistrationTCP
+        RegistrationBase = RegistrationSCXI Or RegistrationClient Or RegistrationTCP
         <Description(c_SnapshotBase)>
-        SnapshotBase = FormExamination.SnapshotViewingDiagram Or FormExamination.SnapshotPhotograph
+        SnapshotBase = SnapshotViewingDiagram Or SnapshotPhotograph
     End Enum
 
     ''' <summary>
@@ -393,8 +393,8 @@ Module DigitalModule
     ''' <param name="inCountAcquisition"></param>
     Public Sub ConfigureBuffer(ByVal inCountsBuffers As Integer, ByVal inCountParameters As Integer, ByVal inCountAcquisition As Integer)
         BuffersSnapshot = New Dictionary(Of Integer, Double(,))(inCountsBuffers)
-        DigitalModule.parametersCount = inCountParameters
-        DigitalModule.countAcquisition = inCountAcquisition
+        parametersCount = inCountParameters
+        countAcquisition = inCountAcquisition
     End Sub
 
     Public Sub StartTaskDigitalInput()

@@ -13,169 +13,116 @@ Friend Class AnalysisВключениеКОнаРУД115
 
     Private Sub AllocateProtocol()
         EngineDefineTU()
-        'ReDim_Protocol(7, 3)
         Re.Dim(Protocol, 7, 3)
-        Protocol(1, 1) = "Контрольный лист №"
-        Protocol(2, 1) = "Кадр предъявляется"
-        Protocol(3, 1) = "Температура бокса"
-        Protocol(4, 1) = "Сигналы прошли"
-        Protocol(5, 1) = "t восстановления режима"
-        Protocol(6, 1) = "t выдачи сигнала <Помпаж>"
-        Protocol(7, 1) = "t гидроблокировки"
-
-        Protocol(1, 2) = CStr(Parent.NumberProductionSnapshot)
-        Protocol(2, 2) = "п/заказчика"
-        Protocol(3, 2) = TemperatureOfBox & "град."
-        Protocol(4, 2) = "По ТУ"
-        Protocol(5, 2) = "сек в ТУ"
-        Protocol(6, 2) = "сек в ТУ"
-        Protocol(7, 2) = "сек в ТУ"
-
-        Protocol(1, 3) = ""
-        Protocol(2, 3) = ""
-        Protocol(3, 3) = ""
-        Protocol(4, 3) = ""
-        Protocol(5, 3) = GetEngineNormTUParameter(44)
-        Protocol(6, 3) = GetEngineNormTUParameter(45)
-        Protocol(7, 3) = GetEngineNormTUParameter(42)
+        PopulateProtocol(1, {"Контрольный лист №", CStr(Parent.NumberProductionSnapshot),""})
+        PopulateProtocol(2, {"Кадр предъявляется", "п/заказчика",""})
+        PopulateProtocol(3, {"Температура бокса", TemperatureOfBox & "град.",""})
+        PopulateProtocol(4, {"Сигналы прошли", "По ТУ", ""})
+        PopulateProtocol(5, {"t восстановления режима","сек в ТУ",GetEngineNormTUParameter(44)})
+        PopulateProtocol(6, {"t выдачи сигнала <Помпаж>","сек в ТУ",GetEngineNormTUParameter(45)})
+        PopulateProtocol(7, {"t гидроблокировки", "сек в ТУ", GetEngineNormTUParameter(42)})
     End Sub
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim totalErrorsMessage As String = Nothing
-        Dim IsTotalErrors As Boolean
-        Dim parameter As String
-
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
-        'находим время Помпаж
+        ' время Помпаж
         parameter = conПомпаж
-        Dim clsДлительностьЗабросаПровалаПомпаж As New ДлительностьЗабросаПровала(parameter,
-                                                                                  Parent.FrequencyBackgroundSnapshot,
-                                                                                  Parent.MeasuredValues,
-                                                                                  Parent.SnapshotSmallParameters,
-                                                                                  Parent.XAxisTime.Range.Minimum,
-                                                                                  Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровалаПомпаж
-            .Аначальное = 1
-            .Апорога = 4.99
-            .Расчет()
+        Dim mДлительностьЗабросаПровалаПомпаж = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаПомпаж
+            .Astart = 1
+            .Astop = 4.99
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений, накапливаем ошибку
+                IsTotalErrors = True
+                totalErrorsMessage += .ErrorsMessage & vbCrLf
+            Else
+                ' отрисовать стрелки
+                Parent.TracingDecodingArrow(
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Horizontal,
+                    $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                Protocol(6, 2) = Round(.TimeDuration, 2) & " сек."
+            End If
         End With
 
-        If clsДлительностьЗабросаПровалаПомпаж.IsErrors Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            IsTotalErrors = True
-            totalErrorsMessage += clsДлительностьЗабросаПровалаПомпаж.ErrorsMessage & vbCrLf
-        Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровалаПомпаж
-                Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                ArrowType.Horizontal,
-                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
-            End With
-        End If
-
-        'находим прохождение сигнала КО
+        ' прохождение сигнала КО
         parameter = conКлапанКО
-        Dim clsДлительностьЗабросаПровалаКлапанКО As New ДлительностьЗабросаПровала(parameter,
-                                                                                    Parent.FrequencyBackgroundSnapshot,
-                                                                                    Parent.MeasuredValues,
-                                                                                    Parent.SnapshotSmallParameters,
-                                                                                    Parent.XAxisTime.Range.Minimum,
-                                                                                    Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровалаКлапанКО
-            .Аначальное = 1
-            .Апорога = 4.99
-            .Расчет()
+        Dim mДлительностьЗабросаПровалаКлапанКО = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаКлапанКО
+            .Astart = 1
+            .Astop = 4.99
+            .Calculation()
         End With
 
-        If clsДлительностьЗабросаПровалаКлапанКО.IsErrors Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
+        If mДлительностьЗабросаПровалаКлапанКО.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
             IsTotalErrors = True
-            totalErrorsMessage += clsДлительностьЗабросаПровалаКлапанКО.ErrorsMessage & vbCrLf
+            totalErrorsMessage += mДлительностьЗабросаПровалаКлапанКО.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровалаКлапанКО
+            ' отрисовать стрелки
+            With mДлительностьЗабросаПровалаКлапанКО
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
+                .Tstart,
+                CastToAxesStandard(.IndexParameter, .Astop),
+                .Tstop,
+                CastToAxesStandard(.IndexParameter, .Astop),
                 ArrowType.Horizontal,
-                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
+                $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
             End With
-            '************************************************
-            'время восстановления по N1 минус 2%
-            parameter = conN1
-            Dim clsДлительностьФронтаОтИндексаДоN1Уст_2 As New ДлительностьФронтаОтИндексаДоN1Уст_2(parameter,
-                                                                                                    Parent.FrequencyBackgroundSnapshot,
-                                                                                                    Parent.MeasuredValues,
-                                                                                                    Parent.SnapshotSmallParameters,
-                                                                                                    Parent.XAxisTime.Range.Minimum,
-                                                                                                    Parent.XAxisTime.Range.Maximum)
-            With clsДлительностьФронтаОтИндексаДоN1Уст_2
-                .ИндексТначальное = clsДлительностьЗабросаПровалаКлапанКО.ИндексТконечное 'ИндексТначальное
-                .Расчет()
-            End With
-            If clsДлительностьФронтаОтИндексаДоN1Уст_2.IsErrors Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                IsTotalErrors = True
-                totalErrorsMessage += clsДлительностьФронтаОтИндексаДоN1Уст_2.ErrorsMessage & vbCrLf
-            Else
-                'строим стрелки
-                With clsДлительностьФронтаОтИндексаДоN1Уст_2
-                    Parent.TracingDecodingArrow(
-                    clsДлительностьЗабросаПровалаКлапанКО.Тначальное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                    .Тконечное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                    ArrowType.Horizontal,
-                    parameter & "уст-2%:dT=" & Round(.Тконечное - clsДлительностьЗабросаПровалаКлапанКО.Тначальное, 2) & " сек.")
-                    Protocol(5, 2) = Round(.Тконечное - clsДлительностьЗабросаПровалаКлапанКО.Тначальное, 2) & " сек."
-                End With
-            End If
 
-            'гидроблокировка  Рт ОК1К на помпаже
-            parameter = conРтОК1К
-            Dim clsДлительностьОтИндексаДоСтабильногоРоста As New ДлительностьОтИндексаДоСтабильногоРоста(parameter,
-                                                                                                          Parent.FrequencyBackgroundSnapshot,
-                                                                                                          Parent.MeasuredValues,
-                                                                                                          Parent.SnapshotSmallParameters,
-                                                                                                          Parent.XAxisTime.Range.Minimum,
-                                                                                                          Parent.XAxisTime.Range.Maximum)
-            With clsДлительностьОтИндексаДоСтабильногоРоста
-                .ИндексТначальное = clsДлительностьЗабросаПровалаКлапанКО.ИндексТначальное
-                .ПорогРостаОтМинимального = 0.3  '1
-                .Расчет()
-            End With
-            If clsДлительностьОтИндексаДоСтабильногоРоста.IsErrors Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                IsTotalErrors = True
-                totalErrorsMessage += clsДлительностьОтИндексаДоСтабильногоРоста.ErrorsMessage & vbCrLf
-            Else
-                'строим стрелки
-                With clsДлительностьОтИндексаДоСтабильногоРоста
+            ' время восстановления по N1 минус 2%
+            parameter = conN1
+            Dim mДлительностьФронтаОтИндексаДоN1Уст_2 = CType(mFiguresManager(EnumFigures.ДлительностьФронтаОтИндексаДоN1Уст_2, parameter), ДлительностьФронтаОтИндексаДоN1Уст_2)
+            With mДлительностьФронтаОтИндексаДоN1Уст_2
+                .IndexTstart = mДлительностьЗабросаПровалаКлапанКО.IndexTstop 'ИндексТначальное
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
                     Parent.TracingDecodingArrow(
-                    .Тначальное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                    .Тконечное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                    ArrowType.Horizontal,
-                    parameter & ":dTстаб=" & Round(.Тконечное - clsДлительностьЗабросаПровалаКлапанКО.Тначальное, 2) & " сек.")
-                    Protocol(7, 2) = Round(.Тконечное - clsДлительностьЗабросаПровалаКлапанКО.Тначальное, 2) & " сек."
-                End With
-            End If
+                        mДлительностьЗабросаПровалаКлапанКО.Tstart,
+                        CastToAxesStandard(.IndexParameter, .Astart),
+                        .Tstop,
+                        CastToAxesStandard(.IndexParameter, .Astop),
+                        ArrowType.Horizontal,
+                        $"{parameter}уст-2%:dT={Round(.Tstop - mДлительностьЗабросаПровалаКлапанКО.Tstart, 2)} сек.")
+                    Protocol(5, 2) = Round(.Tstop - mДлительностьЗабросаПровалаКлапанКО.Tstart, 2) & " сек."
+                End If
+            End With
+
+            ' гидроблокировка  Рт ОК1К на помпаже
+            parameter = conРтОК1К
+            Dim mДлительностьОтИндексаДоСтабильногоРостаРтОК1К = CType(mFiguresManager(EnumFigures.ДлительностьОтИндексаДоСтабильногоРоста, parameter), ДлительностьОтИндексаДоСтабильногоРоста)
+            With mДлительностьОтИндексаДоСтабильногоРостаРтОК1К
+                .IndexTstart = mДлительностьЗабросаПровалаКлапанКО.IndexTstart
+                .ThresholdGrowthFromMinimal = 0.3
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
+                    Parent.TracingDecodingArrow(
+                        .Tstart,
+                        CastToAxesStandard(.IndexParameter, .Astart),
+                        .Tstop,
+                        CastToAxesStandard(.IndexParameter, .Astop),
+                        ArrowType.Horizontal,
+                        $"{parameter}:dTстаб={Round(.Tstop - mДлительностьЗабросаПровалаКлапанКО.Tstart, 2)} сек.")
+                    Protocol(7, 2) = Round(.Tstop - mДлительностьЗабросаПровалаКлапанКО.Tstart, 2) & " сек."
+                End If
+            End With
         End If
 
         ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
-

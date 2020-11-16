@@ -13,407 +13,291 @@ Friend Class AnalysisПриемистостьсФорсажомМГ_РУД115
 
     Private Sub AllocateProtocol()
         EngineDefineTU()
-        'ReDim_Protocol(12, 3)
         Re.Dim(Protocol, 12, 3)
-        Protocol(1, 1) = "Контрольный лист №"
-        Protocol(2, 1) = "Кадр предъявляется"
-        Protocol(3, 1) = "Температура бокса"
-        Protocol(4, 1) = "Сигналы прошли "
-        Protocol(5, 1) = "t руд"
-        Protocol(6, 1) = "t приём.Ф1"
-        Protocol(7, 1) = "t приём.Ф2"
-        Protocol(8, 1) = "J ионизации"
-        Protocol(9, 1) = "Заброс N1"
-        Protocol(10, 1) = "Провал N1"
-        Protocol(11, 1) = "Заброс N2"
-        Protocol(12, 1) = "Забросов Ттвг"
-
-        Protocol(1, 2) = CStr(Parent.NumberProductionSnapshot)
-        Protocol(2, 2) = "п/заказчика"
-        Protocol(3, 2) = TemperatureOfBox & "град."
-        Protocol(4, 2) = "По ТУ"
-        Protocol(5, 2) = "сек в ТУ"
-        Protocol(6, 2) = "сек в ТУ"
-        Protocol(7, 2) = "сек в ТУ"
-        Protocol(8, 2) = "100 мкА"
-        Protocol(9, 2) = "Нет"
-        Protocol(10, 2) = "% в ТУ"
-        Protocol(11, 2) = "Нет"
-        Protocol(12, 2) = "Нет"
-
-        Protocol(1, 3) = ""
-        Protocol(2, 3) = ""
-        Protocol(3, 3) = ""
-        Protocol(4, 3) = ""
-        Protocol(5, 3) = GetEngineNormTUParameter(32)
-        Protocol(6, 3) = GetEngineNormTUParameter(29)
-        Protocol(7, 3) = GetEngineNormTUParameter(30)
-        Protocol(8, 3) = GetEngineNormTUParameter(38)
-        Protocol(9, 3) = GetEngineNormTUParameter(12)
-        Protocol(10, 3) = GetEngineNormTUParameter(15)
-        Protocol(11, 3) = GetEngineNormTUParameter(13)
-        Protocol(12, 3) = GetEngineNormTUParameter(36)
+        PopulateProtocol(1, {"Контрольный лист №", CStr(Parent.NumberProductionSnapshot), ""})
+        PopulateProtocol(2, {"Кадр предъявляется", "п/заказчика", ""})
+        PopulateProtocol(3, {"Температура бокса", TemperatureOfBox & "град.", ""})
+        PopulateProtocol(4, {"Сигналы прошли", "По ТУ", ""})
+        PopulateProtocol(5, {"t руд", "сек в ТУ", GetEngineNormTUParameter(32)})
+        PopulateProtocol(6, {"t приём.Ф1", "сек в ТУ", GetEngineNormTUParameter(29)})
+        PopulateProtocol(7, {"t приём.Ф2", "сек в ТУ", GetEngineNormTUParameter(30)})
+        PopulateProtocol(8, {"J ионизации", "100 мкА", GetEngineNormTUParameter(38)})
+        PopulateProtocol(9, {"Заброс N1", "Нет", GetEngineNormTUParameter(12)})
+        PopulateProtocol(10, {"Провал N1", "% в ТУ", GetEngineNormTUParameter(15)})
+        PopulateProtocol(11, {"Заброс N2", "Нет", GetEngineNormTUParameter(13)})
+        PopulateProtocol(12, {"Забросов Ттвг", "Нет", GetEngineNormTUParameter(36)})
     End Sub
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim totalErrorsMessage As String = Nothing
-        Dim IsTotalErrors As Boolean
-        Dim parameter As String
-
-        Dim mfrmРегулировка As New FormAdjustment(Parent.TypeKRDinSnapshot)
-        mfrmРегулировка.ShowDialog()
+        Dim mFormAdjustment As New FormAdjustment(Parent.TypeKRDinSnapshot)
+        mFormAdjustment.ShowDialog()
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
-
-        'риски настройки КРД параметра N1
+        ' риски настройки КРД параметра N1
         parameter = conN1
-        Dim clsРискиНастроекПараметровN1 As New РискиНастроекПараметров(parameter,
-                                                                        Parent.FrequencyBackgroundSnapshot,
-                                                                        Parent.SnapshotSmallParameters,
-                                                                        Parent.XAxisTime.Range.Minimum,
-                                                                        Parent.XAxisTime.Range.Maximum)
-        clsРискиНастроекПараметровN1.Расчет()
-        If clsРискиНастроекПараметровN1.IsErrors = False Then
-            'строим стрелки
-            With clsРискиНастроекПараметровN1
+        Dim mРискиНастроекПараметровN1 = CType(mFiguresManager(EnumFigures.РискиНастроекПараметров, parameter), РискиНастроекПараметров)
+        With mРискиНастроекПараметровN1
+            .Calculation()
+            If .IsErrors = False Then
+                ' отрисовать стрелки
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, mfrmРегулировка.N1НастройкаКРД),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, mfrmРегулировка.N1НастройкаКРД),
-                ArrowType.Inclined,
-                "настройка N1 КРД=" & CStr(mfrmРегулировка.N1НастройкаКРД) & " %")
-            End With
-        End If
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, mFormAdjustment.N1TuningKrd),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, mFormAdjustment.N1TuningKrd),
+                    ArrowType.Inclined,
+                    $"настройка N1 КРД={CStr(mFormAdjustment.N1TuningKrd)} %")
+            End If
+        End With
 
-        'риски настройки КРД параметра N2
+        ' риски настройки КРД параметра N2
         parameter = conN2
-        Dim clsРискиНастроекПараметровN2 As New РискиНастроекПараметров(parameter,
-                                                                        Parent.FrequencyBackgroundSnapshot,
-                                                                        Parent.SnapshotSmallParameters,
-                                                                        Parent.XAxisTime.Range.Minimum,
-                                                                        Parent.XAxisTime.Range.Maximum)
-        clsРискиНастроекПараметровN2.Расчет()
-        If clsРискиНастроекПараметровN2.IsErrors = False Then
-            'строим стрелки
-            With clsРискиНастроекПараметровN2
+        Dim mРискиНастроекПараметровN2 = CType(mFiguresManager(EnumFigures.РискиНастроекПараметров, parameter), РискиНастроекПараметров)
+        With mРискиНастроекПараметровN2
+            .Calculation()
+            If .IsErrors = False Then
+                ' отрисовать стрелки
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, mfrmРегулировка.N2НастройкаКРД),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, mfrmРегулировка.N2НастройкаКРД),
-                ArrowType.Inclined,
-                "настройка N2 КРД=" & CStr(mfrmРегулировка.N2НастройкаКРД) & " %")
-            End With
-        End If
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, mFormAdjustment.N2TuningKrd),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, mFormAdjustment.N2TuningKrd),
+                    ArrowType.Inclined,
+                    $"настройка N2 КРД={CStr(mFormAdjustment.N2TuningKrd)} %")
+            End If
+        End With
 
-        'риски настройки КРД параметра Т4
-        parameter = conТ4
-        Dim clsРискиНастроекПараметровТ4 As New РискиНастроекПараметров(parameter,
-                                                                        Parent.FrequencyBackgroundSnapshot,
-                                                                        Parent.SnapshotSmallParameters,
-                                                                        Parent.XAxisTime.Range.Minimum,
-                                                                        Parent.XAxisTime.Range.Maximum)
-        clsРискиНастроекПараметровТ4.Расчет()
-        If clsРискиНастроекПараметровТ4.IsErrors = False Then
-            'строим стрелки
-            With clsРискиНастроекПараметровТ4
+        ' риски настройки КРД параметра Т4
+        parameter = conT4
+        Dim mРискиНастроекПараметровТ4 = CType(mFiguresManager(EnumFigures.РискиНастроекПараметров, parameter), РискиНастроекПараметров)
+        With mРискиНастроекПараметровТ4
+            mРискиНастроекПараметровТ4.Calculation()
+            If mРискиНастроекПараметровТ4.IsErrors = False Then
+                ' отрисовать стрелки
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, mfrmРегулировка.Т4КРД),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, mfrmРегулировка.Т4КРД),
-                ArrowType.Inclined,
-                "настройка Т4 КРД=" & CStr(mfrmРегулировка.Т4КРД) & " гр.")
-            End With
-        End If
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, mFormAdjustment.T4Krd),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, mFormAdjustment.T4Krd),
+                    ArrowType.Inclined,
+                    $"настройка Т4 КРД={CStr(mFormAdjustment.T4Krd)} гр.")
+            End If
+        End With
 
-        'находим время приемистости
+        ' время приемистости
         parameter = conаРУД
-        Dim clsДлительностьФронтаСпада As New ДлительностьФронтаСпада(parameter,
-                                                                      Parent.FrequencyBackgroundSnapshot,
-                                                                      Parent.MeasuredValues,
-                                                                      Parent.SnapshotSmallParameters,
-                                                                      Parent.XAxisTime.Range.Minimum,
-                                                                      Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьФронтаСпада
-            .Аначальное = 17
-            .Аконечное = ВводЗначенияРуда() '111
-            .Расчет()
+        Dim mДлительностьФронтаСпадаРУД = CType(mFiguresManager(EnumFigures.ДлительностьФронтаСпада, parameter), ДлительностьФронтаСпада)
+        With mДлительностьФронтаСпадаРУД
+            .Astart = 17
+            .Astop = GetRud()
+            .Calculation()
         End With
-
-        If clsДлительностьФронтаСпада.IsErrors Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
+        If mДлительностьФронтаСпадаРУД.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
             IsTotalErrors = True
-            totalErrorsMessage += clsДлительностьФронтаСпада.ErrorsMessage & vbCrLf
+            totalErrorsMessage += mДлительностьФронтаСпадаРУД.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsДлительностьФронтаСпада
+            ' отрисовать стрелки
+            With mДлительностьФронтаСпадаРУД
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Horizontal,
-                parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                Protocol(5, 2) = Round(.Тдлительность, 2) & " сек."
-            End With
-            '************************************************
-            'вычисление время первой форсажной приемистости
-            parameter = conТокJправый
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
-                                                                                                                      Parent.FrequencyBackgroundSnapshot,
-                                                                                                                      Parent.MeasuredValues,
-                                                                                                                      Parent.SnapshotSmallParameters,
-                                                                                                                      Parent.XAxisTime.Range.Minimum,
-                                                                                                                      Parent.XAxisTime.Range.Maximum)
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраТокJправый As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
-                                                                                                                      Parent.FrequencyBackgroundSnapshot,
-                                                                                                                      Parent.MeasuredValues,
-                                                                                                                      Parent.SnapshotSmallParameters,
-                                                                                                                      Parent.XAxisTime.Range.Minimum,
-                                                                                                                      Parent.XAxisTime.Range.Maximum)
-            With clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый
-                .ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Аконечное = 60
-                .Расчет()
-            End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.IsErrors Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                IsTotalErrors = True
-                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.ErrorsMessage & vbCrLf
-            Else
-                '************************************************
-                'нахождение минимального и максимального значения параметра ТокJправый
-                With clsМинимальноеМаксимальноеЗначениеПараметраТокJправый
-                    .ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                    .Расчет()
-                End With
-            End If
-            '************************************************
-            'находим наибольшее
-            parameter = conТокJлевый
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
-                                                                                                                     Parent.FrequencyBackgroundSnapshot,
-                                                                                                                     Parent.MeasuredValues,
-                                                                                                                     Parent.SnapshotSmallParameters,
-                                                                                                                     Parent.XAxisTime.Range.Minimum,
-                                                                                                                     Parent.XAxisTime.Range.Maximum)
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраТокJлевый As New МинимальноеМаксимальноеЗначениеПараметра(parameter,
-                                                                                                                     Parent.FrequencyBackgroundSnapshot,
-                                                                                                                     Parent.MeasuredValues,
-                                                                                                                     Parent.SnapshotSmallParameters,
-                                                                                                                     Parent.XAxisTime.Range.Minimum,
-                                                                                                                     Parent.XAxisTime.Range.Maximum)
-            With clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый
-                .ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Аконечное = 60
-                .Расчет()
-            End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.IsErrors Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                IsTotalErrors = True
-                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.ErrorsMessage & vbCrLf
-            Else
-                '************************************************
-                'нахождение минимального и максимального значения параметра ТокJправый
-                With clsМинимальноеМаксимальноеЗначениеПараметраТокJлевый
-                    .ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                    .Расчет()
-                End With
-            End If
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.IsErrors = False And clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.IsErrors = False Then
-                If clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.Тдлительность <= clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.Тдлительность Then
-                    'строим(стрелки)
-                    With clsДлительностьФронтаСпадаОтИндексаДоУровняТокJправый
-                        Parent.TracingDecodingArrow(
-                        .Тначальное,
-                        Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                        .Тконечное,
-                        Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                        ArrowType.Horizontal,
-                        parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                        Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
-                    End With
-                    Protocol(8, 2) = Round(clsМинимальноеМаксимальноеЗначениеПараметраТокJправый.МаксимальноеЗначение, 2) & " мка."
-                Else
-                    'строим стрелки
-                    With clsДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый
-                        Parent.TracingDecodingArrow(
-                        .Тначальное,
-                        Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                        .Тконечное,
-                        Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                        ArrowType.Horizontal,
-                        parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                        Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
-                    End With
-                    Protocol(8, 2) = Round(clsМинимальноеМаксимальноеЗначениеПараметраТокJлевый.МаксимальноеЗначение, 2) & " мка."
-                End If
-            End If
-            '************************************************
-            'вычисление время второй форсажной приемистости
-            parameter = conПолныйФорсаж
-            Dim clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ As New ДлительностьФронтаСпадаОтИндексаДоУровня(parameter,
-                                                                                                               Parent.FrequencyBackgroundSnapshot,
-                                                                                                               Parent.MeasuredValues,
-                                                                                                               Parent.SnapshotSmallParameters,
-                                                                                                               Parent.XAxisTime.Range.Minimum,
-                                                                                                               Parent.XAxisTime.Range.Maximum)
-            With clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ
-                .ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Аконечное = 4
-                .Расчет()
-            End With
-            If clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ.IsErrors Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                IsTotalErrors = True
-                totalErrorsMessage += clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ.ErrorsMessage & vbCrLf
-            Else
-                'строим стрелки
-                With clsДлительностьФронтаСпадаОтИндексаДоУровняМСТ
-                    Parent.TracingDecodingArrow(
-                    .Тначальное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                    .Тконечное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, .Astart),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, .Astop),
                     ArrowType.Horizontal,
-                    parameter & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                    Protocol(7, 2) = Round(.Тдлительность, 2) & " сек."
+                    $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                Protocol(5, 2) = $"{Round(.TimeDuration, 2)} сек."
+            End With
+
+            ' вычисление время первой форсажной приемистости
+            parameter = conТокJправый
+            Dim mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый = CType(mFiguresManager(EnumFigures.ДлительностьФронтаСпадаОтИндексаДоУровня, parameter), ДлительностьФронтаСпадаОтИндексаДоУровня)
+            Dim mМаксимальноеЗначениеТокJправый = CType(mFiguresManager(EnumFigures.МинимальноеМаксимальноеЗначениеПараметра, parameter), МинимальноеМаксимальноеЗначениеПараметра)
+            With mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый
+                .IndexTstart = mДлительностьФронтаСпадаРУД.IndexTstart
+                .Astop = 60
+                .Calculation()
+            End With
+            If mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.IsErrors Then
+                ' анализ для последующих построений, накапливаем ошибку
+                IsTotalErrors = True
+                totalErrorsMessage += mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.ErrorsMessage & vbCrLf
+            Else
+                ' нахождение минимального и максимального значения параметра ТокJправый
+                With mМаксимальноеЗначениеТокJправый
+                    .IndexTstart = mДлительностьФронтаСпадаРУД.IndexTstart
+                    .Calculation()
                 End With
             End If
+
+            ' наибольшее
+            parameter = conТокJлевый
+            Dim mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый = CType(mFiguresManager(EnumFigures.ДлительностьФронтаСпадаОтИндексаДоУровня, parameter), ДлительностьФронтаСпадаОтИндексаДоУровня)
+            Dim mМаксимальноеЗначениеТокJлевый = CType(mFiguresManager(EnumFigures.МинимальноеМаксимальноеЗначениеПараметра, parameter), МинимальноеМаксимальноеЗначениеПараметра)
+            With mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый
+                .IndexTstart = mДлительностьФронтаСпадаРУД.IndexTstart
+                .Astop = 60
+                .Calculation()
+            End With
+            If mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.IsErrors Then
+                ' анализ для последующих построений, накапливаем ошибку
+                IsTotalErrors = True
+                totalErrorsMessage += mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.ErrorsMessage & vbCrLf
+            Else
+                ' нахождение минимального и максимального значения параметра ТокJправый
+                With mМаксимальноеЗначениеТокJлевый
+                    .IndexTstart = mДлительностьФронтаСпадаРУД.IndexTstart
+                    .Calculation()
+                End With
+            End If
+
+            If mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.IsErrors = False AndAlso mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.IsErrors = False Then
+                ' отрисовать(стрелки)
+                If mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый.TimeDuration <= mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый.TimeDuration Then
+                    With mДлительностьФронтаСпадаОтИндексаДоУровняТокJправый
+                        Parent.TracingDecodingArrow(
+                            .Tstart,
+                            CastToAxesStandard(.IndexParameter, .Astart),
+                            .Tstop,
+                            CastToAxesStandard(.IndexParameter, .Astop),
+                            ArrowType.Horizontal,
+                            $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                        Protocol(6, 2) = $"{Round(.TimeDuration, 2)} сек."
+                    End With
+                    Protocol(8, 2) = Round(mМаксимальноеЗначениеТокJправый.MaxValue, 2) & " мка."
+                Else
+                    With mДлительностьФронтаСпадаОтИндексаДоУровняТокJлевый
+                        Parent.TracingDecodingArrow(
+                            .Tstart,
+                            CastToAxesStandard(.IndexParameter, .Astart),
+                            .Tstop,
+                            CastToAxesStandard(.IndexParameter, .Astop),
+                            ArrowType.Horizontal,
+                            $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                        Protocol(6, 2) = $"{Round(.TimeDuration, 2)} сек."
+                    End With
+                    Protocol(8, 2) = Round(mМаксимальноеЗначениеТокJлевый.MaxValue, 2) & " мка."
+                End If
+            End If
+
+            ' вычисление время второй форсажной приемистости
+            parameter = conПолныйФорсаж
+            Dim mДлительностьФронтаСпадаОтИндексаДоУровняМСТ = CType(mFiguresManager(EnumFigures.ДлительностьФронтаСпадаОтИндексаДоУровня, parameter), ДлительностьФронтаСпадаОтИндексаДоУровня)
+            With mДлительностьФронтаСпадаОтИндексаДоУровняМСТ
+                .IndexTstart = mДлительностьФронтаСпадаРУД.IndexTstart
+                .Astop = 4
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
+                    Parent.TracingDecodingArrow(
+                        .Tstart,
+                        CastToAxesStandard(.IndexParameter, .Astart),
+                        .Tstop,
+                        CastToAxesStandard(.IndexParameter, .Astop),
+                        ArrowType.Horizontal,
+                        $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                    Protocol(7, 2) = $"{Round(.TimeDuration, 2)} сек."
+                End If
+            End With
         End If
 
-        'вычисляем заброс N1
+        ' вычисление заброс N1
         parameter = conN1
-        Dim clsДлительностьЗабросаПровалаN1 As New ДлительностьЗабросаПровала(parameter,
-                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                              Parent.MeasuredValues,
-                                                                              Parent.SnapshotSmallParameters,
-                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровалаN1
-            .Аначальное = 50
-            .Апорога = mfrmРегулировка.N1НастройкаКРД
-            .Расчет()
+        Dim mДлительностьЗабросаПровалаN1 = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаN1
+            .Astart = 50
+            .Astop = mFormAdjustment.N1TuningKrd
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений
+            Else
+                ' отрисовать стрелки
+                Parent.TracingDecodingArrow(
+                    .TimeMaxValue,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    .TimeMaxValue,
+                    CastToAxesStandard(.IndexParameter, .MaxValue),
+                    ArrowType.Vertical,
+                    $"{parameter}:заброс={Round(.MaxValue - .Astop, 2)} %")
+                Protocol(9, 2) = $"{Round(.MaxValue - .Astop, 2)} %"
+            End If
         End With
 
-        If clsДлительностьЗабросаПровалаN1.IsErrors Then
-            'анализируем для последующих построений
-        Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровалаN1
-                Parent.TracingDecodingArrow(
-                .ТМаксимальногоЗначения,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                .ТМаксимальногоЗначения,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                ArrowType.Vertical,
-                parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %")
-                Protocol(9, 2) = parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %"
-            End With
-        End If
-
-        'вычисляем заброс N2
+        ' вычисление заброс N2
         parameter = conN2
-        Dim clsДлительностьЗабросаПровалаN2 As New ДлительностьЗабросаПровала(parameter,
-                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                              Parent.MeasuredValues,
-                                                                              Parent.SnapshotSmallParameters,
-                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровалаN2
-            .Аначальное = 50
-            .Апорога = mfrmРегулировка.N2НастройкаКРД
-            .Расчет()
-        End With
-
-        If clsДлительностьЗабросаПровалаN2.IsErrors Then
-            'анализируем для последующих построений
-        Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровалаN2
+        Dim mДлительностьЗабросаПровалаN2 = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаN2
+            .Astart = 50
+            .Astop = mFormAdjustment.N2TuningKrd
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений
+            Else
+                ' отрисовать стрелки
                 Parent.TracingDecodingArrow(
-                .ТМаксимальногоЗначения,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                .ТМаксимальногоЗначения,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                ArrowType.Vertical,
-                parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %")
-                Protocol(11, 2) = parameter & ":заброс=" & Round(.МаксимальноеЗначение - .Апорога, 2) & " %"
-            End With
-        End If
-
-        'вычисляем заброс Т4
-        parameter = conТ4
-        Dim clsДлительностьЗабросаПровалаТ4 As New ДлительностьЗабросаПровала(parameter,
-                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                              Parent.MeasuredValues,
-                                                                              Parent.SnapshotSmallParameters,
-                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровалаТ4
-            .Аначальное = 700
-            .Апорога = mfrmРегулировка.Т4КРД
-            .Расчет()
+                    .TimeMaxValue,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    .TimeMaxValue,
+                    CastToAxesStandard(.IndexParameter, .MaxValue),
+                    ArrowType.Vertical,
+                    $"{parameter}:заброс={Round(.MaxValue - .Astop, 2)} %")
+                Protocol(11, 2) = $"{Round(.MaxValue - .Astop, 2)} %"
+            End If
         End With
 
-        If clsДлительностьЗабросаПровалаТ4.IsErrors Then
-            'анализируем для последующих построений
-        Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровалаТ4
-                Dim dblЗабросT4 As Double = Round(.МаксимальноеЗначение - .Апорога, 2)
-                If dblЗабросT4 > 0 AndAlso dblЗабросT4 < 3 Then
-                    dblЗабросT4 = 0
+        ' вычисление заброс Т4
+        parameter = conT4
+        Dim mДлительностьЗабросаПровалаТ4 = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаТ4
+            .Astart = 700
+            .Astop = mFormAdjustment.T4Krd
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений
+            Else
+                ' отрисовать стрелки
+                Dim overshootT4 As Double = Round(.MaxValue - .Astop, 2) ' Заброс T4 
+                If overshootT4 > 0 AndAlso overshootT4 < 3 Then
+                    overshootT4 = 0
                 Else
                     Parent.TracingDecodingArrow(
-                    .ТМаксимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                    .ТМаксимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                    ArrowType.Vertical,
-                    parameter & ":заброс=" & dblЗабросT4 & " гр.")
+                        .TimeMaxValue,
+                        CastToAxesStandard(.IndexParameter, .Astop),
+                        .TimeMaxValue,
+                        CastToAxesStandard(.IndexParameter, .MaxValue),
+                        ArrowType.Vertical,
+                        $"{parameter}:заброс={overshootT4} гр.")
                 End If
-                Protocol(12, 2) = parameter & ":заброс=" & dblЗабросT4 & " гр."
-            End With
-        End If
-
-        'находим провал N1относительно установившегося
-        parameter = conN1
-        Dim clsПровалN1ОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(parameter,
-                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                              Parent.MeasuredValues,
-                                                                                              Parent.SnapshotSmallParameters,
-                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsПровалN1ОтносительноУстановившегося
-            .ИндексТначальное = clsДлительностьФронтаСпада.ИндексТконечное 'отсчет от этой точки минус 2 секунды
-            .Расчет()
+                Protocol(12, 2) = $"{parameter}:заброс={overshootT4} гр."
+            End If
         End With
 
-        If clsПровалN1ОтносительноУстановившегося.IsErrors Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            IsTotalErrors = True
-            totalErrorsMessage += clsПровалN1ОтносительноУстановившегося.ErrorsMessage & vbCrLf
-        Else
-            'строим стрелки
-            With clsПровалN1ОтносительноУстановившегося
+        ' провал N1относительно установившегося
+        parameter = conN1
+        Dim mПровалN1ОтносительноУстановившегося = CType(mFiguresManager(EnumFigures.ПровалN1ОтносительноУстановившегося, parameter), ПровалN1ОтносительноУстановившегося)
+        With mПровалN1ОтносительноУстановившегося
+            .IndexTstart = mДлительностьФронтаСпадаРУД.IndexTstop
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений, накапливаем ошибку
+                IsTotalErrors = True
+                totalErrorsMessage += .ErrorsMessage & vbCrLf
+            Else
+                ' отрисовать стрелки
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аначальное),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Vertical,
-                parameter & ":провал=" & Round(.DeltaA, 2) & " %")
-                Protocol(10, 2) = parameter & ":провал=" & Round(.DeltaA, 2) & " %"
-            End With
-        End If
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, .Astart),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Vertical,
+                    $"{parameter}:провал={Round(.DeltaA, 2)} %")
+                Protocol(10, 2) = $"{parameter}:провал={Round(.DeltaA, 2)} %"
+            End If
+        End With
 
         ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub

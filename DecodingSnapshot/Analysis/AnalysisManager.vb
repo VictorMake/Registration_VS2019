@@ -13,9 +13,9 @@ Friend Class AnalysisManager
     Implements IEnumerable
     Implements IEnumerable(Of Analysis)
 
-#Region "Interface"
+#Region "Interface IEnumerable"
     ''' <summary>
-    ''' Оболочка коллекции окон
+    ''' Оболочка коллекции Analysis
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
@@ -94,9 +94,9 @@ Friend Class AnalysisManager
     Private Property Mediator As FormSnapshotViewingDiagram
     Private analysisToLoad As List(Of String)                           ' список подлежащих загрузке классов расшифровок
     Private ReadOnly analysisEnabled As New List(Of String)             ' список разрешенных к загрузке расшифровоки
-    Private enumDescriptionsList As List(Of String)                     ' список описаний из типа перечислителя
-    Private enumNamesList As List(Of String)                            ' список значений элементов из типа перечислителя
-    'Private mAnalysisCreated As Integer                                 ' внутренний счетчик для подсчета созданных расшифровок
+    Private descriptionsEnumDescriptions As List(Of String)             ' список описаний из типа перечислителя
+    Private namesEnumAnalysis As List(Of String)                        ' список значений элементов из типа перечислителя
+    'Private mAnalysisCreated As Integer                                ' внутренний счетчик для подсчета созданных расшифровок
     Private ReadOnly DecryptionsAnalysis As New Dictionary(Of String, Analysis)    ' внутренняя ленивая коллекция для управления расшифровками
     ' коллекция фабрик расшифровок
     Private ReadOnly CreatorsAnalysis As Dictionary(Of String, CreatorAnalysis) = New Dictionary(Of String, CreatorAnalysis) From {
@@ -126,6 +126,7 @@ Friend Class AnalysisManager
         {cПриемистостьАИ222, New CreatorAnalysisПриемистостьАИ222},
         {cСбросАИ222, New CreatorAnalysisСбросАИ222}
         }
+
 
     Public Sub New(mediator As FormSnapshotViewingDiagram)
         Me.Mediator = mediator
@@ -173,7 +174,7 @@ Friend Class AnalysisManager
                     For Each itemName In productList
                         ' создать меню изделия
                         Dim tsMenuItemEngine As New ToolStripMenuItem With {
-                            .Image = Global.Registration.My.Resources.Resources.product,
+                            .Image = My.Resources.product,
                             .Name = "tsMenuProduct" & itemName,
                             .Size = New Size(172, 24),
                             .Text = $"Изделие {itemName} ..."
@@ -233,7 +234,7 @@ Friend Class AnalysisManager
         Try
             PopulateListEnumNamesAndDescriptions()
 
-            For Each itemDescription As String In enumDescriptionsList
+            For Each itemDescription As String In descriptionsEnumDescriptions
                 If analysisToLoad.Contains(itemDescription) Then
                     If CreatorsAnalysis.ContainsKey(itemDescription) Then
                         analysisEnabled.Add(itemDescription)
@@ -260,8 +261,8 @@ Friend Class AnalysisManager
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub PopulateListEnumNamesAndDescriptions()
-        enumDescriptionsList = New List(Of String)
-        enumNamesList = New List(Of String)
+        descriptionsEnumDescriptions = New List(Of String)
+        namesEnumAnalysis = New List(Of String)
 
         ' получить все аттрибуты перечислителя для создания списка возможных окон в системе
         For Each value In [Enum].GetValues(GetType(EnumAnalysis))
@@ -269,9 +270,9 @@ Friend Class AnalysisManager
             Dim dna As DescriptionAttribute = DirectCast(Attribute.GetCustomAttribute(fi, GetType(DescriptionAttribute)), DescriptionAttribute)
 
             If dna IsNot Nothing Then
-                enumDescriptionsList.Add(dna.Description)
+                descriptionsEnumDescriptions.Add(dna.Description)
             Else
-                enumDescriptionsList.Add("Нет описания")
+                descriptionsEnumDescriptions.Add("Нет описания")
             End If
         Next
 
@@ -285,7 +286,7 @@ Friend Class AnalysisManager
         '    End If
         'Next     
 
-        enumNamesList.AddRange([Enum].GetNames(GetType(EnumAnalysis)).ToArray)
+        namesEnumAnalysis.AddRange([Enum].GetNames(GetType(EnumAnalysis)).ToArray)
     End Sub
 
     ''' <summary>

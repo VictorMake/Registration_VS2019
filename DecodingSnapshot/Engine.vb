@@ -79,7 +79,6 @@ Friend MustInherit Class Engine
                 cmd.CommandType = CommandType.Text
                 cmd.CommandText = strSQL
                 rdr = cmd.ExecuteReader
-                'ReDim_normsTU(rowsCount)
                 Re.Dim(normsTU, rowsCount)
 
                 Do While (rdr.Read)

@@ -378,7 +378,7 @@ Friend MustInherit Class FormRegistrationBase
                         indexPlot += 1
 
                         If SlidePlot.Value = indexPlot Then
-                            'cmbВыборОси.Text = myTypeList(I).strНаименованиеПараметра
+                            'cmbВыборОси.Text = inTypeSmallParameter(I).strНаименованиеПараметра
                             Exit For
                         End If
                     End If

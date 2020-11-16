@@ -1,226 +1,100 @@
 ﻿Friend Class ДлительностьОтИндексаДоСтабильногоРоста
-    Dim mИндексПараметра, mИндексТначальное, mИндексТконечное As Integer
-    Dim mДлительностьТакта, mТначальное, mТконечное, mТдлительность As Double
-    Dim mАначальное, mАконечное As Double
-    Dim mМаксимальноеЗначение, mМинимальноеЗначение As Double
-    Dim mИндексМаксимальногоЗначения, mИндексМинимальногоЗначения As Integer
-    Dim mIsErrors As Boolean
-    Dim mИмяПараметра, mErrorsMessage As String
-    Dim marrЗначения(,) As Double
-    Dim mmyTypeList() As TypeSmallParameter
-    Dim mПорогРостаОтМинимального As Double
-    Dim mGraphMinimum, mGraphMaximum As Short
+    Inherits Figure
 
-    Public Property GraphMinimum() As Double
+    '''' <summary>
+    '''' Индекс Т начальное
+    '''' </summary>
+    '''' <returns></returns>
+    Public Overloads Property IndexTstart() As Integer
         Get
-            Return CDbl(mGraphMinimum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMinimum = CShort(Value)
-        End Set
-    End Property
-    Public Property GraphMaximum() As Double
-        Get
-            Return CDbl(mGraphMaximum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMaximum = CShort(Value)
-        End Set
-    End Property
-
-    Public ReadOnly Property ИндексПараметра() As Integer
-        Get
-            Return mИндексПараметра
-        End Get
-    End Property
-
-    Public Property ИндексТначальное() As Integer
-        Get
-            Return mИндексТначальное
+            Return mIndexTstart
         End Get
         Set(ByVal Value As Integer)
-            mИндексТначальное = Value
+            mIndexTstart = Value
         End Set
     End Property
 
-    Public ReadOnly Property ИндексТконечное() As Integer
-        Get
-            Return mИндексТконечное
-        End Get
-    End Property
+    ''' <summary>
+    ''' Порог Роста От Минимального
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property ThresholdGrowthFromMinimal() As Double
 
-    Public ReadOnly Property ДлительностьТакта() As Double
-        Get
-            Return mДлительностьТакта
-        End Get
-    End Property
+    Public Sub New(inNameParameter As String,
+                    frequency As Integer,
+                    inMeasuredValues(,) As Double,
+                    inTypeSmallParameter() As TypeSmallParameter,
+                    minimum As Double, ByVal maximum As Double)
 
-    Public ReadOnly Property Тначальное() As Double
-        Get
-            Return mТначальное
-        End Get
-    End Property
-
-    Public ReadOnly Property Тконечное() As Double
-        Get
-            Return mТконечное
-        End Get
-    End Property
-
-    Public ReadOnly Property Тдлительность() As Double
-        Get
-            Return mТдлительность
-        End Get
-    End Property
-
-    Public ReadOnly Property IsErrors() As Boolean
-        Get
-            Return mIsErrors
-        End Get
-    End Property
-
-    Public ReadOnly Property ErrorsMessage() As String
-        Get
-            Return mErrorsMessage
-        End Get
-    End Property
-
-    Public Property Аначальное() As Double
-        Get
-            Return mАначальное
-        End Get
-        Set(ByVal Value As Double)
-            mАначальное = Value
-        End Set
-    End Property
-
-    Public Property Аконечное() As Double
-        Get
-            Return mАконечное
-        End Get
-        Set(ByVal Value As Double)
-            mАконечное = Value
-        End Set
-    End Property
-
-    Public Property ПорогРостаОтМинимального() As Double
-        Get
-            Return mПорогРостаОтМинимального
-        End Get
-        Set(ByVal Value As Double)
-            mПорогРостаОтМинимального = Value
-        End Set
-    End Property
-
-    Public Sub New(ByVal ИмяПараметра As String,
-                   ByVal ЧастотаКадра As Integer,
-                   ByVal arrЗначенияПараметров(,) As Double,
-                   ByVal myTypeList() As TypeSmallParameter,
-                   ByVal Minimum As Double, ByVal Maximum As Double)
-
-        mИмяПараметра = ИмяПараметра
-        marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
-        mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
-        mДлительностьТакта = 1 / ЧастотаКадра
-        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
-        mМинимальноеЗначение = Double.MaxValue
-        mМаксимальноеЗначение = Double.MinValue
-        GraphMinimum = Minimum
-        GraphMaximum = Maximum
+        MyBase.New(inNameParameter, frequency, inMeasuredValues, inTypeSmallParameter, minimum, maximum)
     End Sub
 
-    Public Sub Расчет()
-        Dim I, J, N, СтартовыйИндекс As Integer
-        Dim параметрНайден, индексТконечноеНайден, провалНайден As Boolean
-        Dim минимальноеЗначениеСПорогом As Double
+    Public Overrides Sub Calculation()
+        Dim I, IndexStart As Integer
+        Dim isTstopFound, isHoleFound As Boolean ' провал Найден
+        Dim minimumWithThreshold As Double ' минимальное Значение С Порогом
 
-        'находим индекс параметра
-        For J = 1 To UBound(mmyTypeList)
-            If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
-                mИндексПараметра = J - 1
-                параметрНайден = True
-                Exit For
-            End If
-        Next
-
-        If Not параметрНайден Then
+        If ShowTotalErrorsMessage.IsParameterNotCorrect(nameParameter, mErrorsMessage, Parameters, mIndexParameter) Then
             mIsErrors = True
-            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
-        'N = UBound(marrЗначения, 2)
-        N = mGraphMaximum
-        For I = mИндексТначальное To N
-            'поиск минимального  в диапазоне
-            If marrЗначения(mИндексПараметра, I) < mМинимальноеЗначение Then
-                mМинимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                mИндексМинимальногоЗначения = I
+        For I = mIndexTstart To mGraphMaximum
+            ' поиск минимального  в диапазоне
+            If MeasuredValues(mIndexParameter, I) < mMinValue Then
+                mMinValue = MeasuredValues(mIndexParameter, I)
+                mIndexMinValue = I
             End If
         Next
 
-        For I = mИндексМинимальногоЗначения To N
-            'поиск максимального от mИндексМинимальногоЗначения до конца
-            If marrЗначения(mИндексПараметра, I) > mМаксимальноеЗначение Then
-                mМаксимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                mИндексМаксимальногоЗначения = I
-                индексТконечноеНайден = True
+        For I = mIndexMinValue To mGraphMaximum
+            ' поиск максимального от mIndexMinValue до конца
+            If MeasuredValues(mIndexParameter, I) > mMaxValue Then
+                mMaxValue = MeasuredValues(mIndexParameter, I)
+                mIndexMaxValue = I
+                isTstopFound = True
             End If
         Next
 
-        'поиск первого значения превышающего порог роста
-        СтартовыйИндекс = mИндексМинимальногоЗначения
-        минимальноеЗначениеСПорогом = marrЗначения(mИндексПараметра, mИндексМинимальногоЗначения) + mПорогРостаОтМинимального
-        For I = mИндексМинимальногоЗначения To mИндексМаксимальногоЗначения
-            If marrЗначения(mИндексПараметра, I) > минимальноеЗначениеСПорогом Then
-                СтартовыйИндекс = I
+        ' поиск первого значения превышающего порог роста
+        IndexStart = mIndexMinValue
+        minimumWithThreshold = MeasuredValues(mIndexParameter, mIndexMinValue) + ThresholdGrowthFromMinimal
+        For I = mIndexMinValue To mIndexMaxValue
+            If MeasuredValues(mIndexParameter, I) > minimumWithThreshold Then
+                IndexStart = I
                 Exit For
             End If
         Next
 
-        'первоначальное присваивание
-        mИндексТконечное = СтартовыйИндекс
-        'по фронту
-        For I = СтартовыйИндекс To mИндексМаксимальногоЗначения - 2
-            'If marrЗначения(mИндексПараметра, I) - marrЗначения(mИндексПараметра, I + 1) > mПорогРостаОтМинимального Then
-            If marrЗначения(mИндексПараметра, I) > marrЗначения(mИндексПараметра, I + 1) Then
-                'есть локальный провал в точке marrЗначения(mИндексПараметра, I + 1)
-                mИндексТконечное = I + 2
-                провалНайден = True
+        ' первоначальное присваивание
+        mIndexTstop = IndexStart
+        ' по фронту
+        For I = IndexStart To mIndexMaxValue - 2
+            'If MeasuredValues(mIndexParameter, I) - MeasuredValues(mIndexParameter, I + 1) > mПорогРостаОтМинимального Then
+            If MeasuredValues(mIndexParameter, I) > MeasuredValues(mIndexParameter, I + 1) Then
+                ' есть локальный провал в точке MeasuredValues(mIndexParameter, I + 1)
+                mIndexTstop = I + 2
+                isHoleFound = True
                 Exit For
             End If
         Next
 
-        If провалНайден Then
-            СтартовыйИндекс = mИндексТконечное
-            For I = СтартовыйИндекс To mИндексМаксимальногоЗначения - 2
-                If marrЗначения(mИндексПараметра, I + 1) > marrЗначения(mИндексПараметра, I) Then
-                    'есть подьем после провала
-                    mИндексТконечное = I + 2
+        If isHoleFound Then
+            IndexStart = mIndexTstop
+            For I = IndexStart To mIndexMaxValue - 2
+                If MeasuredValues(mIndexParameter, I + 1) > MeasuredValues(mIndexParameter, I) Then
+                    ' есть подьем после провала
+                    mIndexTstop = I + 2
                     Exit For
                 End If
             Next
         End If
 
-        mАначальное = marrЗначения(mИндексПараметра, mИндексТначальное)
-        mАконечное = marrЗначения(mИндексПараметра, mИндексТконечное)
-        mТначальное = mИндексТначальное * mДлительностьТакта
-        mТконечное = mИндексТконечное * mДлительностьТакта
-        mТдлительность = mТконечное - mТначальное
-
-        If mИндексТначальное <= mGraphMinimum Then
-            mIsErrors = True
-            mErrorsMessage += "Тначальное не найдено" & vbCrLf
-        End If
-
-        If Not индексТконечноеНайден OrElse mИндексТконечное = mGraphMinimum Then
-            mIsErrors = True
-            mErrorsMessage += "Тконечное не найдено" & vbCrLf
-        End If
-
-        If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mIsErrors = True
-            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
-        End If
+        Astart = MeasuredValues(mIndexParameter, mIndexTstart)
+        Astop = MeasuredValues(mIndexParameter, mIndexTstop)
+        mTstart = mIndexTstart * ClockPeriod
+        mTstop = mIndexTstop * ClockPeriod
+        mTimeDuration = mTstop - mTstart
+        mIsErrors = ShowTotalErrorsMessage.IsTimeFound(isTstopFound, mIndexTstart, mIndexTstop, mGraphMinimum, mErrorsMessage)
     End Sub
 End Class

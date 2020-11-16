@@ -26,7 +26,7 @@ Public Class FormConfigurationSolveModule
     End Sub
 
     Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
-        DialogResult = System.Windows.Forms.DialogResult.Cancel
+        DialogResult = DialogResult.Cancel
         RegistrationEventLog.EventLog_AUDIT_SUCCESS("Закрытие окна " & Text)
         Close()
     End Sub

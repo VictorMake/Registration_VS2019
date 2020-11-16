@@ -47,7 +47,7 @@ Public Class SettingSelectedParameters
     Public Class ManagerSelectedParameters
 
         ''' <summary>
-        ''' Представляет выборочный списк, тестовый контроль или графический контроль.
+        ''' Представляет выборочный список, тестовый контроль или графический контроль.
         ''' </summary>
         <DataContract>
         Public Class Book
@@ -263,14 +263,14 @@ Public Class SettingSelectedParameters
     Public Sub New(inPathResourses As String, inNameBook As String)
         PathFileControlParameters = Path.Combine(inPathResourses, FileControlParameters)
 
-        If Not File.Exists(PathFileControlParameters) Then GreateCongigByDefault()
+        If Not File.Exists(PathFileControlParameters) Then CreateCongigByDefault()
 
         NameWorkBook = inNameBook
         ReadControlParameters()
 
         ' инициализировать рабочую конфигурацию
         If Not Books.TryGetValue(NameWorkBook, workBook) Then
-            ' вслучае отсутствия создать и записать
+            ' в случае отсутствия создать и записать
             'Books.Add(NameWorkBook, CreateBookByDefault(NameWorkBook))
             Books(NameWorkBook) = CreateBookByDefault(NameWorkBook)
             workBook = Books(NameWorkBook)
@@ -330,7 +330,7 @@ Public Class SettingSelectedParameters
     End Sub
 
     ''' <summary>
-    ''' Создание нового списка парметров в текущей книге
+    ''' Удаление списка парметров в текущей книге
     ''' </summary>
     ''' <param name="deleteNameList"></param>
     Public Sub DeleteListParameter(deleteNameList As String)
@@ -364,7 +364,7 @@ Public Class SettingSelectedParameters
     Private Sub SerializerControlParameters(inManagerInheritsConfigurations As ManagerSelectedParameters)
         Dim jsonFormatter As DataContractJsonSerializer = New DataContractJsonSerializer(GetType(ManagerSelectedParameters))
 
-        Using fs As FileStream = New FileStream(PathFileControlParameters, FileMode.Create)
+        Using fs As New FileStream(PathFileControlParameters, FileMode.Create)
             jsonFormatter.WriteObject(fs, inManagerInheritsConfigurations)
         End Using
     End Sub
@@ -376,7 +376,7 @@ Public Class SettingSelectedParameters
         Dim jsonFormatter As DataContractJsonSerializer = New DataContractJsonSerializer(GetType(ManagerSelectedParameters))
         Dim mManagerSelectedParameters As ManagerSelectedParameters
 
-        Using fs As FileStream = New FileStream(PathFileControlParameters, FileMode.Open)
+        Using fs As New FileStream(PathFileControlParameters, FileMode.Open)
             mManagerSelectedParameters = CType(jsonFormatter.ReadObject(fs), ManagerSelectedParameters)
             'For Each p As ControlParameter In arrControlParameter
             '    Console.WriteLine("Имя: {0} --- Возраст: {1}", p.Name, p.Age)
@@ -434,7 +434,7 @@ Public Class SettingSelectedParameters
     ''' <summary>
     ''' Создание и запись в файл конфигурации по умолчанию
     ''' </summary>
-    Private Sub GreateCongigByDefault()
+    Private Sub CreateCongigByDefault()
         ' 4. --- Configurations ---------------------------------------------------
         ' TextControl - "Текстовый контроль"
         ' GraphControl - "Графический контроль"

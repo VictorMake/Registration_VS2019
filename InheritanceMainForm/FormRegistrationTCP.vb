@@ -1182,7 +1182,7 @@ End Class
 '    '            indexPlot += 1
 '    '        End If
 '    '    Else
-'    '        If myTypeList(indexParameter).Видимость Then
+'    '        If inTypeSmallParameter(indexParameter).Видимость Then
 '    '            среднее = ПриведениеКОсиЭталона(indexПараметраОсиЭталона, indexParameter, среднее) ' массив приведен к какой-то шкале
 '    '            arrСреднееПересчитанный(J, 0) = среднее ' массив приведен к какой-то шкале
 
@@ -1212,9 +1212,9 @@ End Class
 '    '                    .Items(J).SubItems(1).Text = CStr(Math.Round(arrСреднее(J, indexTimeVsRow), Precision))
 '    '                Next J
 '    '            Else
-'    '                For J = 1 To UBound(myTypeList)
-'    '                    If myTypeList(J).Видимость Then
-'    '                        .Items(myTypeList(J).НомерВЛисте - 1).SubItems(1).Text = CStr(Math.Round(arrСреднее(J - 1, indexTimeVsRow), Precision))
+'    '                For J = 1 To UBound(inTypeSmallParameter)
+'    '                    If inTypeSmallParameter(J).Видимость Then
+'    '                        .Items(inTypeSmallParameter(J).НомерВЛисте - 1).SubItems(1).Text = CStr(Math.Round(arrСреднее(J - 1, indexTimeVsRow), Precision))
 '    '                    End If
 '    '                Next J
 '    '            End If

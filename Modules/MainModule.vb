@@ -656,7 +656,7 @@ Module MainModule
 
         AnalysisArguments(cmdArgs)
 
-        If (UBound(Diagnostics.Process.GetProcessesByName(Diagnostics.Process.GetCurrentProcess.ProcessName)) > 0) = True Then
+        If (UBound(Process.GetProcessesByName(Process.GetCurrentProcess.ProcessName)) > 0) = True Then
             Dim text As String = "Приложение уже запущено!"
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
             RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
@@ -743,7 +743,7 @@ Module MainModule
         mfrmSplash.Show()
         mfrmSplash.Refresh()
         'mfrmSplash.UpdateStatusAsync()
-        mfrmSplash.UpdateStatus()
+        'mfrmSplash.UpdateStatus()
         ConfigPath()
 
         ColorsNet(0) = Color.White
@@ -759,7 +759,7 @@ Module MainModule
         ' загрузка шапки
         SettingForm = New FormSetting
         SettingForm.ShowDialog()
-        mfrmSplash.UpdateStatusRevers()
+        'mfrmSplash.UpdateStatusRevers()
         mfrmSplash.Close()
 
         If IsUseTCPClient AndAlso FileNotExists(PathChannels_cfg_lmz) Then

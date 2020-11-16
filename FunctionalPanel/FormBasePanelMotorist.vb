@@ -1623,13 +1623,13 @@ Friend Class FormBasePanelMotorist
         Else
             Try
                 ' записать строку в файл
-                Using sw As StreamWriter = New StreamWriter(MainModule.PathTempFileSoap)
+                Using sw As StreamWriter = New StreamWriter(PathTempFileSoap)
                     sw.Write(aControl.Tag)
                     'sw.Close() FxCop
                 End Using
 
                 ' считать с преобразованием
-                Dim hashtableControlBase As Object = DeserializePropertiesControlBaseFromXML(MainModule.PathTempFileSoap, errors)
+                Dim hashtableControlBase As Object = DeserializePropertiesControlBaseFromXML(PathTempFileSoap, errors)
                 If hashtableControlBase IsNot Nothing Then
                     propControlBase = DirectCast(hashtableControlBase, PropertiesControlBase)
                 End If

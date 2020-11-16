@@ -21,31 +21,31 @@ Partial Class FormServiceBases
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormServiceBases))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle51 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle52 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle75 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle53 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle54 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle55 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle56 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle57 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle59 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle60 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle61 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle62 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle63 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle64 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle65 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle66 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle73 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle74 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.StatusStripBar = New System.Windows.Forms.StatusStrip()
         Me.LabelPanelRegistration = New System.Windows.Forms.ToolStripStatusLabel()
         Me.LabelAggregate = New System.Windows.Forms.ToolStripStatusLabel()
@@ -312,7 +312,7 @@ Partial Class FormServiceBases
         Me.StatusStripBar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LabelPanelRegistration, Me.LabelAggregate})
         Me.StatusStripBar.Location = New System.Drawing.Point(0, 736)
         Me.StatusStripBar.Name = "StatusStripBar"
-        Me.StatusStripBar.Size = New System.Drawing.Size(1132, 25)
+        Me.StatusStripBar.Size = New System.Drawing.Size(1187, 25)
         Me.StatusStripBar.TabIndex = 34
         '
         'LabelPanelRegistration
@@ -325,7 +325,7 @@ Partial Class FormServiceBases
         Me.LabelPanelRegistration.Image = CType(resources.GetObject("LabelPanelRegistration.Image"), System.Drawing.Image)
         Me.LabelPanelRegistration.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LabelPanelRegistration.Name = "LabelPanelRegistration"
-        Me.LabelPanelRegistration.Size = New System.Drawing.Size(1035, 20)
+        Me.LabelPanelRegistration.Size = New System.Drawing.Size(1090, 20)
         Me.LabelPanelRegistration.Spring = True
         Me.LabelPanelRegistration.Text = "Готов"
         Me.LabelPanelRegistration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -346,11 +346,11 @@ Partial Class FormServiceBases
         'ToolStripContainer1.ContentPanel
         '
         Me.ToolStripContainer1.ContentPanel.Controls.Add(Me.SplitContainer1)
-        Me.ToolStripContainer1.ContentPanel.Size = New System.Drawing.Size(1132, 658)
+        Me.ToolStripContainer1.ContentPanel.Size = New System.Drawing.Size(1187, 658)
         Me.ToolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ToolStripContainer1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStripContainer1.Name = "ToolStripContainer1"
-        Me.ToolStripContainer1.Size = New System.Drawing.Size(1132, 736)
+        Me.ToolStripContainer1.Size = New System.Drawing.Size(1187, 736)
         Me.ToolStripContainer1.TabIndex = 35
         Me.ToolStripContainer1.Text = "ToolStripContainer1"
         '
@@ -375,7 +375,7 @@ Partial Class FormServiceBases
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.PanelList)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1132, 658)
+        Me.SplitContainer1.Size = New System.Drawing.Size(1187, 658)
         Me.SplitContainer1.SplitterDistance = 276
         Me.SplitContainer1.TabIndex = 0
         '
@@ -556,7 +556,7 @@ Partial Class FormServiceBases
         Me.PanelList.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelList.Location = New System.Drawing.Point(0, 0)
         Me.PanelList.Name = "PanelList"
-        Me.PanelList.Size = New System.Drawing.Size(848, 654)
+        Me.PanelList.Size = New System.Drawing.Size(903, 654)
         Me.PanelList.TabIndex = 137
         '
         'SplitContainerGridChannel
@@ -575,7 +575,7 @@ Partial Class FormServiceBases
         'SplitContainerGridChannel.Panel2
         '
         Me.SplitContainerGridChannel.Panel2.Controls.Add(Me.PanelChannel)
-        Me.SplitContainerGridChannel.Size = New System.Drawing.Size(844, 591)
+        Me.SplitContainerGridChannel.Size = New System.Drawing.Size(899, 591)
         Me.SplitContainerGridChannel.SplitterDistance = 195
         Me.SplitContainerGridChannel.TabIndex = 21
         '
@@ -583,35 +583,35 @@ Partial Class FormServiceBases
         '
         Me.DataGridChannels.AllowUserToAddRows = False
         Me.DataGridChannels.AllowUserToDeleteRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Lavender
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.MidnightBlue
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.PaleGreen
-        Me.DataGridChannels.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle51.BackColor = System.Drawing.Color.Lavender
+        DataGridViewCellStyle51.ForeColor = System.Drawing.Color.MidnightBlue
+        DataGridViewCellStyle51.SelectionBackColor = System.Drawing.Color.Teal
+        DataGridViewCellStyle51.SelectionForeColor = System.Drawing.Color.PaleGreen
+        Me.DataGridChannels.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle51
         Me.DataGridChannels.AutoGenerateColumns = False
         Me.DataGridChannels.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridChannels.BackgroundColor = System.Drawing.Color.Lavender
         Me.DataGridChannels.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.DataGridChannels.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridChannels.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle52.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle52.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        DataGridViewCellStyle52.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle52.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle52.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle52.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridChannels.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle52
         Me.DataGridChannels.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridChannels.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn9, Me.DataGridViewTextBoxColumn10, Me.DataGridViewTextBoxColumn11, Me.DataGridViewTextBoxColumn12, Me.DataGridViewTextBoxColumn13, Me.DataGridViewTextBoxColumn14, Me.DataGridViewTextBoxColumn15, Me.DataGridViewTextBoxColumn16, Me.DataGridViewTextBoxColumn17, Me.DataGridViewTextBoxColumn18, Me.DataGridViewTextBoxColumn19, Me.DataGridViewTextBoxColumn20, Me.DataGridViewCheckBoxColumn1, Me.DataGridViewTextBoxColumn21, Me.DataGridViewTextBoxColumn22, Me.DataGridViewTextBoxColumn23, Me.DataGridViewTextBoxColumn24, Me.DataGridViewTextBoxColumn25, Me.DataGridViewTextBoxColumn26, Me.DataGridViewTextBoxColumn27, Me.DataGridViewCheckBoxColumn2, Me.DataGridViewTextBoxColumn28, Me.DataGridViewCheckBoxColumn3, Me.DataGridViewCheckBoxColumn4, Me.DataGridViewTextBoxColumn29})
         Me.DataGridChannels.DataSource = Me.BindingSourceChannelsN
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle25.BackColor = System.Drawing.Color.GhostWhite
-        DataGridViewCellStyle25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
-        DataGridViewCellStyle25.ForeColor = System.Drawing.Color.MidnightBlue
-        DataGridViewCellStyle25.SelectionBackColor = System.Drawing.Color.Teal
-        DataGridViewCellStyle25.SelectionForeColor = System.Drawing.Color.PaleGreen
-        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridChannels.DefaultCellStyle = DataGridViewCellStyle25
+        DataGridViewCellStyle75.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle75.BackColor = System.Drawing.Color.GhostWhite
+        DataGridViewCellStyle75.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        DataGridViewCellStyle75.ForeColor = System.Drawing.Color.MidnightBlue
+        DataGridViewCellStyle75.SelectionBackColor = System.Drawing.Color.Teal
+        DataGridViewCellStyle75.SelectionForeColor = System.Drawing.Color.PaleGreen
+        DataGridViewCellStyle75.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridChannels.DefaultCellStyle = DataGridViewCellStyle75
         Me.DataGridChannels.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridChannels.GridColor = System.Drawing.Color.RoyalBlue
         Me.DataGridChannels.Location = New System.Drawing.Point(0, 15)
@@ -619,14 +619,14 @@ Partial Class FormServiceBases
         Me.DataGridChannels.Name = "DataGridChannels"
         Me.DataGridChannels.ReadOnly = True
         Me.DataGridChannels.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.DataGridChannels.Size = New System.Drawing.Size(844, 180)
+        Me.DataGridChannels.Size = New System.Drawing.Size(899, 180)
         Me.DataGridChannels.TabIndex = 24
         '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "НомерПараметра"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle53
         Me.DataGridViewTextBoxColumn1.Frozen = True
         Me.DataGridViewTextBoxColumn1.HeaderText = "Номер"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
@@ -646,8 +646,8 @@ Partial Class FormServiceBases
         '
         Me.DataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "Примечания"
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle54.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle54
         Me.DataGridViewTextBoxColumn3.HeaderText = "Примечания"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
@@ -656,8 +656,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "НомерКанала"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle55
         Me.DataGridViewTextBoxColumn4.HeaderText = "Номер Канала"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -666,8 +666,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "НомерУстройства"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle56
         Me.DataGridViewTextBoxColumn5.HeaderText = "Номер Устройства"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
@@ -700,8 +700,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.DataPropertyName = "НижнийПредел"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle57
         Me.DataGridViewTextBoxColumn9.HeaderText = "Нижний Предел"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
@@ -710,8 +710,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "ВерхнийПредел"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle58.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle58
         Me.DataGridViewTextBoxColumn10.HeaderText = "Верхний Предел"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
@@ -728,8 +728,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.DataPropertyName = "НомерФормулы"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle59
         Me.DataGridViewTextBoxColumn12.HeaderText = "Номер Формулы"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.ReadOnly = True
@@ -738,8 +738,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.DataPropertyName = "СтепеньАппроксимации"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle60
         Me.DataGridViewTextBoxColumn13.HeaderText = "Степень Аппроксимации"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
         Me.DataGridViewTextBoxColumn13.ReadOnly = True
@@ -748,8 +748,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "A0"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle61.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle61
         Me.DataGridViewTextBoxColumn14.HeaderText = "A0"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.ReadOnly = True
@@ -758,8 +758,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "A1"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle62
         Me.DataGridViewTextBoxColumn15.HeaderText = "A1"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -768,8 +768,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "A2"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle63
         Me.DataGridViewTextBoxColumn16.HeaderText = "A2"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
@@ -778,8 +778,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "A3"
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle64.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle64
         Me.DataGridViewTextBoxColumn17.HeaderText = "A3"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
         Me.DataGridViewTextBoxColumn17.ReadOnly = True
@@ -788,8 +788,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn18
         '
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "A4"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle65
         Me.DataGridViewTextBoxColumn18.HeaderText = "A4"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
@@ -798,8 +798,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "A5"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle66
         Me.DataGridViewTextBoxColumn19.HeaderText = "A5"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.ReadOnly = True
@@ -808,8 +808,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "Смещение"
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle67
         Me.DataGridViewTextBoxColumn20.HeaderText = "Смещение"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
         Me.DataGridViewTextBoxColumn20.ReadOnly = True
@@ -834,8 +834,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn22
         '
         Me.DataGridViewTextBoxColumn22.DataPropertyName = "ДопускМинимум"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn22.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle68.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn22.DefaultCellStyle = DataGridViewCellStyle68
         Me.DataGridViewTextBoxColumn22.HeaderText = "Допуск Минимум"
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.ReadOnly = True
@@ -844,8 +844,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn23
         '
         Me.DataGridViewTextBoxColumn23.DataPropertyName = "ДопускМаксимум"
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn23.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn23.DefaultCellStyle = DataGridViewCellStyle69
         Me.DataGridViewTextBoxColumn23.HeaderText = "Допуск Максимум"
         Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
         Me.DataGridViewTextBoxColumn23.ReadOnly = True
@@ -854,8 +854,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn24
         '
         Me.DataGridViewTextBoxColumn24.DataPropertyName = "РазносУмин"
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn24.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn24.DefaultCellStyle = DataGridViewCellStyle70
         Me.DataGridViewTextBoxColumn24.HeaderText = "Разнос Умин"
         Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
         Me.DataGridViewTextBoxColumn24.ReadOnly = True
@@ -864,8 +864,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn25
         '
         Me.DataGridViewTextBoxColumn25.DataPropertyName = "РазносУмакс"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle71.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle71
         Me.DataGridViewTextBoxColumn25.HeaderText = "Разнос Умакс"
         Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
         Me.DataGridViewTextBoxColumn25.ReadOnly = True
@@ -874,8 +874,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn26
         '
         Me.DataGridViewTextBoxColumn26.DataPropertyName = "АварийноеЗначениеМин"
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle72.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle72
         Me.DataGridViewTextBoxColumn26.HeaderText = "Аварийное Значение Мин"
         Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
         Me.DataGridViewTextBoxColumn26.ReadOnly = True
@@ -884,8 +884,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn27
         '
         Me.DataGridViewTextBoxColumn27.DataPropertyName = "АварийноеЗначениеМакс"
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle73.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle73
         Me.DataGridViewTextBoxColumn27.HeaderText = "Аварийное Значение Макс"
         Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
         Me.DataGridViewTextBoxColumn27.ReadOnly = True
@@ -926,8 +926,8 @@ Partial Class FormServiceBases
         'DataGridViewTextBoxColumn29
         '
         Me.DataGridViewTextBoxColumn29.DataPropertyName = "Погрешность"
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn29.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle74.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn29.DefaultCellStyle = DataGridViewCellStyle74
         Me.DataGridViewTextBoxColumn29.HeaderText = "Погрешность"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.ReadOnly = True
@@ -951,7 +951,7 @@ Partial Class FormServiceBases
         Me.LabelCaptionDataGrideView.ForeColor = System.Drawing.Color.White
         Me.LabelCaptionDataGrideView.Location = New System.Drawing.Point(0, 0)
         Me.LabelCaptionDataGrideView.Name = "LabelCaptionDataGrideView"
-        Me.LabelCaptionDataGrideView.Size = New System.Drawing.Size(844, 15)
+        Me.LabelCaptionDataGrideView.Size = New System.Drawing.Size(899, 15)
         Me.LabelCaptionDataGrideView.TabIndex = 19
         Me.LabelCaptionDataGrideView.Text = "Каналы сгруппрованные по условию (для сортировки щёлкните по заголовку столбца)"
         Me.LabelCaptionDataGrideView.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -969,16 +969,16 @@ Partial Class FormServiceBases
         Me.PanelChannel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelChannel.Location = New System.Drawing.Point(0, 0)
         Me.PanelChannel.Name = "PanelChannel"
-        Me.PanelChannel.Size = New System.Drawing.Size(844, 392)
+        Me.PanelChannel.Size = New System.Drawing.Size(899, 392)
         Me.PanelChannel.TabIndex = 0
         '
         'Panel4
         '
         Me.Panel4.Controls.Add(Me.GroupBoxGraph)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel4.Location = New System.Drawing.Point(464, 0)
+        Me.Panel4.Location = New System.Drawing.Point(466, 0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(376, 388)
+        Me.Panel4.Size = New System.Drawing.Size(429, 388)
         Me.Panel4.TabIndex = 111
         '
         'GroupBoxGraph
@@ -989,7 +989,7 @@ Partial Class FormServiceBases
         Me.GroupBoxGraph.Controls.Add(Me.TableLayoutPanel1)
         Me.GroupBoxGraph.Location = New System.Drawing.Point(8, 8)
         Me.GroupBoxGraph.Name = "GroupBoxGraph"
-        Me.GroupBoxGraph.Size = New System.Drawing.Size(363, 368)
+        Me.GroupBoxGraph.Size = New System.Drawing.Size(416, 368)
         Me.GroupBoxGraph.TabIndex = 2
         Me.GroupBoxGraph.TabStop = False
         Me.GroupBoxGraph.Text = "График"
@@ -1000,8 +1000,8 @@ Partial Class FormServiceBases
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 31.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.LabelLedMax, 2, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelPhysicsMax, 4, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelPhysicsMin, 4, 0)
@@ -1039,7 +1039,7 @@ Partial Class FormServiceBases
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(357, 349)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(410, 349)
         Me.TableLayoutPanel1.TabIndex = 56
         '
         'LabelLedMax
@@ -1047,7 +1047,7 @@ Partial Class FormServiceBases
         Me.LabelLedMax.BackColor = System.Drawing.Color.Red
         Me.LabelLedMax.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.LabelLedMax.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLedMax.Location = New System.Drawing.Point(245, 251)
+        Me.LabelLedMax.Location = New System.Drawing.Point(298, 251)
         Me.LabelLedMax.Name = "LabelLedMax"
         Me.LabelLedMax.Size = New System.Drawing.Size(19, 26)
         Me.LabelLedMax.TabIndex = 61
@@ -1058,9 +1058,9 @@ Partial Class FormServiceBases
         '
         Me.LabelPhysicsMax.AutoSize = True
         Me.LabelPhysicsMax.Dock = System.Windows.Forms.DockStyle.Left
-        Me.LabelPhysicsMax.Location = New System.Drawing.Point(335, 26)
+        Me.LabelPhysicsMax.Location = New System.Drawing.Point(382, 26)
         Me.LabelPhysicsMax.Name = "LabelPhysicsMax"
-        Me.LabelPhysicsMax.Size = New System.Drawing.Size(19, 26)
+        Me.LabelPhysicsMax.Size = New System.Drawing.Size(25, 26)
         Me.LabelPhysicsMax.TabIndex = 59
         Me.LabelPhysicsMax.Text = "дел"
         '
@@ -1068,9 +1068,9 @@ Partial Class FormServiceBases
         '
         Me.LabelPhysicsMin.AutoSize = True
         Me.LabelPhysicsMin.Dock = System.Windows.Forms.DockStyle.Left
-        Me.LabelPhysicsMin.Location = New System.Drawing.Point(335, 0)
+        Me.LabelPhysicsMin.Location = New System.Drawing.Point(382, 0)
         Me.LabelPhysicsMin.Name = "LabelPhysicsMin"
-        Me.LabelPhysicsMin.Size = New System.Drawing.Size(19, 26)
+        Me.LabelPhysicsMin.Size = New System.Drawing.Size(25, 26)
         Me.LabelPhysicsMin.TabIndex = 58
         Me.LabelPhysicsMin.Text = "дел"
         '
@@ -1090,9 +1090,9 @@ Partial Class FormServiceBases
         Me.LabelAlarmMax.AutoSize = True
         Me.LabelAlarmMax.BackColor = System.Drawing.Color.Silver
         Me.LabelAlarmMax.Dock = System.Windows.Forms.DockStyle.Right
-        Me.LabelAlarmMax.Location = New System.Drawing.Point(35, 251)
+        Me.LabelAlarmMax.Location = New System.Drawing.Point(7, 251)
         Me.LabelAlarmMax.Name = "LabelAlarmMax"
-        Me.LabelAlarmMax.Size = New System.Drawing.Size(139, 26)
+        Me.LabelAlarmMax.Size = New System.Drawing.Size(220, 26)
         Me.LabelAlarmMax.TabIndex = 56
         Me.LabelAlarmMax.Text = "если значение параметра станет больше:"
         Me.LabelAlarmMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -1115,7 +1115,7 @@ Partial Class FormServiceBases
         Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label2.Location = New System.Drawing.Point(3, 210)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(351, 15)
+        Me.Label2.Size = New System.Drawing.Size(404, 15)
         Me.Label2.TabIndex = 57
         Me.Label2.Text = "Зажигать лампу аварии при значении параметра:"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -1134,9 +1134,9 @@ Partial Class FormServiceBases
         'NumericLevelMin
         '
         Me.NumericLevelMin.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(2)
-        Me.NumericLevelMin.Location = New System.Drawing.Point(270, 3)
+        Me.NumericLevelMin.Location = New System.Drawing.Point(323, 3)
         Me.NumericLevelMin.Name = "NumericLevelMin"
-        Me.NumericLevelMin.Size = New System.Drawing.Size(56, 20)
+        Me.NumericLevelMin.Size = New System.Drawing.Size(53, 20)
         Me.NumericLevelMin.TabIndex = 0
         Me.NumericLevelMin.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left
         '
@@ -1145,9 +1145,9 @@ Partial Class FormServiceBases
         Me.LabelAlarmMin.AutoSize = True
         Me.LabelAlarmMin.BackColor = System.Drawing.Color.Silver
         Me.LabelAlarmMin.Dock = System.Windows.Forms.DockStyle.Right
-        Me.LabelAlarmMin.Location = New System.Drawing.Point(35, 225)
+        Me.LabelAlarmMin.Location = New System.Drawing.Point(5, 225)
         Me.LabelAlarmMin.Name = "LabelAlarmMin"
-        Me.LabelAlarmMin.Size = New System.Drawing.Size(139, 26)
+        Me.LabelAlarmMin.Size = New System.Drawing.Size(222, 26)
         Me.LabelAlarmMin.TabIndex = 54
         Me.LabelAlarmMin.Text = "если значение параметра станет меньше:"
         Me.LabelAlarmMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -1156,7 +1156,7 @@ Partial Class FormServiceBases
         '
         Me.LabelMax.AutoSize = True
         Me.LabelMax.Dock = System.Windows.Forms.DockStyle.Left
-        Me.LabelMax.Location = New System.Drawing.Point(335, 52)
+        Me.LabelMax.Location = New System.Drawing.Point(382, 52)
         Me.LabelMax.Name = "LabelMax"
         Me.LabelMax.Size = New System.Drawing.Size(15, 26)
         Me.LabelMax.TabIndex = 55
@@ -1166,9 +1166,9 @@ Partial Class FormServiceBases
         'NumericLevelMax
         '
         Me.NumericLevelMax.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(2)
-        Me.NumericLevelMax.Location = New System.Drawing.Point(270, 29)
+        Me.NumericLevelMax.Location = New System.Drawing.Point(323, 29)
         Me.NumericLevelMax.Name = "NumericLevelMax"
-        Me.NumericLevelMax.Size = New System.Drawing.Size(56, 20)
+        Me.NumericLevelMax.Size = New System.Drawing.Size(53, 20)
         Me.NumericLevelMax.TabIndex = 1
         Me.NumericLevelMax.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left
         Me.NumericLevelMax.Value = 100.0R
@@ -1177,7 +1177,7 @@ Partial Class FormServiceBases
         '
         Me.LabelMin.AutoSize = True
         Me.LabelMin.Dock = System.Windows.Forms.DockStyle.Left
-        Me.LabelMin.Location = New System.Drawing.Point(245, 52)
+        Me.LabelMin.Location = New System.Drawing.Point(298, 52)
         Me.LabelMin.Name = "LabelMin"
         Me.LabelMin.Size = New System.Drawing.Size(15, 26)
         Me.LabelMin.TabIndex = 54
@@ -1192,7 +1192,7 @@ Partial Class FormServiceBases
         Me.SlideValuePrcentMax.CaptionPosition = NationalInstruments.UI.CaptionPosition.Left
         Me.TableLayoutPanel1.SetColumnSpan(Me.SlideValuePrcentMax, 2)
         Me.SlideValuePrcentMax.FillMode = NationalInstruments.UI.NumericFillMode.None
-        Me.SlideValuePrcentMax.Location = New System.Drawing.Point(270, 81)
+        Me.SlideValuePrcentMax.Location = New System.Drawing.Point(323, 81)
         Me.SlideValuePrcentMax.Name = "SlideValuePrcentMax"
         Me.SlideValuePrcentMax.PointerColor = System.Drawing.Color.Maroon
         Me.SlideValuePrcentMax.Range = New NationalInstruments.UI.Range(0R, 100.0R)
@@ -1210,7 +1210,7 @@ Partial Class FormServiceBases
         Me.SlideValuePrcentMin.CaptionPosition = NationalInstruments.UI.CaptionPosition.Left
         Me.TableLayoutPanel1.SetColumnSpan(Me.SlideValuePrcentMin, 2)
         Me.SlideValuePrcentMin.FillMode = NationalInstruments.UI.NumericFillMode.None
-        Me.SlideValuePrcentMin.Location = New System.Drawing.Point(180, 81)
+        Me.SlideValuePrcentMin.Location = New System.Drawing.Point(233, 81)
         Me.SlideValuePrcentMin.Name = "SlideValuePrcentMin"
         Me.SlideValuePrcentMin.PointerColor = System.Drawing.Color.Maroon
         Me.SlideValuePrcentMin.Range = New NationalInstruments.UI.Range(0R, 100.0R)
@@ -1223,7 +1223,7 @@ Partial Class FormServiceBases
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.LabelLevelMin, 2)
         Me.LabelLevelMin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLevelMin.Location = New System.Drawing.Point(180, 0)
+        Me.LabelLevelMin.Location = New System.Drawing.Point(233, 0)
         Me.LabelLevelMin.Name = "LabelLevelMin"
         Me.LabelLevelMin.Size = New System.Drawing.Size(84, 26)
         Me.LabelLevelMin.TabIndex = 50
@@ -1242,7 +1242,7 @@ Partial Class FormServiceBases
         Me.GraphSignal1.PlotAreaColor = System.Drawing.Color.White
         Me.GraphSignal1.Plots.AddRange(New NationalInstruments.UI.WaveformPlot() {Me.PlotSigmal})
         Me.TableLayoutPanel1.SetRowSpan(Me.GraphSignal1, 4)
-        Me.GraphSignal1.Size = New System.Drawing.Size(171, 204)
+        Me.GraphSignal1.Size = New System.Drawing.Size(224, 204)
         Me.GraphSignal1.TabIndex = 53
         Me.GraphSignal1.XAxes.AddRange(New NationalInstruments.UI.XAxis() {Me.XAxis})
         Me.GraphSignal1.YAxes.AddRange(New NationalInstruments.UI.YAxis() {Me.YAxis})
@@ -1337,7 +1337,7 @@ Partial Class FormServiceBases
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.LabelLevelMax, 2)
         Me.LabelLevelMax.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLevelMax.Location = New System.Drawing.Point(180, 26)
+        Me.LabelLevelMax.Location = New System.Drawing.Point(233, 26)
         Me.LabelLevelMax.Name = "LabelLevelMax"
         Me.LabelLevelMax.Size = New System.Drawing.Size(84, 26)
         Me.LabelLevelMax.TabIndex = 52
@@ -1347,9 +1347,9 @@ Partial Class FormServiceBases
         'NumericSlidepercentMax
         '
         Me.NumericSlidepercentMax.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(0)
-        Me.NumericSlidepercentMax.Location = New System.Drawing.Point(270, 55)
+        Me.NumericSlidepercentMax.Location = New System.Drawing.Point(323, 55)
         Me.NumericSlidepercentMax.Name = "NumericSlidepercentMax"
-        Me.NumericSlidepercentMax.Size = New System.Drawing.Size(56, 20)
+        Me.NumericSlidepercentMax.Size = New System.Drawing.Size(53, 20)
         Me.NumericSlidepercentMax.Source = Me.SlideValuePrcentMax
         Me.NumericSlidepercentMax.TabIndex = 41
         Me.NumericSlidepercentMax.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left
@@ -1357,7 +1357,7 @@ Partial Class FormServiceBases
         'NumericSlidepercentMin
         '
         Me.NumericSlidepercentMin.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(0)
-        Me.NumericSlidepercentMin.Location = New System.Drawing.Point(180, 55)
+        Me.NumericSlidepercentMin.Location = New System.Drawing.Point(233, 55)
         Me.NumericSlidepercentMin.Name = "NumericSlidepercentMin"
         Me.NumericSlidepercentMin.Size = New System.Drawing.Size(56, 20)
         Me.NumericSlidepercentMin.Source = Me.SlideValuePrcentMin
@@ -1367,7 +1367,7 @@ Partial Class FormServiceBases
         'NumericEditAlarmMin
         '
         Me.NumericEditAlarmMin.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(2)
-        Me.NumericEditAlarmMin.Location = New System.Drawing.Point(180, 228)
+        Me.NumericEditAlarmMin.Location = New System.Drawing.Point(233, 228)
         Me.NumericEditAlarmMin.Name = "NumericEditAlarmMin"
         Me.NumericEditAlarmMin.Size = New System.Drawing.Size(56, 20)
         Me.NumericEditAlarmMin.TabIndex = 2
@@ -1376,7 +1376,7 @@ Partial Class FormServiceBases
         'NumericEditAlarmMax
         '
         Me.NumericEditAlarmMax.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(2)
-        Me.NumericEditAlarmMax.Location = New System.Drawing.Point(180, 254)
+        Me.NumericEditAlarmMax.Location = New System.Drawing.Point(233, 254)
         Me.NumericEditAlarmMax.Name = "NumericEditAlarmMax"
         Me.NumericEditAlarmMax.Size = New System.Drawing.Size(56, 20)
         Me.NumericEditAlarmMax.TabIndex = 3
@@ -1388,7 +1388,7 @@ Partial Class FormServiceBases
         Me.LabelLedMin.BackColor = System.Drawing.Color.Orange
         Me.LabelLedMin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.LabelLedMin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLedMin.Location = New System.Drawing.Point(245, 225)
+        Me.LabelLedMin.Location = New System.Drawing.Point(298, 225)
         Me.LabelLedMin.Name = "LabelLedMin"
         Me.LabelLedMin.Size = New System.Drawing.Size(19, 26)
         Me.LabelLedMin.TabIndex = 60
@@ -1398,7 +1398,7 @@ Partial Class FormServiceBases
         'Splitter4
         '
         Me.Splitter4.BackColor = System.Drawing.Color.Gray
-        Me.Splitter4.Location = New System.Drawing.Point(461, 0)
+        Me.Splitter4.Location = New System.Drawing.Point(463, 0)
         Me.Splitter4.Name = "Splitter4"
         Me.Splitter4.Size = New System.Drawing.Size(3, 388)
         Me.Splitter4.TabIndex = 112
@@ -1410,7 +1410,7 @@ Partial Class FormServiceBases
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel3.Location = New System.Drawing.Point(343, 0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(118, 388)
+        Me.Panel3.Size = New System.Drawing.Size(120, 388)
         Me.Panel3.TabIndex = 109
         '
         'GroupBoxExtra
@@ -1425,16 +1425,16 @@ Partial Class FormServiceBases
         Me.GroupBoxExtra.Controls.Add(Me.LabelNote)
         Me.GroupBoxExtra.Location = New System.Drawing.Point(8, 8)
         Me.GroupBoxExtra.Name = "GroupBoxExtra"
-        Me.GroupBoxExtra.Size = New System.Drawing.Size(105, 368)
+        Me.GroupBoxExtra.Size = New System.Drawing.Size(107, 368)
         Me.GroupBoxExtra.TabIndex = 1
         Me.GroupBoxExtra.TabStop = False
         Me.GroupBoxExtra.Text = "Дополнительно"
         '
         'PictureBoxControl
         '
-        Me.PictureBoxControl.Location = New System.Drawing.Point(8, 176)
+        Me.PictureBoxControl.Location = New System.Drawing.Point(6, 176)
         Me.PictureBoxControl.Name = "PictureBoxControl"
-        Me.PictureBoxControl.Size = New System.Drawing.Size(64, 64)
+        Me.PictureBoxControl.Size = New System.Drawing.Size(66, 64)
         Me.PictureBoxControl.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBoxControl.TabIndex = 105
         Me.PictureBoxControl.TabStop = False
@@ -1443,11 +1443,11 @@ Partial Class FormServiceBases
         '
         Me.TextBoxNote.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxNote.Location = New System.Drawing.Point(8, 256)
+        Me.TextBoxNote.Location = New System.Drawing.Point(6, 256)
         Me.TextBoxNote.Multiline = True
         Me.TextBoxNote.Name = "TextBoxNote"
         Me.TextBoxNote.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBoxNote.Size = New System.Drawing.Size(99, 104)
+        Me.TextBoxNote.Size = New System.Drawing.Size(95, 104)
         Me.TextBoxNote.TabIndex = 1
         '
         'ListBoxUnit
@@ -1458,18 +1458,18 @@ Partial Class FormServiceBases
         Me.ListBoxUnit.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
         Me.ListBoxUnit.IntegralHeight = False
         Me.ListBoxUnit.ItemHeight = 16
-        Me.ListBoxUnit.Location = New System.Drawing.Point(8, 32)
+        Me.ListBoxUnit.Location = New System.Drawing.Point(6, 32)
         Me.ListBoxUnit.Name = "ListBoxUnit"
-        Me.ListBoxUnit.Size = New System.Drawing.Size(99, 136)
+        Me.ListBoxUnit.Size = New System.Drawing.Size(95, 136)
         Me.ListBoxUnit.TabIndex = 0
         '
         'LabelMeasurement
         '
         Me.LabelMeasurement.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelMeasurement.Location = New System.Drawing.Point(8, 16)
+        Me.LabelMeasurement.Location = New System.Drawing.Point(6, 16)
         Me.LabelMeasurement.Name = "LabelMeasurement"
-        Me.LabelMeasurement.Size = New System.Drawing.Size(99, 16)
+        Me.LabelMeasurement.Size = New System.Drawing.Size(96, 16)
         Me.LabelMeasurement.TabIndex = 14
         Me.LabelMeasurement.Text = "Ед. измерения"
         Me.LabelMeasurement.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -1478,9 +1478,9 @@ Partial Class FormServiceBases
         '
         Me.LabelNote.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelNote.Location = New System.Drawing.Point(8, 240)
+        Me.LabelNote.Location = New System.Drawing.Point(6, 240)
         Me.LabelNote.Name = "LabelNote"
-        Me.LabelNote.Size = New System.Drawing.Size(99, 16)
+        Me.LabelNote.Size = New System.Drawing.Size(95, 16)
         Me.LabelNote.TabIndex = 19
         Me.LabelNote.Text = "Примечание"
         Me.LabelNote.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -2096,7 +2096,7 @@ Partial Class FormServiceBases
         Me.LabelDescriptionStage.ForeColor = System.Drawing.Color.Blue
         Me.LabelDescriptionStage.Location = New System.Drawing.Point(0, 0)
         Me.LabelDescriptionStage.Name = "LabelDescriptionStage"
-        Me.LabelDescriptionStage.Size = New System.Drawing.Size(844, 17)
+        Me.LabelDescriptionStage.Size = New System.Drawing.Size(899, 17)
         Me.LabelDescriptionStage.TabIndex = 20
         Me.LabelDescriptionStage.Text = "Выбрать канал для редактирование в дереве или в таблице"
         Me.LabelDescriptionStage.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -2108,7 +2108,7 @@ Partial Class FormServiceBases
         Me.PanelButton.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.PanelButton.Location = New System.Drawing.Point(0, 608)
         Me.PanelButton.Name = "PanelButton"
-        Me.PanelButton.Size = New System.Drawing.Size(844, 42)
+        Me.PanelButton.Size = New System.Drawing.Size(899, 42)
         Me.PanelButton.TabIndex = 1
         '
         'BindingNavigatorChannelsN
@@ -2127,7 +2127,7 @@ Partial Class FormServiceBases
         Me.BindingNavigatorChannelsN.MovePreviousItem = Nothing
         Me.BindingNavigatorChannelsN.Name = "BindingNavigatorChannelsN"
         Me.BindingNavigatorChannelsN.PositionItem = Me.BindingNavigatorPositionItem
-        Me.BindingNavigatorChannelsN.Size = New System.Drawing.Size(840, 39)
+        Me.BindingNavigatorChannelsN.Size = New System.Drawing.Size(895, 39)
         Me.BindingNavigatorChannelsN.TabIndex = 36
         Me.BindingNavigatorChannelsN.Text = "BindingNavigator1"
         '
@@ -2238,7 +2238,7 @@ Partial Class FormServiceBases
         Me.MenuTarir.Location = New System.Drawing.Point(0, 0)
         Me.MenuTarir.MdiWindowListItem = Me.MenuWindow
         Me.MenuTarir.Name = "MenuTarir"
-        Me.MenuTarir.Size = New System.Drawing.Size(1132, 24)
+        Me.MenuTarir.Size = New System.Drawing.Size(1187, 24)
         Me.MenuTarir.TabIndex = 36
         Me.MenuTarir.Text = "MenuStripTarir"
         '
@@ -2544,7 +2544,7 @@ Partial Class FormServiceBases
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1132, 761)
+        Me.ClientSize = New System.Drawing.Size(1187, 761)
         Me.Controls.Add(Me.ToolStripContainer1)
         Me.Controls.Add(Me.StatusStripBar)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)

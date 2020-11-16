@@ -420,12 +420,13 @@ Friend MustInherit Class FormSnapshotBase
 
         If isUsePens Then TuneAnnotation()
     End Sub
+
     ''' <summary>
     ''' Обновить графики от параметров для снимка
     ''' </summary>
     ''' <param name="inClassGrafOfParam"></param>
     Protected Overrides Sub ReloadDiagramParameterFromParameterForSnapshot(ByRef inClassGrafOfParam As GraphsOfParameters.GraphOfParameter)
-        Dim coefficientBringingTBoxingInSnapshot As Double = Math.Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin))
+        Dim coefficientBringingTBoxingInSnapshot As Double = Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin))
         Dim xData, yData, result As Double()
         Dim J, indexResult As Integer
         Dim rangeMin As Integer = CInt(Int(XAxisTime.Range.Minimum))
@@ -1364,7 +1365,7 @@ Friend MustInherit Class FormSnapshotBase
                             For indexName = 1 To K
                                 For indexParameter = 1 To L
                                     If SnapshotSmallParameters(indexParameter).NameParameter = NamesParameterRegime(indexName) Then
-                                        dataMeasuredValuesString.Append(CStr(Math.Round(MeasuredValues(indexParameter - 1, J), Precision)))
+                                        dataMeasuredValuesString.Append(CStr(Round(MeasuredValues(indexParameter - 1, J), Precision)))
 
                                         If indexName < K Then dataMeasuredValuesString.Append(vbTab)
 
@@ -1380,17 +1381,17 @@ Friend MustInherit Class FormSnapshotBase
 
                         For J = 0 To UBound(MeasuredValues, 2) - 1
                             For I = 0 To K - 1 'параметры
-                                dataMeasuredValuesString.Append(CStr(Math.Round(MeasuredValues(I, J), Precision)) & vbTab)
+                                dataMeasuredValuesString.Append(CStr(Round(MeasuredValues(I, J), Precision)) & vbTab)
                             Next
-                            dataMeasuredValuesString.Append(CStr(Math.Round(MeasuredValues(K, J), Precision)) & vbCrLf)
+                            dataMeasuredValuesString.Append(CStr(Round(MeasuredValues(K, J), Precision)) & vbCrLf)
                         Next
 
                         ' запись последнего столбца с нулевыми значениями на предпоследний
                         For I = 0 To K - 1
-                            dataMeasuredValuesString.Append(CStr(Math.Round(MeasuredValues(I, UBound(MeasuredValues, 2) - 1), Precision)) & vbTab)
+                            dataMeasuredValuesString.Append(CStr(Round(MeasuredValues(I, UBound(MeasuredValues, 2) - 1), Precision)) & vbTab)
                         Next
 
-                        dataMeasuredValuesString.Append(CStr(Math.Round(MeasuredValues(K, UBound(MeasuredValues, 2) - 1), Precision)) & vbCrLf)
+                        dataMeasuredValuesString.Append(CStr(Round(MeasuredValues(K, UBound(MeasuredValues, 2) - 1), Precision)) & vbCrLf)
                     End If
 
                     SW.Write(dataMeasuredValuesString.ToString)
@@ -1994,7 +1995,7 @@ Friend MustInherit Class FormSnapshotBase
 
                     For I = 0 To UBound(y)
                         For J = 0 To UBound(y, 2)
-                            dataMeasuredValuesString.Append(Str(Math.Round(y(I, J), 3)))
+                            dataMeasuredValuesString.Append(Str(Round(y(I, J), 3)))
                             If J <> UBound(y, 2) Then dataMeasuredValuesString.Append(vbTab)
                         Next
                         dataMeasuredValuesString.Append(vbCrLf)
@@ -2105,8 +2106,8 @@ Friend MustInherit Class FormSnapshotBase
             .ActiveChart.ChartArea.Select()
             .ActiveChart.SetSourceData(Source:= .Sheets("Лист1").Range("A1").CurrentRegion, PlotBy:=Excel.XlRowCol.xlColumns)
             ' фактическая ось записывается на основании мин мах осей графика
-            axisXMinimum = Math.Round(XAxisTime.Range.Minimum, 1) / FrequencyBackgroundSnapshot
-            axisXMaximum = Math.Round(XAxisTime.Range.Maximum, 1) / FrequencyBackgroundSnapshot
+            axisXMinimum = Round(XAxisTime.Range.Minimum, 1) / FrequencyBackgroundSnapshot
+            axisXMaximum = Round(XAxisTime.Range.Maximum, 1) / FrequencyBackgroundSnapshot
             axisYMinimum = RangesOfDeviation(NumberParameterAxes, 1)
             axisYMaximum = RangesOfDeviation(NumberParameterAxes, 2) ' относительная в 100%
 
@@ -3372,7 +3373,7 @@ Friend MustInherit Class FormSnapshotBase
 
                     For I = 0 To UBound(y)
                         For J = 0 To UBound(y, 2)
-                            dataMeasuredValuesString.Append(Str(Math.Round(y(I, J), Precision)))
+                            dataMeasuredValuesString.Append(Str(Round(y(I, J), Precision)))
                             If J <> UBound(y, 2) Then dataMeasuredValuesString.Append(vbTab)
                         Next J
                         dataMeasuredValuesString.Append(vbCrLf)
@@ -3732,8 +3733,8 @@ Friend MustInherit Class FormSnapshotBase
                     Else
                         ' еще раз проба с графиком
                         ' Координаты х и у относительно окна графика, а не окна приложения
-                        Dim pix_X_В_Дел As Double = Math.Abs((XAxisTime.Range.Maximum - XAxisTime.Range.Minimum)) / WaveformGraphTime.PlotAreaBounds.Width
-                        Dim pix_Y_В_Дел As Double = Math.Abs((YAxisTime.Range.Maximum - YAxisTime.Range.Minimum)) / WaveformGraphTime.PlotAreaBounds.Height
+                        Dim pix_X_В_Дел As Double = Abs((XAxisTime.Range.Maximum - XAxisTime.Range.Minimum)) / WaveformGraphTime.PlotAreaBounds.Width
+                        Dim pix_Y_В_Дел As Double = Abs((YAxisTime.Range.Maximum - YAxisTime.Range.Minimum)) / WaveformGraphTime.PlotAreaBounds.Height
 
                         _XPosition = XAxisTime.Range.Minimum + (e.X - WaveformGraphTime.PlotAreaBounds.X) * pix_X_В_Дел
                         _YPosition = YAxisTime.Range.Maximum - (e.Y - WaveformGraphTime.PlotAreaBounds.Y) * pix_Y_В_Дел
@@ -3754,7 +3755,7 @@ Friend MustInherit Class FormSnapshotBase
                             ' только видимые
                             If isDetailedSheet Then
                                 If ParametersShaphotType(IndexParameters(J)).IsVisible Then
-                                    difference = Math.Abs(MeasuredValuesToRange(J - 1, iXPosition) - _YPosition)
+                                    difference = Abs(MeasuredValuesToRange(J - 1, iXPosition) - _YPosition)
                                     If minDifference > difference Then
                                         minDifference = difference
                                         I = J
@@ -3762,7 +3763,7 @@ Friend MustInherit Class FormSnapshotBase
                                 End If
                             Else
                                 If SnapshotSmallParameters(J).IsVisible Then
-                                    difference = Math.Abs(MeasuredValuesToRange(J - 1, iXPosition) - _YPosition)
+                                    difference = Abs(MeasuredValuesToRange(J - 1, iXPosition) - _YPosition)
                                     If minDifference > difference Then
                                         minDifference = difference
                                         I = J
@@ -3771,7 +3772,7 @@ Friend MustInherit Class FormSnapshotBase
                             End If
                         Else
                             ' по всем шлейфам
-                            difference = Math.Abs(MeasuredValuesToRange(J - 1, iXPosition) - _YPosition)
+                            difference = Abs(MeasuredValuesToRange(J - 1, iXPosition) - _YPosition)
                             If minDifference > difference Then
                                 minDifference = difference
                                 I = J
@@ -3831,14 +3832,14 @@ Friend MustInherit Class FormSnapshotBase
     Private Sub MoreButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonMore.Click
         If showMorePanel Then
             'MoreButton.Image = Registration.ProjectResources.SINEWAVE - можно и так
-            ButtonMore.Image = Global.Registration.My.Resources.Resources.up
+            ButtonMore.Image = My.Resources.up
             ButtonMore.ToolTipText = "<< Скрыть дополнительную панель"
             showMorePanel = False
             SplitContainerForm.SplitterDistance = SplitContainerForm.SplitterDistance - 24
             TableLayoutPanelУправленияДляСнимка.RowStyles(1).Height = 24
             InstrumentControlStrip1.Visible = True
         Else
-            ButtonMore.Image = Global.Registration.My.Resources.Resources.down
+            ButtonMore.Image = My.Resources.down
             ButtonMore.ToolTipText = "Показать дополнительную панель >>"
             showMorePanel = True
             SplitContainerForm.SplitterDistance = SplitContainerForm.SplitterDistance + 24
@@ -3869,7 +3870,7 @@ Friend MustInherit Class FormSnapshotBase
         ListViewAcquisition.BeginUpdate()
         If isDetailedSheet Then
             For J = 1 To UBound(IndexParameters)
-                ListViewAcquisition.Items(J - 1).SubItems(1).Text = CStr(Math.Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
+                ListViewAcquisition.Items(J - 1).SubItems(1).Text = CStr(Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
                 ' Debug.Print(ListView1.Items(J - 1).SubItems(0).Text)
                 ' если в программе Осциллографировыния не корректно переименовали каналы или не сделали обновление Режима
                 ' то могут в Registration быть ошибки а в Осциллографировыния нет
@@ -3879,12 +3880,12 @@ Friend MustInherit Class FormSnapshotBase
             If IsRegimeIsRegistrator Then
                 For J = 1 To UBound(IndexParameters)
                     If SnapshotSmallParameters(J).IsVisible Then
-                        ListViewAcquisition.Items(SnapshotSmallParameters(J).NumberInList - 1).SubItems(1).Text = CStr(Math.Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
+                        ListViewAcquisition.Items(SnapshotSmallParameters(J).NumberInList - 1).SubItems(1).Text = CStr(Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
                     End If
                 Next
             Else
                 For J = 1 To UBound(IndexParameters)
-                    ListViewAcquisition.Items(J - 1).SubItems(1).Text = CStr(Math.Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
+                    ListViewAcquisition.Items(J - 1).SubItems(1).Text = CStr(Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
                 Next
             End If
         End If
@@ -3900,7 +3901,7 @@ Friend MustInherit Class FormSnapshotBase
 
             For J = 1 To UBound(IndexParameters)
                 PackOfParameters(index) = ParametersShaphotType(IndexParameters(J)).NameParameter
-                PackOfParameters(index + 1) = CStr(Math.Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
+                PackOfParameters(index + 1) = CStr(Round(MeasuredValues(J - 1, xCursorIndexPosition), Precision))
                 PackOfParameters(index + 2) = CStr(ParametersShaphotType(IndexParameters(J)).NumberParameter)
                 index += 3
             Next
@@ -3920,8 +3921,8 @@ Friend MustInherit Class FormSnapshotBase
         End If
 
         If (GraphModeValue = MyGraphMode.TwoCursors AndAlso e.Cursor Is XyCursorEnd) OrElse (GraphModeValue = MyGraphMode.TwoCursors AndAlso e.Cursor Is XyCursorStart) Then
-            amplitude = CDbl(Format(Math.Abs(XyCursorEnd.YPosition - XyCursorStart.YPosition), "0.##"))
-            period = CDbl(Format(Math.Abs(XyCursorEnd.XPosition - XyCursorStart.XPosition) / SampleRate, "0.##"))
+            amplitude = CDbl(Format(Abs(XyCursorEnd.YPosition - XyCursorStart.YPosition), "0.##"))
+            period = CDbl(Format(Abs(XyCursorEnd.XPosition - XyCursorStart.XPosition) / SampleRate, "0.##"))
             AmplitudeVal.Text = CStr(amplitude)
             PeriodVal.Text = CStr(period)
         End If
@@ -4809,21 +4810,21 @@ Friend MustInherit Class FormSnapshotBase
         If additionOnStepSec = 0 Then additionOnStepSec = 1
 
         If additionOnStepSec > 0 AndAlso additionOnStepSec <= 0.1 Then
-            additionOnStepSec = Math.Round(Math.Round(additionOnStepSec * 100 + 0.5) / 100, 2)
+            additionOnStepSec = Round(Round(additionOnStepSec * 100 + 0.5) / 100, 2)
             roundDigit = 2
         ElseIf additionOnStepSec > 0.1 AndAlso additionOnStepSec <= 1 Then
-            additionOnStepSec = Math.Round(Math.Round(additionOnStepSec * 10 + 0.5) / 10, 1)
+            additionOnStepSec = Round(Round(additionOnStepSec * 10 + 0.5) / 10, 1)
             roundDigit = 1
         ElseIf additionOnStepSec > 1 AndAlso additionOnStepSec <= 10 Then
-            additionOnStepSec = CInt(Math.Round(additionOnStepSec + 0.5))
+            additionOnStepSec = CInt(Round(additionOnStepSec + 0.5))
         ElseIf additionOnStepSec > 10 AndAlso additionOnStepSec <= 100 Then
-            additionOnStepSec = CInt((Math.Round(additionOnStepSec / 10 + 0.5)) * 10)
+            additionOnStepSec = CInt((Round(additionOnStepSec / 10 + 0.5)) * 10)
         ElseIf additionOnStepSec > 100 AndAlso additionOnStepSec <= 1000 Then
-            additionOnStepSec = CInt((Math.Round(additionOnStepSec / 100 + 0.5)) * 100)
+            additionOnStepSec = CInt((Round(additionOnStepSec / 100 + 0.5)) * 100)
         ElseIf additionOnStepSec > 1000 AndAlso additionOnStepSec <= 10000 Then
-            additionOnStepSec = CInt((Math.Round(additionOnStepSec / 1000 + 0.5)) * 1000)
+            additionOnStepSec = CInt((Round(additionOnStepSec / 1000 + 0.5)) * 1000)
         ElseIf additionOnStepSec > 10000 Then
-            additionOnStepSec = CInt((Math.Round(additionOnStepSec / 10000 + 0.5)) * 10000)
+            additionOnStepSec = CInt((Round(additionOnStepSec / 10000 + 0.5)) * 10000)
         End If
 
         XAxisTime.CustomDivisions.Clear()
@@ -4846,7 +4847,7 @@ Friend MustInherit Class FormSnapshotBase
 
             XAxisTime.CustomDivisions.Add(newAxisCustomDivision)
             division += additionOnStepSec
-            division = Math.Round(division, roundDigit)
+            division = Round(division, roundDigit)
             'I += additionOnStep
             'If СчетчикПрогресса Mod 100 = 0 Then
             '    prgПрогресс.Value = CInt((СчетчикПрогресса / DivisionCount) * 100)
@@ -4992,7 +4993,7 @@ End Class
 
 'Friend Sub ПостроитьЛинииСечений()
 '    Dim числоСечений, I As Integer
-'    Dim времяСечения, sgnИнкремент As Single 'время для сечений
+'    Dim времяСечения, sgnИнкремент As Single ' время для сечений
 '    Dim plot As NationalInstruments.UI.WaveformPlot
 '    XAxisTimeRange = New NationalInstruments.UI.Range(XAxisTime.Range.Minimum, XAxisTime.Range.Maximum)
 '    ПромежутокСечения(sgnИнкремент, числоСечений, времяСечения)
@@ -5045,7 +5046,7 @@ End Class
 
 'Private Sub ОчисткаМассиваСечений()
 '    ReDim_arrСечения(7, 1)
-'    arrСечения(1, 1) = 0 'Время
+'    arrСечения(1, 1) = 0 ' время
 '    arrСечения(2, 1) = 0 '100 N1физ
 '    arrСечения(3, 1) = 0 '100 'N1прив
 '    arrСечения(4, 1) = 0 '100 'A1

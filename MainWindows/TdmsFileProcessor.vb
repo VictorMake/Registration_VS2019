@@ -146,7 +146,7 @@ Friend Class TdmsFileProcessor
     Private isSnapshotFull As Boolean
 
     Sub New()
-        Me.New(10, 20, NationalInstruments.WaveformSampleIntervalMode.Regular, False)
+        Me.New(10, 20, WaveformSampleIntervalMode.Regular, False)
     End Sub
 
     Sub New(ByVal inLimitAddedBlocks As Integer, ByVal frequency As Double, ByVal intervalMode As WaveformSampleIntervalMode, ByVal isRiseEventsSave As Boolean)
@@ -374,7 +374,7 @@ Friend Class TdmsFileProcessor
         timeStartCollectNumeric = TimeOfDay.ToOADate
 
         ' удалить если файл случайно существует 
-        If System.IO.File.Exists(fileName) Then TdmsFile.Delete(fileName)
+        If File.Exists(fileName) Then TdmsFile.Delete(fileName)
 
         RegistrationEventLog.EventLog_AUDIT_SUCCESS("Создание файла: " & fileName)
 

@@ -53,7 +53,7 @@
         '
         'separatorLabel
         '
-        Me.separatorLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.separatorLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
         Me.separatorLabel.Location = New System.Drawing.Point(96, 24)
         Me.separatorLabel.Name = "separatorLabel"
         Me.separatorLabel.Size = New System.Drawing.Size(8, 16)
@@ -78,19 +78,19 @@
         '
         'minimumNumericEdit
         '
-        Me.minimumNumericEdit.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(0)
+        Me.minimumNumericEdit.FormatMode = NumericFormatMode.CreateSimpleDoubleMode(0)
         Me.minimumNumericEdit.Location = New System.Drawing.Point(16, 24)
         Me.minimumNumericEdit.Name = "minimumNumericEdit"
-        Me.minimumNumericEdit.OutOfRangeMode = NationalInstruments.UI.NumericOutOfRangeMode.CoerceToRange
+        Me.minimumNumericEdit.OutOfRangeMode = NumericOutOfRangeMode.CoerceToRange
         Me.minimumNumericEdit.Size = New System.Drawing.Size(76, 20)
         Me.minimumNumericEdit.TabIndex = 10
         '
         'maximumNumericEdit
         '
-        Me.maximumNumericEdit.FormatMode = NationalInstruments.UI.NumericFormatMode.CreateSimpleDoubleMode(0)
+        Me.maximumNumericEdit.FormatMode = NumericFormatMode.CreateSimpleDoubleMode(0)
         Me.maximumNumericEdit.Location = New System.Drawing.Point(112, 24)
         Me.maximumNumericEdit.Name = "maximumNumericEdit"
-        Me.maximumNumericEdit.OutOfRangeMode = NationalInstruments.UI.NumericOutOfRangeMode.CoerceToRange
+        Me.maximumNumericEdit.OutOfRangeMode = NumericOutOfRangeMode.CoerceToRange
         Me.maximumNumericEdit.Size = New System.Drawing.Size(76, 20)
         Me.maximumNumericEdit.TabIndex = 11
         '
@@ -116,7 +116,7 @@
             newMinimum = oldMinimum
             newMaximum = oldMaximum
         End If
-        Return MyBase.ProcessDialogKey(keyData)
+        Return ProcessDialogKey(keyData)
     End Function
 
     Public ReadOnly Property Minimum() As Double

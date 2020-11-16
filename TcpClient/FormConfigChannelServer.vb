@@ -188,7 +188,7 @@ Friend Class FormConfigChannelServer
             I += 1
         Next
 
-        ' заполнить все ячейки типа ComboBoxColumn данного столбца даныыми
+        ' заполнить все ячейки типа ComboBoxColumn данного столбца данными
         Using tempComboBoxColumnЕдИзмВходная As DataGridViewComboBoxColumn = CType(DataGridViewOutputChannel.Columns("ЕдиницаИзмеренияDataGridViewTextBoxColumn"), DataGridViewComboBoxColumn)
             tempComboBoxColumnЕдИзмВходная.Items.AddRange(Units)
         End Using
@@ -2215,10 +2215,10 @@ Friend Class FormConfigChannelServer
             Dim f As Form = dgView.FindForm()
             ' Прервать операцию drag, если мышь переместилась вне формы
             ' screenOffset даёт размеры рабочего стола, что выше и левее от стороны экрана
-            If (((Control.MousePosition.X - screenOffset.X) < f.DesktopBounds.Left) OrElse
-                ((Control.MousePosition.X - screenOffset.X) > f.DesktopBounds.Right) OrElse
-                ((Control.MousePosition.Y - screenOffset.Y) < f.DesktopBounds.Top) OrElse
-                ((Control.MousePosition.Y - screenOffset.Y) > f.DesktopBounds.Bottom)) Then
+            If (((MousePosition.X - screenOffset.X) < f.DesktopBounds.Left) OrElse
+                ((MousePosition.X - screenOffset.X) > f.DesktopBounds.Right) OrElse
+                ((MousePosition.Y - screenOffset.Y) < f.DesktopBounds.Top) OrElse
+                ((MousePosition.Y - screenOffset.Y) > f.DesktopBounds.Bottom)) Then
 
                 e.Action = DragAction.Cancel
             End If
@@ -3845,7 +3845,7 @@ End Class
 '    'ОБОРОТЫ
 '    'Дискрет.ВХОД
 '    'Дискрет.ВХОД
-'    'ВРЕМЯ
+'    ' время
 
 '    'другая структура
 '    'Вибрации

@@ -294,7 +294,7 @@ Friend Class FormSnapshotViewingDiagram
     ''' <returns></returns>
     Public Function NewToolStripMenuItem(inName As String, inText As String, inTag As String, inToolTipText As String) As ToolStripMenuItem
         Dim mnuNewRegime As New ToolStripMenuItem() With {
-            .Image = Global.Registration.My.Resources.Resources.analysis,'= CType(Resources.GetObject("mnuРегистратор.Image"), System.Drawing.Image)
+            .Image = My.Resources.analysis,'= CType(Resources.GetObject("mnuРегистратор.Image"), System.Drawing.Image)
             .Name = inName,
             .Text = inText,
             .Tag = inTag,
@@ -387,16 +387,16 @@ Friend Class FormSnapshotViewingDiagram
             If isButtonCursorMouseDown Then
                 Select Case whereMoveCursor
                     Case MoveCursorTo.MoveFirstCursorToBackward ' уменьшить
-                        MyBase.MoveCursor(MyBase.XyCursorStart, False)
+                        MoveCursor(MyBase.XyCursorStart, False)
                         Exit Select
                     Case MoveCursorTo.MoveFirstCursorToForward ' увеличить
-                        MyBase.MoveCursor(MyBase.XyCursorStart, True)
+                        MoveCursor(MyBase.XyCursorStart, True)
                         Exit Select
                     Case MoveCursorTo.MoveSecondCursorToBackward ' уменьшить
-                        MyBase.MoveCursor(MyBase.XyCursorEnd, False)
+                        MoveCursor(MyBase.XyCursorEnd, False)
                         Exit Select
                     Case MoveCursorTo.MoveSecondCursorToForward ' увеличить
-                        MyBase.MoveCursor(MyBase.XyCursorEnd, True)
+                        MoveCursor(MyBase.XyCursorEnd, True)
                         Exit Select
                 End Select
             Else

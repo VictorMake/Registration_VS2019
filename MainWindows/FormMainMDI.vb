@@ -112,7 +112,7 @@ Public Class FormMainMDI
                     IsTaskRunning = False
                     If DAQmxTask IsNot Nothing Then
                         DAQmxTask.Stop()
-                        Thread.Sleep(100)
+                        Sleep(100)
                         DAQmxTask.Dispose()
                         DAQmxTask = Nothing
                     End If
@@ -169,7 +169,7 @@ Public Class FormMainMDI
         Select Case inTypeExamination
             Case TypeExamination.Registration
                 CloseTestBarometer()
-                CheckForCopyingBase(MainModule.TypeWorkAutomaticBackup.RegistrationOnStart)
+                CheckForCopyingBase(TypeWorkAutomaticBackup.RegistrationOnStart)
                 MenuNewWindowRegistration.Enabled = False
                 CaptionForm = "Регистратор " & lDocumentCount
                 RegistrationFormName = CaptionForm
@@ -231,7 +231,7 @@ Public Class FormMainMDI
                         IsTaskRunning = False
                         If DAQmxTask IsNot Nothing Then
                             DAQmxTask.Stop()
-                            Thread.Sleep(100)
+                            Sleep(100)
                             DAQmxTask.Dispose()
                             DAQmxTask = Nothing
                         End If
@@ -701,12 +701,12 @@ Public Class FormMainMDI
     Private splitterConnectionPanelWidth As Integer
     Private Sub ShowConnectPanel()
         If showMorePanel Then
-            ButtonShowConnectPanel.Image = Global.Registration.My.Resources.Resources.forward
+            ButtonShowConnectPanel.Image = My.Resources.forward
             Me.ToolTip.SetToolTip(ButtonShowConnectPanel, "Скрыть дополнительную панель >>")
             showMorePanel = False
             SplitterConnectionPanel.SplitPosition = splitterConnectionPanelWidth
         Else
-            ButtonShowConnectPanel.Image = Global.Registration.My.Resources.Resources.back
+            ButtonShowConnectPanel.Image = My.Resources.back
             Me.ToolTip.SetToolTip(ButtonShowConnectPanel, "<< Показать дополнительную панель")
             showMorePanel = True
             splitterConnectionPanelWidth = SplitterConnectionPanel.SplitPosition
@@ -813,7 +813,7 @@ Public Class FormMainMDI
                             ' чтобы не было 2 открытых соединений с Сервером
                             CType(mTaskDoMonitorCheckDataFromServer.AsyncState, ConnectionInfoClient).IsCancel = True
                             ConnectionClient.Close()
-                            Thread.Sleep(100)
+                            Sleep(100)
                         End If
 
                         ' Проба с таймером в форме
@@ -828,7 +828,7 @@ Public Class FormMainMDI
                         Dim smallStringPakcetByte As Byte() = SendSSDDescription(gPacketArraySmallString, "Registration", "АРМ сбора и обработки информации")
                         ConnectionClient.Stream.Write(smallStringPakcetByte, 0, smallStringPakcetByte.Length)
 
-                        Thread.Sleep(100)
+                        Sleep(100)
                         ConnectionClient.StartAcquisitionTCP()
                         mTaskDoMonitorCheckDataFromServer = Task.Factory.StartNew(AddressOf DoMonitorCheckDataFromServer, ConnectionClient, TaskCreationOptions.LongRunning)
                         ConnectionClient.AwaitData() '_ConnectionClient)
@@ -1569,7 +1569,7 @@ Public Class FormMainMDI
                 ' Соединить сокет по адресу (remote endpoint).
                 'listener.Connect(remoteEP)
                 InvokeConnectClientStartStop(True)
-                Thread.Sleep(5000)
+                Sleep(5000)
 
                 'If listener.Connected Then
                 If ConnectionClient IsNot Nothing AndAlso ConnectionClient.Tcp_Client IsNot Nothing AndAlso ConnectionClient.Tcp_Client.Connected Then

@@ -1,105 +1,16 @@
 ﻿Friend Class ЗабросN1ОтносительноУстановившегося
-    Dim mИндексПараметра, mИндексТначальное, mИндексТконечное As Integer
-    Dim mДлительностьТакта, mТначальное, mТконечное, mТдлительность As Double
-    Dim mАначальное, mАконечное As Double
-    Dim mDeltaA As Double
-    Dim mВремяОсреднения As Double
-    Dim mIsErrors As Boolean
-    Dim mИмяПараметра, mErrorsMessage As String
-    Dim marrЗначения(,) As Double
-    Dim mmyTypeList() As TypeSmallParameter
-    Dim mGraphMinimum, mGraphMaximum As Short
+    Inherits Figure
 
-    Public Property GraphMinimum() As Double
+    '''' <summary>
+    '''' Индекс Т начальное
+    '''' </summary>
+    '''' <returns></returns>
+    Public Overloads Property IndexTstart() As Integer
         Get
-            Return CDbl(mGraphMinimum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMinimum = CShort(Value)
-        End Set
-    End Property
-
-    Public Property GraphMaximum() As Double
-        Get
-            Return CDbl(mGraphMaximum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMaximum = CShort(Value)
-        End Set
-    End Property
-
-    Public ReadOnly Property ИндексПараметра() As Integer
-        Get
-            Return mИндексПараметра
-        End Get
-    End Property
-
-    Public Property ИндексТначальное() As Integer
-        Get
-            Return mИндексТначальное
+            Return mIndexTstart
         End Get
         Set(ByVal Value As Integer)
-            mИндексТначальное = Value
-        End Set
-    End Property
-
-    Public ReadOnly Property ИндексТконечное() As Integer
-        Get
-            Return mИндексТконечное
-        End Get
-    End Property
-
-    Public ReadOnly Property ДлительностьТакта() As Double
-        Get
-            Return mДлительностьТакта
-        End Get
-    End Property
-
-    Public ReadOnly Property Тначальное() As Double
-        Get
-            Return mТначальное
-        End Get
-    End Property
-
-    Public ReadOnly Property Тконечное() As Double
-        Get
-            Return mТконечное
-        End Get
-    End Property
-
-    Public ReadOnly Property Тдлительность() As Double
-        Get
-            Return mТдлительность
-        End Get
-    End Property
-
-    Public ReadOnly Property IsErrors() As Boolean
-        Get
-            Return mIsErrors
-        End Get
-    End Property
-
-    Public ReadOnly Property ErrorsMessage() As String
-        Get
-            Return mErrorsMessage
-        End Get
-    End Property
-
-    Public Property Аначальное() As Double
-        Get
-            Return mАначальное
-        End Get
-        Set(ByVal Value As Double)
-            mАначальное = Value
-        End Set
-    End Property
-
-    Public Property Аконечное() As Double
-        Get
-            Return mАконечное
-        End Get
-        Set(ByVal Value As Double)
-            mАконечное = Value
+            mIndexTstart = Value
         End Set
     End Property
 
@@ -109,84 +20,62 @@
         End Get
     End Property
 
-    Public Property ВремяОсреднения() As Double
-        Get
-            Return mВремяОсреднения
-        End Get
-        Set(ByVal Value As Double)
-            mВремяОсреднения = Value
-        End Set
-    End Property
+    ''' <summary>
+    ''' Время Осреднения
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property TimeAverage() As Double
 
-    Public Sub New(ByVal ИмяПараметра As String,
-                   ByVal ЧастотаКадра As Integer,
-                   ByVal arrЗначенияПараметров(,) As Double,
-                   ByVal myTypeList() As TypeSmallParameter,
-                   ByVal Minimum As Double, ByVal Maximum As Double)
+    Private mDeltaA As Double
 
-        mИмяПараметра = ИмяПараметра
-        marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
-        mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
-        mДлительностьТакта = 1 / ЧастотаКадра
-        mErrorsMessage = "Параметр: " & mИмяПараметра & vbCrLf
-        mВремяОсреднения = 2 'по умолчанию
-        GraphMinimum = Minimum
-        GraphMaximum = Maximum
+    Public Sub New(inNameParameter As String,
+                    frequency As Integer,
+                    inMeasuredValues(,) As Double,
+                    inTypeSmallParameter() As TypeSmallParameter,
+                    minimum As Double, ByVal maximum As Double)
+
+        MyBase.New(inNameParameter, frequency, inMeasuredValues, inTypeSmallParameter, minimum, maximum)
+        TimeAverage = 2 ' по умолчанию
+        IndexTstart = GraphMinimum
     End Sub
 
-    Public Sub Расчет()
-        Dim I, J, N As Integer
-        Dim success As Boolean
+    Public Overrides Sub Calculation()
+        Dim I As Integer
         Dim count As Integer
-        Dim максимальноеЗначение As Double = Double.MinValue
-        Dim индексМаксимальногоЗначения As Integer
-        Dim mСреднее As Double
+        Dim maximum As Double = Double.MinValue
+        Dim indexMaximum As Integer
+        Dim average As Double ' Среднее
 
-        'находим индекс параметра
-        For J = 1 To UBound(mmyTypeList)
-            If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
-                mИндексПараметра = J - 1
-                success = True
-                Exit For
-            End If
-        Next
-
-        If Not success Then
+        If ShowTotalErrorsMessage.IsParameterNotCorrect(nameParameter, mErrorsMessage, Parameters, mIndexParameter) Then
             mIsErrors = True
-            mErrorsMessage += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
             Exit Sub
         End If
 
-        'N = UBound(marrЗначения, 2)
-        N = mGraphMaximum
-        'находим среднее за последние 2 сек
-        For I = N - CInt(mВремяОсреднения / mДлительностьТакта) To N
-            mСреднее += marrЗначения(mИндексПараметра, I)
+        ' среднее за последние 2 сек
+        For I = mGraphMaximum - CInt(TimeAverage / ClockPeriod) To mGraphMaximum
+            average += MeasuredValues(mIndexParameter, I)
             count += 1
         Next
-        mСреднее /= count
+        average /= count
 
-        'находим первый максимум 
-        For I = mИндексТначальное To N
+        ' первый максимум 
+        For I = mIndexTstart To mGraphMaximum
             'поиск максимального
-            If marrЗначения(mИндексПараметра, I) > максимальноеЗначение Then
-                максимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                индексМаксимальногоЗначения = I
+            If MeasuredValues(mIndexParameter, I) > maximum Then
+                maximum = MeasuredValues(mIndexParameter, I)
+                indexMaximum = I
             End If
         Next
 
-        mИндексТконечное = N
-        mИндексТначальное = индексМаксимальногоЗначения
-        mТначальное = mИндексТначальное * mДлительностьТакта
-        mТконечное = mИндексТконечное * mДлительностьТакта
-        mТдлительность = mТконечное - mТначальное
-        mАначальное = максимальноеЗначение
-        mАконечное = mСреднее
-        mDeltaA = максимальноеЗначение - mСреднее
+        mIndexTstop = mGraphMaximum
+        mIndexTstart = indexMaximum
+        mTstart = mIndexTstart * ClockPeriod
+        mTstop = mIndexTstop * ClockPeriod
+        mTimeDuration = mTstop - mTstart
+        Astart = maximum
+        Astop = average
+        mDeltaA = maximum - average
 
-        If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mIsErrors = True
-            mErrorsMessage += "Тначальное и Тконечное равны" & vbCrLf
-        End If
+        mIsErrors = ShowTotalErrorsMessage.IsTimeFound(mIndexTstart, mIndexTstop, mGraphMinimum, mErrorsMessage)
     End Sub
 End Class
