@@ -141,7 +141,7 @@ Friend Class KTCalculationModuleManager
                 If itemPassport.Enable Then
                     Dim assemblyName As String = Path.Combine(pathCatalogModules, itemPassport.NameModule & ".dll")
                     Dim tempBaseFormKT_frmBaseKT As frmBaseKT
-                    Dim inheritsBaseFormAssembly As Reflection.Assembly = System.Reflection.Assembly.LoadFrom(assemblyName)
+                    Dim inheritsBaseFormAssembly As Reflection.Assembly = Reflection.Assembly.LoadFrom(assemblyName)
 
                     ' получить из имени файла DLL строку имени класса и имени визуально наследуемой формы
                     Dim className As String = itemPassport.NameModule & ".frmMain"

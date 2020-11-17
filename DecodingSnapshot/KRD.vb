@@ -10,25 +10,25 @@ Friend MustInherit Class KRD
     ''' <returns></returns>
     Public Property Type As KRDType
 
-    Protected mN1НастройкаКРД As Double
+    Protected mN1TuningKrd As Double
     ''' <summary>
     ''' Пересчитанное N1 КРД
     ''' </summary>
     ''' <returns></returns>
-    Public ReadOnly Property N1НастройкаКРД() As Double
+    Public ReadOnly Property N1TuningKrd() As Double
         Get
-            Return mN1НастройкаКРД
+            Return mN1TuningKrd
         End Get
     End Property
 
-    Protected mN2НастройкаКРД As Double
+    Protected mN2TuningKrd As Double
     ''' <summary>
     ''' Пересчитанное N2 КРД
     ''' </summary>
     ''' <returns></returns>
-    Public ReadOnly Property N2НастройкаКРД() As Double
+    Public ReadOnly Property N2TuningKrd() As Double
         Get
-            Return mN2НастройкаКРД
+            Return mN2TuningKrd
         End Get
     End Property
 
@@ -36,9 +36,9 @@ Friend MustInherit Class KRD
     ''' Рассчитать настройки КРД
     ''' </summary>
     ''' <param name="inTbox"></param>
-    ''' <param name="inN1КРД15"></param>
-    ''' <param name="inN2КРД15"></param>
-    Public MustOverride Sub Calculate(inTbox As Double, inN1КРД15 As Double, inN2КРД15 As Double)
+    ''' <param name="inN1Krd15"></param>
+    ''' <param name="inN2Krd15"></param>
+    Public MustOverride Sub Calculate(inTbox As Double, inN1Krd15 As Double, inN2Krd15 As Double)
 
     Protected PointN1_X(), PointN1_Y(), PointN2_X(), PointN2_Y() As Double
     Protected TuningN1KRD_15, TuningN2KRD_15 As Double ' Настройка N1 N2 КРД при +15 град.
@@ -47,20 +47,20 @@ Friend MustInherit Class KRD
     ''' Рассчитать настройки КРД
     ''' </summary>
     ''' <param name="inTbox"></param>
-    ''' <param name="inN1КРД15"></param>
-    ''' <param name="inN2КРД15"></param>
-    Protected Sub CalculateBase(inTbox As Double, inN1КРД15 As Double, inN2КРД15 As Double)
-        Dim N1КРД, N2КРД As Double
+    ''' <param name="inN1Krd15"></param>
+    ''' <param name="inN2Krd15"></param>
+    Protected Sub CalculateBase(inTbox As Double, inN1Krd15 As Double, inN2Krd15 As Double)
+        Dim N1Krd, N2Krd As Double
 
         'для N1
-        N1КРД = InterpLine(PointN1_X, PointN1_Y, inTbox)
-        N1КРД += inN1КРД15 - TuningN1KRD_15 'для 15 градусов прибавка      
+        N1Krd = InterpLine(PointN1_X, PointN1_Y, inTbox)
+        N1Krd += inN1Krd15 - TuningN1KRD_15 ' для 15 градусов прибавка      
         'для N2
-        N2КРД = InterpLine(PointN2_X, PointN2_Y, inTbox)
-        N2КРД += inN2КРД15 - TuningN2KRD_15 'для 15 градусов прибавка
+        N2Krd = InterpLine(PointN2_X, PointN2_Y, inTbox)
+        N2Krd += inN2Krd15 - TuningN2KRD_15 ' для 15 градусов прибавка
 
-        mN1НастройкаКРД = Math.Round(N1КРД, 2)
-        mN2НастройкаКРД = Math.Round(N2КРД, 2)
+        mN1TuningKrd = Math.Round(N1Krd, 2)
+        mN2TuningKrd = Math.Round(N2Krd, 2)
     End Sub
 
     'Protected PointN1(), PointN2() As PointF

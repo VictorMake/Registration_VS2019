@@ -3,7 +3,6 @@ Imports NationalInstruments.DAQmx
 
 Friend Class FormSnapshotPhotograph
     Protected Sub New()
-        'Public Sub New()
         Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormSnapshotPhotograph")
         'InitializeComponent()
     End Sub

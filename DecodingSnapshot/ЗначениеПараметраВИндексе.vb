@@ -1,102 +1,43 @@
 ﻿Friend Class ЗначениеПараметраВИндексе
-    Dim mИндексПараметра, mИндексТначальное As Integer
-    Dim mДлительностьТакта, mТначальное As Double
-    Dim mЗначениеПараметра As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
-    Dim marrЗначения(,) As Double
-    Dim mmyTypeList() As TypeSmallParameter
-    Dim mGraphMinimum, mGraphMaximum As Short
+    Inherits Figure
 
-    Public Property GraphMinimum() As Double
+    '''' <summary>
+    '''' Индекс Т начальное
+    '''' </summary>
+    '''' <returns></returns>
+    Public Overloads Property IndexTstart() As Integer
         Get
-            Return CDbl(mGraphMinimum)
+            Return mIndexTstart
         End Get
-        Set(ByVal Value As Double)
-            mGraphMinimum = CShort(Value)
-        End Set
-    End Property
-
-    Public Property GraphMaximum() As Double
-        Get
-            Return CDbl(mGraphMaximum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMaximum = CShort(Value)
-        End Set
-    End Property
-
-    Public ReadOnly Property ИндексПараметра() As Integer
-        Get
-            Return mИндексПараметра
-        End Get
-    End Property
-
-    Public WriteOnly Property ИндексТначальное() As Integer
         Set(ByVal Value As Integer)
-            mИндексТначальное = Value
+            mIndexTstart = Value
         End Set
     End Property
 
-    Public ReadOnly Property Тначальное() As Double
+    Public ReadOnly Property ParameterValue() As Double
         Get
-            Return mТначальное
+            Return mParameterValue
         End Get
     End Property
 
-    Public ReadOnly Property ЗначениеПараметра() As Double
-        Get
-            Return mЗначениеПараметра
-        End Get
-    End Property
+    Private mParameterValue As Double
 
-    Public ReadOnly Property Ошибка() As Boolean
-        Get
-            Return mОшибка
-        End Get
-    End Property
+    Public Sub New(inNameParameter As String,
+                    frequency As Integer,
+                    inMeasuredValues(,) As Double,
+                    inTypeSmallParameter() As TypeSmallParameter,
+                    minimum As Double, ByVal maximum As Double)
 
-    Public ReadOnly Property ТекстОшибки() As String
-        Get
-            Return mТекстОшибки
-        End Get
-    End Property
-
-    Public Sub New(ByVal ИмяПараметра As String,
-                   ByVal ЧастотаКадра As Integer,
-                   ByVal arrЗначенияПараметров(,) As Double,
-                   ByVal myTypeList() As TypeSmallParameter,
-                   ByVal Minimum As Double,
-                   ByVal Maximum As Double)
-
-        mИмяПараметра = ИмяПараметра
-        marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
-        mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
-        mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
-        GraphMinimum = Minimum
-        GraphMaximum = Maximum
+        MyBase.New(inNameParameter, frequency, inMeasuredValues, inTypeSmallParameter, minimum, maximum)
     End Sub
 
-    Public Sub Расчет()
-        Dim параметрНайден As Boolean
-
-        'находим индекс параметра
-        For J As Integer = 1 To UBound(mmyTypeList)
-            If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
-                mИндексПараметра = J - 1
-                параметрНайден = True
-                Exit For
-            End If
-        Next
-
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+    Public Overrides Sub Calculation()
+        If ShowTotalErrorsMessage.IsParameterNotCorrect(nameParameter, mErrorsMessage, Parameters, mIndexParameter) Then
+            mIsErrors = True
             Exit Sub
         End If
 
-        mЗначениеПараметра = marrЗначения(mИндексПараметра, mИндексТначальное)
-        mТначальное = mИндексТначальное * mДлительностьТакта
+        mParameterValue = MeasuredValues(mIndexParameter, mIndexTstart)
+        mTstart = mIndexTstart * ClockPeriod
     End Sub
 End Class

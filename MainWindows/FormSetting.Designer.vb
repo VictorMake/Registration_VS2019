@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormSetting
     Inherits System.Windows.Forms.Form
 
     'Форма переопределяет dispose для очистки списка компонентов.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,10 +20,12 @@ Partial Class FormSetting
     'Примечание: следующая процедура является обязательной для конструктора форм Windows Forms
     'Для ее изменения используйте конструктор форм Windows Form.  
     'Не изменяйте ее в редакторе исходного кода.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSetting))
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.OpenFileDialogPuth = New System.Windows.Forms.OpenFileDialog()
         Me.HelpProvider1 = New System.Windows.Forms.HelpProvider()
         Me.ComboNumberStend = New System.Windows.Forms.ComboBox()
@@ -90,6 +92,21 @@ Partial Class FormSetting
         Me.LabelDiscreditFact = New System.Windows.Forms.Label()
         Me.TextFrequencySamplingChannel = New System.Windows.Forms.Label()
         Me.TabPageChannels = New System.Windows.Forms.TabPage()
+        Me.PanelConstantChannels = New System.Windows.Forms.Panel()
+        Me.DataGridViewConstantChannels = New System.Windows.Forms.DataGridView()
+        Me.BindingNavigatorConstantChannels = New System.Windows.Forms.BindingNavigator(Me.components)
+        Me.BindingNavigatorAddNewItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel()
+        Me.BindingNavigatorDeleteItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMovePreviousItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorSeparator = New System.Windows.Forms.ToolStripSeparator()
+        Me.BindingNavigatorPositionItem = New System.Windows.Forms.ToolStripTextBox()
+        Me.BindingNavigatorSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.LabelSelectedChannel = New System.Windows.Forms.Label()
         Me.GroupBoxWeather = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanelControls = New System.Windows.Forms.TableLayoutPanel()
         Me.TextTbox = New System.Windows.Forms.TextBox()
@@ -140,6 +157,10 @@ Partial Class FormSetting
         CType(Me.NumPrecision, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelKadr.SuspendLayout()
         Me.TabPageChannels.SuspendLayout()
+        Me.PanelConstantChannels.SuspendLayout()
+        CType(Me.DataGridViewConstantChannels, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BindingNavigatorConstantChannels, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.BindingNavigatorConstantChannels.SuspendLayout()
         Me.GroupBoxWeather.SuspendLayout()
         Me.TableLayoutPanelControls.SuspendLayout()
         Me.GroupBoxNameConst.SuspendLayout()
@@ -1061,6 +1082,7 @@ Partial Class FormSetting
         '
         Me.TabPageChannels.BackColor = System.Drawing.SystemColors.Control
         Me.TabPageChannels.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.TabPageChannels.Controls.Add(Me.PanelConstantChannels)
         Me.TabPageChannels.Controls.Add(Me.GroupBoxWeather)
         Me.TabPageChannels.Controls.Add(Me.GroupBoxNameConst)
         Me.TabPageChannels.ImageIndex = 5
@@ -1072,16 +1094,172 @@ Partial Class FormSetting
         Me.TabPageChannels.Text = "Каналы"
         Me.TabPageChannels.ToolTipText = "Вкладка настроек отслеживаемых параметров"
         '
+        'PanelConstantChannels
+        '
+        Me.PanelConstantChannels.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PanelConstantChannels.Controls.Add(Me.DataGridViewConstantChannels)
+        Me.PanelConstantChannels.Controls.Add(Me.BindingNavigatorConstantChannels)
+        Me.PanelConstantChannels.Controls.Add(Me.LabelSelectedChannel)
+        Me.PanelConstantChannels.Location = New System.Drawing.Point(5, 218)
+        Me.PanelConstantChannels.Name = "PanelConstantChannels"
+        Me.PanelConstantChannels.Size = New System.Drawing.Size(406, 131)
+        Me.PanelConstantChannels.TabIndex = 80
+        '
+        'DataGridViewConstantChannels
+        '
+        Me.DataGridViewConstantChannels.AllowUserToAddRows = False
+        Me.DataGridViewConstantChannels.AllowUserToDeleteRows = False
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Lavender
+        Me.DataGridViewConstantChannels.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.DataGridViewConstantChannels.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridViewConstantChannels.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells
+        Me.DataGridViewConstantChannels.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.DataGridViewConstantChannels.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewConstantChannels.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.DataGridViewConstantChannels.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewConstantChannels.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewConstantChannels.Location = New System.Drawing.Point(0, 47)
+        Me.DataGridViewConstantChannels.MultiSelect = False
+        Me.DataGridViewConstantChannels.Name = "DataGridViewConstantChannels"
+        Me.DataGridViewConstantChannels.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.DataGridViewConstantChannels.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.DataGridViewConstantChannels.Size = New System.Drawing.Size(402, 80)
+        Me.DataGridViewConstantChannels.TabIndex = 36
+        '
+        'BindingNavigatorConstantChannels
+        '
+        Me.BindingNavigatorConstantChannels.AddNewItem = Me.BindingNavigatorAddNewItem
+        Me.BindingNavigatorConstantChannels.CountItem = Me.BindingNavigatorCountItem
+        Me.BindingNavigatorConstantChannels.DeleteItem = Me.BindingNavigatorDeleteItem
+        Me.BindingNavigatorConstantChannels.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BindingNavigatorMoveFirstItem, Me.BindingNavigatorMovePreviousItem, Me.BindingNavigatorSeparator, Me.BindingNavigatorPositionItem, Me.BindingNavigatorCountItem, Me.BindingNavigatorSeparator1, Me.BindingNavigatorMoveNextItem, Me.BindingNavigatorMoveLastItem, Me.BindingNavigatorSeparator2, Me.BindingNavigatorAddNewItem, Me.BindingNavigatorDeleteItem})
+        Me.BindingNavigatorConstantChannels.Location = New System.Drawing.Point(0, 22)
+        Me.BindingNavigatorConstantChannels.MoveFirstItem = Me.BindingNavigatorMoveFirstItem
+        Me.BindingNavigatorConstantChannels.MoveLastItem = Me.BindingNavigatorMoveLastItem
+        Me.BindingNavigatorConstantChannels.MoveNextItem = Me.BindingNavigatorMoveNextItem
+        Me.BindingNavigatorConstantChannels.MovePreviousItem = Me.BindingNavigatorMovePreviousItem
+        Me.BindingNavigatorConstantChannels.Name = "BindingNavigatorConstantChannels"
+        Me.BindingNavigatorConstantChannels.PositionItem = Me.BindingNavigatorPositionItem
+        Me.BindingNavigatorConstantChannels.Size = New System.Drawing.Size(402, 25)
+        Me.BindingNavigatorConstantChannels.TabIndex = 37
+        Me.BindingNavigatorConstantChannels.Text = "BindingNavigatorConstantChannels"
+        '
+        'BindingNavigatorAddNewItem
+        '
+        Me.BindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorAddNewItem.Image = CType(resources.GetObject("BindingNavigatorAddNewItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorAddNewItem.Name = "BindingNavigatorAddNewItem"
+        Me.BindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorAddNewItem.Size = New System.Drawing.Size(23, 22)
+        Me.BindingNavigatorAddNewItem.Text = "Добавить"
+        Me.BindingNavigatorAddNewItem.ToolTipText = "Добавить константный параметр"
+        '
+        'BindingNavigatorCountItem
+        '
+        Me.BindingNavigatorCountItem.Name = "BindingNavigatorCountItem"
+        Me.BindingNavigatorCountItem.Size = New System.Drawing.Size(43, 22)
+        Me.BindingNavigatorCountItem.Text = "для {0}"
+        Me.BindingNavigatorCountItem.ToolTipText = "Общее число элементов"
+        '
+        'BindingNavigatorDeleteItem
+        '
+        Me.BindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorDeleteItem.Image = CType(resources.GetObject("BindingNavigatorDeleteItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorDeleteItem.Name = "BindingNavigatorDeleteItem"
+        Me.BindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorDeleteItem.Size = New System.Drawing.Size(23, 22)
+        Me.BindingNavigatorDeleteItem.Text = "Удалить"
+        Me.BindingNavigatorDeleteItem.ToolTipText = "Удалить константный параметр"
+        '
+        'BindingNavigatorMoveFirstItem
+        '
+        Me.BindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveFirstItem.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveFirstItem.Name = "BindingNavigatorMoveFirstItem"
+        Me.BindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveFirstItem.Size = New System.Drawing.Size(23, 22)
+        Me.BindingNavigatorMoveFirstItem.Text = "Переместить в начало"
+        '
+        'BindingNavigatorMovePreviousItem
+        '
+        Me.BindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMovePreviousItem.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMovePreviousItem.Name = "BindingNavigatorMovePreviousItem"
+        Me.BindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMovePreviousItem.Size = New System.Drawing.Size(23, 22)
+        Me.BindingNavigatorMovePreviousItem.Text = "Переместить назад"
+        '
+        'BindingNavigatorSeparator
+        '
+        Me.BindingNavigatorSeparator.Name = "BindingNavigatorSeparator"
+        Me.BindingNavigatorSeparator.Size = New System.Drawing.Size(6, 25)
+        '
+        'BindingNavigatorPositionItem
+        '
+        Me.BindingNavigatorPositionItem.AccessibleName = "Положение"
+        Me.BindingNavigatorPositionItem.AutoSize = False
+        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
+        Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(50, 23)
+        Me.BindingNavigatorPositionItem.Text = "0"
+        Me.BindingNavigatorPositionItem.ToolTipText = "Текущее положение"
+        '
+        'BindingNavigatorSeparator1
+        '
+        Me.BindingNavigatorSeparator1.Name = "BindingNavigatorSeparator1"
+        Me.BindingNavigatorSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'BindingNavigatorMoveNextItem
+        '
+        Me.BindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveNextItem.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveNextItem.Name = "BindingNavigatorMoveNextItem"
+        Me.BindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveNextItem.Size = New System.Drawing.Size(23, 22)
+        Me.BindingNavigatorMoveNextItem.Text = "Переместить вперед"
+        '
+        'BindingNavigatorMoveLastItem
+        '
+        Me.BindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveLastItem.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveLastItem.Name = "BindingNavigatorMoveLastItem"
+        Me.BindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveLastItem.Size = New System.Drawing.Size(23, 22)
+        Me.BindingNavigatorMoveLastItem.Text = "Переместить в конец"
+        '
+        'BindingNavigatorSeparator2
+        '
+        Me.BindingNavigatorSeparator2.Name = "BindingNavigatorSeparator2"
+        Me.BindingNavigatorSeparator2.Size = New System.Drawing.Size(6, 25)
+        '
+        'LabelSelectedChannel
+        '
+        Me.LabelSelectedChannel.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.LabelSelectedChannel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.LabelSelectedChannel.ForeColor = System.Drawing.Color.Blue
+        Me.LabelSelectedChannel.Location = New System.Drawing.Point(0, 0)
+        Me.LabelSelectedChannel.Name = "LabelSelectedChannel"
+        Me.LabelSelectedChannel.Size = New System.Drawing.Size(402, 22)
+        Me.LabelSelectedChannel.TabIndex = 34
+        Me.LabelSelectedChannel.Text = "Назначить константные каналы"
+        Me.LabelSelectedChannel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'GroupBoxWeather
         '
         Me.GroupBoxWeather.Controls.Add(Me.TableLayoutPanelControls)
         Me.GroupBoxWeather.ForeColor = System.Drawing.Color.Blue
-        Me.GroupBoxWeather.Location = New System.Drawing.Point(6, 127)
+        Me.GroupBoxWeather.Location = New System.Drawing.Point(6, 124)
         Me.GroupBoxWeather.Name = "GroupBoxWeather"
-        Me.GroupBoxWeather.Size = New System.Drawing.Size(402, 88)
+        Me.GroupBoxWeather.Size = New System.Drawing.Size(405, 91)
         Me.GroupBoxWeather.TabIndex = 79
         Me.GroupBoxWeather.TabStop = False
-        Me.GroupBoxWeather.Text = "Контроль"
+        Me.GroupBoxWeather.Text = "Контроль значения канала"
         '
         'TableLayoutPanelControls
         '
@@ -1100,7 +1278,7 @@ Partial Class FormSetting
         Me.TableLayoutPanelControls.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
         Me.TableLayoutPanelControls.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
         Me.TableLayoutPanelControls.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
-        Me.TableLayoutPanelControls.Size = New System.Drawing.Size(396, 69)
+        Me.TableLayoutPanelControls.Size = New System.Drawing.Size(399, 72)
         Me.TableLayoutPanelControls.TabIndex = 5
         '
         'TextTbox
@@ -1109,7 +1287,7 @@ Partial Class FormSetting
         Me.TextTbox.BackColor = System.Drawing.SystemColors.Control
         Me.TextTbox.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextTbox.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.TextTbox.Location = New System.Drawing.Point(202, 35)
+        Me.TextTbox.Location = New System.Drawing.Point(204, 35)
         Me.TextTbox.MaxLength = 0
         Me.TextTbox.Name = "TextTbox"
         Me.TextTbox.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -1123,9 +1301,9 @@ Partial Class FormSetting
         Me.Label1.AutoSize = True
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Label1.Location = New System.Drawing.Point(202, 3)
+        Me.Label1.Location = New System.Drawing.Point(204, 3)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(188, 26)
+        Me.Label1.Size = New System.Drawing.Size(189, 26)
         Me.Label1.TabIndex = 5
         Me.Label1.Text = "Значение канала"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1137,7 +1315,7 @@ Partial Class FormSetting
         Me.Label2.ForeColor = System.Drawing.SystemColors.ControlText
         Me.Label2.Location = New System.Drawing.Point(6, 3)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(187, 26)
+        Me.Label2.Size = New System.Drawing.Size(189, 26)
         Me.Label2.TabIndex = 4
         Me.Label2.Text = "Имя канала"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1151,7 +1329,7 @@ Partial Class FormSetting
         Me.LabelTbox.Location = New System.Drawing.Point(6, 32)
         Me.LabelTbox.Name = "LabelTbox"
         Me.LabelTbox.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.LabelTbox.Size = New System.Drawing.Size(187, 26)
+        Me.LabelTbox.Size = New System.Drawing.Size(189, 26)
         Me.LabelTbox.TabIndex = 77
         Me.LabelTbox.Text = "Температура бокса:"
         Me.LabelTbox.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -1526,6 +1704,12 @@ Partial Class FormSetting
         CType(Me.NumPrecision, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelKadr.ResumeLayout(False)
         Me.TabPageChannels.ResumeLayout(False)
+        Me.PanelConstantChannels.ResumeLayout(False)
+        Me.PanelConstantChannels.PerformLayout()
+        CType(Me.DataGridViewConstantChannels, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BindingNavigatorConstantChannels, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.BindingNavigatorConstantChannels.ResumeLayout(False)
+        Me.BindingNavigatorConstantChannels.PerformLayout()
         Me.GroupBoxWeather.ResumeLayout(False)
         Me.TableLayoutPanelControls.ResumeLayout(False)
         Me.TableLayoutPanelControls.PerformLayout()
@@ -1638,4 +1822,19 @@ Partial Class FormSetting
     Friend WithEvents ButtonFindChannelTbox As Button
     Friend WithEvents PanelTxc As Panel
     Friend WithEvents ButtonFindChannelTxc As Button
+    Friend WithEvents PanelConstantChannels As Panel
+    Friend WithEvents LabelSelectedChannel As Label
+    Public WithEvents DataGridViewConstantChannels As DataGridView
+    Friend WithEvents BindingNavigatorAddNewItem As ToolStripButton
+    Friend WithEvents BindingNavigatorCountItem As ToolStripLabel
+    Friend WithEvents BindingNavigatorDeleteItem As ToolStripButton
+    Friend WithEvents BindingNavigatorMoveFirstItem As ToolStripButton
+    Friend WithEvents BindingNavigatorMovePreviousItem As ToolStripButton
+    Friend WithEvents BindingNavigatorSeparator As ToolStripSeparator
+    Friend WithEvents BindingNavigatorPositionItem As ToolStripTextBox
+    Friend WithEvents BindingNavigatorSeparator1 As ToolStripSeparator
+    Friend WithEvents BindingNavigatorMoveNextItem As ToolStripButton
+    Friend WithEvents BindingNavigatorMoveLastItem As ToolStripButton
+    Friend WithEvents BindingNavigatorSeparator2 As ToolStripSeparator
+    Public WithEvents BindingNavigatorConstantChannels As BindingNavigator
 End Class

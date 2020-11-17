@@ -136,7 +136,7 @@ Friend Class FormTextControl
                     If rowPanel * colPanel < countControl Then rowPanel += 1
                 ElseIf ratio >= tillTwoColumns AndAlso ratio < tillSquare Then
                     ' квадрат
-                    rowPanel = Convert.ToInt32(Math.Sqrt(countControl))
+                    rowPanel = Convert.ToInt32(Sqrt(countControl))
                     colPanel = Convert.ToInt32(countControl / rowPanel)
                     If rowPanel * colPanel < countControl Then colPanel += 1
                 ElseIf ratio >= tillSquare AndAlso ratio < tillTwoRows Then
@@ -214,8 +214,8 @@ Friend Class FormTextControl
         decFactorX = (mptCurrentScreenX / mptDesignScreenX)
         decFactorY = (mptCurrentScreenY / mptDesignScreenY)
 
-        decFactor = Math.Min(decFactorX, decFactorY)
-        decFontSize = Math.Round(fontSizeDesign * decFactor * 1.5)
+        decFactor = Min(decFactorX, decFactorY)
+        decFontSize = Round(fontSizeDesign * decFactor * 1.5)
 
         If decFontSize < 1.0 Then decFontSize = 1.0
         If decFontSize > 127.0 Then decFontSize = 127.0

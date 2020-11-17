@@ -90,7 +90,7 @@ Friend Class FormPatternGraphByParameter
                 }
             'ScatterPlotTemp.LineColor = System.Drawing.Color.White
 
-            Dim values As Array = LineStyle.GetValues(ScatterPlot1.LineStyle.UnderlyingType)
+            Dim values As Array = EnumObject.GetValues(ScatterPlot1.LineStyle.UnderlyingType)
             Dim valueTemp As LineStyle = LineStyle.Dot ' по умолчанию
 
             For I As Integer = 0 To values.Length - 1

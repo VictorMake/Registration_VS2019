@@ -50,7 +50,7 @@ Friend Class FormTextEditor
     Private Sub FormTextEditor_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         ' Установить рабочий каталог в каталог, содержащий приложение.
         'ChDir(VB6.GetPath)
-        Microsoft.VisualBasic.FileIO.FileSystem.CurrentDirectory = IO.Path.Combine(IO.Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), RootDirectory) ' Ресурсы
+        FileIO.FileSystem.CurrentDirectory = IO.Path.Combine(IO.Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), RootDirectory) ' Ресурсы
 
         ' Читать Системный  реестр, и установите недавний массив контроля списков файлов меню соответственно.
         '    GetRecentFiles

@@ -131,6 +131,7 @@ Friend Class TdmsFileProcessor
     Private timeStartCollectNumeric As Double
     Private countRowsMeasuredValues As Integer ' в аргументе ClosedTDMSFileEventArgs
     Public countRowsAdded As Integer ' в аргументе ClosedTDMSFileEventArgs
+    Public Property IsCloseTDMSFile As Boolean
     ''' <summary>
     ''' Проверка имен каналов при счтитывании файла
     ''' </summary>
@@ -145,7 +146,7 @@ Friend Class TdmsFileProcessor
     Private isSnapshotFull As Boolean
 
     Sub New()
-        Me.New(10, 20, NationalInstruments.WaveformSampleIntervalMode.Regular, False)
+        Me.New(10, 20, WaveformSampleIntervalMode.Regular, False)
     End Sub
 
     Sub New(ByVal inLimitAddedBlocks As Integer, ByVal frequency As Double, ByVal intervalMode As WaveformSampleIntervalMode, ByVal isRiseEventsSave As Boolean)
@@ -242,7 +243,7 @@ Friend Class TdmsFileProcessor
             ex = tdmsException
         Finally
             If ex IsNot Nothing Then
-                Const caption As String = "Ошибка конфигурирования файла в процедуре Configure"
+                Dim caption As String = $"Ошибка конфигурирования файла в процедуре {NameOf(Configure)}"
                 Dim text As String = ex.ToString
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 RegistrationEventLog.EventLog_MSG_FILE_IO_FAILED($"<{caption}> {text}")
@@ -278,7 +279,7 @@ Friend Class TdmsFileProcessor
             ex = tdmsException
         Finally
             If ex IsNot Nothing Then
-                Const caption As String = "Ошибка конфигурирования файла в процедуре Configure"
+                Dim caption As String = $"Ошибка конфигурирования файла в процедуре {NameOf(Configure)}"
                 Dim text As String = ex.ToString
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 RegistrationEventLog.EventLog_MSG_FILE_IO_FAILED($"<{caption}> {text}")
@@ -292,8 +293,8 @@ Friend Class TdmsFileProcessor
     ''' <remarks></remarks>
     Private Sub SetUpTDMSFile()
         ' обычно даже маленький остаточек будет в файле и должен быть записан при выключении кнопки запись, новой конфигурации, и закрытия окна и всего приложения
-        Dim время As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
-        fileName = $"{pathFile}\База снимков\{ModificationEngine}-{title} ({Today.ToShortDateString} {время}) {description}.tdms"
+        Dim nowToLongTime As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
+        fileName = $"{pathFile}\База снимков\{ModificationEngine}-{title} ({Today.ToShortDateString} {nowToLongTime}) {description}.tdms"
 
         'strПутьТекстовогоПотока = strПутьРесурсы & "\База снимков\" & strМодификация & "-" & CStr(lngНомерИзделия) & " (" & Today.ToShortDateString & " " & strВремя & ") " & strПримечаниеСнимка & ".txt"
         'lngНомерИзделия.ToString & ",'" & Today.ToString & "'," & [Время].ToOADate & "," & sgnТемператураБокса.ToString & ",'" & strТипКрд & "','" & режим & "','" & strСтрокаКонфигурации & "'," & chКолСтрок.ToString & "," & UBound(arrСреднее).ToString & "," & intЧастотаФонового.ToString & "," & CStr(XAxisTime.Range.Minimum) & "," & dblMaximum.ToString & ",'" & strПутьТекстовогоПотока & "','" & strChannelПоследняя & "','" & strПримечаниеСнимка & "')"
@@ -357,6 +358,7 @@ Friend Class TdmsFileProcessor
 
         countAddedBlocksToFile = 0
         countRowsAdded = 0
+        IsCloseTDMSFile = False
     End Sub
 
     ''' <summary>
@@ -364,15 +366,15 @@ Friend Class TdmsFileProcessor
     ''' </summary>
     Private Sub SetUpTDMSFileForDecoding()
         ' обычно даже маленький остаточек будет в файле и должен быть записан при выключении кнопки запись, новой конфигурации, и закрытия окна и всего приложения
-        Dim время As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
-        fileName = $"{pathFile}\База снимков\{title}_{Today.ToShortDateString}_{время}_{description}.tdms"
+        Dim nowToLongTime As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
+        fileName = $"{pathFile}\База снимков\{title}_{Today.ToShortDateString}_{nowToLongTime}_{description}.tdms"
 
         'lngНомерИзделия.ToString & ",'" & Today.ToString & "'," & [Время].ToOADate & "," & sgnТемператураБокса.ToString & ",'" & strТипКрд & "','" & режим & "','" & strСтрокаКонфигурации & "'," & chКолСтрок.ToString & "," & UBound(arrСреднее).ToString & "," & intЧастотаФонового.ToString & "," & CStr(XAxisTime.Range.Minimum) & "," & dblMaximum.ToString & ",'" & strПутьТекстовогоПотока & "','" & strChannelПоследняя & "','" & strПримечаниеСнимка & "')"
         todayString = Today.ToString
         timeStartCollectNumeric = TimeOfDay.ToOADate
 
         ' удалить если файл случайно существует 
-        If System.IO.File.Exists(fileName) Then TdmsFile.Delete(fileName)
+        If File.Exists(fileName) Then TdmsFile.Delete(fileName)
 
         RegistrationEventLog.EventLog_AUDIT_SUCCESS("Создание файла: " & fileName)
 
@@ -419,6 +421,7 @@ Friend Class TdmsFileProcessor
 
         countAddedBlocksToFile = 0
         countRowsAdded = 0
+        IsCloseTDMSFile = False
     End Sub
 
     ''' <summary>
@@ -462,6 +465,9 @@ Friend Class TdmsFileProcessor
                 Thread.Sleep(10)
                 Application.DoEvents()
             Loop
+
+            ' если второй раз вызывается из ожидающего потока то прервать
+            If Not mTdmsFile.IsOpen Then Exit Sub
 
             mTdmsFile.Close()
 
@@ -745,7 +751,7 @@ Friend Class TdmsFileProcessor
             If countAddedBlocksToFile >= limitAddedBlocks Then
                 isSnapshotFull = True
                 CloseTDMSFile()
-                SetUpTDMSFile() ' следующий файл
+                If Not IsCloseTDMSFile Then SetUpTDMSFile() ' следующий файл
             Else
                 ' просто уведомить вызывающий модуль о продолжениии накопления
                 RaiseEvent ContinueAccumulation(Me, New EventArgs())

@@ -683,7 +683,7 @@ Public Class FormTestChannel
         Dim unit As System.Text.StringBuilder = New System.Text.StringBuilder("V", 256)
         ' единица преобразования спектра мощности выбранная пользователем
         unitConvertedSpectrum = New Double(samplesPerChannel - 1) {}
-        unitConvertedSpectrum = Measurements.SpectrumUnitConversion(autoPowerSpectrum, NationalInstruments.Analysis.SpectralMeasurements.SpectrumType.Power, scaleMode, unitOfdisplay, df, equivalentNoiseBandwidth, coherentGain, unit)
+        unitConvertedSpectrum = Measurements.SpectrumUnitConversion(autoPowerSpectrum, SpectrumType.Power, scaleMode, unitOfdisplay, df, equivalentNoiseBandwidth, coherentGain, unit)
         ' установить примечание оси yAxis в соответствии с выбранной единицей дисплея.
         powerSpectrumYAxis.Caption = unit.ToString()
 

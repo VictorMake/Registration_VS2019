@@ -13,225 +13,148 @@ Friend Class AnalysisВключениеСУНАНаN290ПоКнопкеБК
 
     Private Sub AllocateProtocol()
         EngineDefineTU()
-        'ReDim_Protocol(10, 3)
         Re.Dim(Protocol, 10, 3)
-        Protocol(1, 1) = "Контрольный лист №"
-        Protocol(2, 1) = "Кадр предъявляется"
-        Protocol(3, 1) = "Температура бокса"
-        Protocol(4, 1) = "Сигналы прошли"
-        Protocol(5, 1) = "N2привед."
-        Protocol(6, 1) = "t БК"
-        Protocol(7, 1) = "t СУНА"
-        Protocol(8, 1) = "dРС"
-        Protocol(9, 1) = "a2"
-        Protocol(10, 1) = "Автоматика а1=f(N2прив)"
-
-        Protocol(1, 2) = CStr(Parent.NumberProductionSnapshot)
-        Protocol(2, 2) = "п/заказчика"
-        Protocol(3, 2) = TemperatureOfBox & "град."
-        Protocol(4, 2) = "По ТУ"
-        Protocol(5, 2) = "%"
-        Protocol(6, 2) = "сек"
-        Protocol(7, 2) = "сек в ТУ"
-        Protocol(8, 2) = "дел. В ТУ"
-        Protocol(9, 2) = "дел. В ТУ"
-        Protocol(10, 2) = "По ТУ"
-
-        Protocol(1, 3) = ""
-        Protocol(2, 3) = ""
-        Protocol(3, 3) = ""
-        Protocol(4, 3) = ""
-        Protocol(5, 3) = ""
-        Protocol(6, 3) = GetEngineNormTUParameter(52)
-        Protocol(7, 3) = GetEngineNormTUParameter(41)
-        Protocol(8, 3) = GetEngineNormTUParameter(48)
-        Protocol(9, 3) = GetEngineNormTUParameter(49)
-        Protocol(10, 3) = ""
+        PopulateProtocol(1, {"Контрольный лист №", CStr(Parent.NumberProductionSnapshot), ""})
+        PopulateProtocol(2, {"Кадр предъявляется", "п/заказчика", ""})
+        PopulateProtocol(3, {"Температура бокса", TemperatureOfBox & "град.", ""})
+        PopulateProtocol(4, {"Сигналы прошли", "По ТУ", ""})
+        PopulateProtocol(5, {"N2привед.", "%", ""})
+        PopulateProtocol(6, {"t БК", "сек", GetEngineNormTUParameter(52)})
+        PopulateProtocol(7, {"t СУНА", "сек в ТУ", GetEngineNormTUParameter(41)})
+        PopulateProtocol(8, {"dРС", "дел. В ТУ", GetEngineNormTUParameter(48)})
+        PopulateProtocol(9, {"a2", "дел. В ТУ", GetEngineNormTUParameter(49)})
+        PopulateProtocol(10, {"Автоматика а1=f(N2прив)", "По ТУ", ""})
     End Sub
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
-
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
-        'вычисляем длительность КнопкаБК
-        параметр = conКнопкаБК
-        Dim clsДлительностьЗабросаПровалаБК As New ДлительностьЗабросаПровала(параметр,
-                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                              Parent.MeasuredValues,
-                                                                              Parent.SnapshotSmallParameters,
-                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровалаБК
-            .Аначальное = 1
-            .Апорога = 4.99
-            .Расчет()
+        ' вычисление длительность КнопкаБК
+        parameter = conКнопкаБК
+        Dim mДлительностьЗабросаПровалаБК = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаБК
+            .Astart = 1
+            .Astop = 4.99
+            .Calculation()
+            If .IsErrors Then
+                ' анализ для последующих построений, накапливаем ошибку
+                IsTotalErrors = True
+                totalErrorsMessage += .ErrorsMessage & vbCrLf
+            Else
+                ' отрисовать стрелки
+                Parent.TracingDecodingArrow(
+                    .Tstart,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    .Tstop,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Horizontal,
+                    $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                Protocol(6, 2) = Round(.TimeDuration, 2) & " сек."
+            End If
         End With
 
-        If clsДлительностьЗабросаПровалаБК.Ошибка = True Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьЗабросаПровалаБК.ТекстОшибки & vbCrLf
-        Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровалаБК
-                Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                Protocol(6, 2) = Round(.Тдлительность, 2) & " сек."
-            End With
-        End If
-
-        'вычисляем длительность КлапанСУНА
-        параметр = conКлапанСУНА
-        Dim clsДлительностьЗабросаПровала As New ДлительностьЗабросаПровала(параметр,
-                                                                            Parent.FrequencyBackgroundSnapshot,
-                                                                            Parent.MeasuredValues,
-                                                                            Parent.SnapshotSmallParameters,
-                                                                            Parent.XAxisTime.Range.Minimum,
-                                                                            Parent.XAxisTime.Range.Maximum)
-        With clsДлительностьЗабросаПровала
-            .Аначальное = 1
-            .Апорога = 4.99
-            .Расчет()
+        ' вычисление длительность КлапанСУНА
+        parameter = conКлапанСУНА
+        Dim mДлительностьЗабросаПровалаКлапанСУНА = CType(mFiguresManager(EnumFigures.ДлительностьЗабросаПровала, parameter), ДлительностьЗабросаПровала)
+        With mДлительностьЗабросаПровалаКлапанСУНА
+            .Astart = 1
+            .Astop = 4.99
+            .Calculation()
         End With
-
-        If clsДлительностьЗабросаПровала.Ошибка = True Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsДлительностьЗабросаПровала.ТекстОшибки & vbCrLf
+        If mДлительностьЗабросаПровалаКлапанСУНА.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
+            IsTotalErrors = True
+            totalErrorsMessage += mДлительностьЗабросаПровалаКлапанСУНА.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsДлительностьЗабросаПровала
+            ' отрисовать стрелки
+            With mДлительностьЗабросаПровалаКлапанСУНА
                 Parent.TracingDecodingArrow(
-                .Тначальное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
-                .Тконечное,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Апорога),
+                .Tstart,
+                CastToAxesStandard(.IndexParameter, .Astop),
+                .Tstop,
+                CastToAxesStandard(.IndexParameter, .Astop),
                 ArrowType.Horizontal,
-                параметр & ":dT=" & Round(.Тдлительность, 2) & " сек.")
-                Protocol(7, 2) = Round(.Тдлительность, 2) & " сек."
-            End With
-            'находим провал ДиаметрРС относительно установившегося здесь нужно значение за последние 2 сек
-            параметр = conДиаметрРС
-            Dim clsПровалДиаметрРСОтносительноУстановившегося As New ПровалN1ОтносительноУстановившегося(параметр,
-                                                                                                         Parent.FrequencyBackgroundSnapshot,
-                                                                                                         Parent.MeasuredValues,
-                                                                                                         Parent.SnapshotSmallParameters,
-                                                                                                         Parent.XAxisTime.Range.Minimum,
-                                                                                                         Parent.XAxisTime.Range.Maximum)
-            With clsПровалДиаметрРСОтносительноУстановившегося
-                .ИндексТначальное = clsДлительностьЗабросаПровала.ИндексТначальное
-                .Расчет()
+                $"{parameter}:dT={Round(.TimeDuration, 2)} сек.")
+                Protocol(7, 2) = Round(.TimeDuration, 2) & " сек."
             End With
 
-            If clsПровалДиаметрРСОтносительноУстановившегося.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsПровалДиаметрРСОтносительноУстановившегося.ТекстОшибки & vbCrLf
-            Else
-                'находим значение ДиаметрРС в точке окончания СУНА
-                Dim clsЗначениеПараметраВИндексе As New ЗначениеПараметраВИндексе(параметр,
-                                                                                  Parent.FrequencyBackgroundSnapshot,
-                                                                                  Parent.MeasuredValues,
-                                                                                  Parent.SnapshotSmallParameters,
-                                                                                  Parent.XAxisTime.Range.Minimum,
-                                                                                  Parent.XAxisTime.Range.Maximum)
-                With clsЗначениеПараметраВИндексе
-                    .ИндексТначальное = clsДлительностьЗабросаПровала.ИндексТконечное - 1S
-                    .Расчет()
-                End With
-
-                'строим стрелки
-                With clsПровалДиаметрРСОтносительноУстановившегося
+            ' провал ДиаметрРС относительно установившегося здесь нужно значение за последние 2 сек
+            parameter = conДиаметрРС
+            Dim mПровалДиаметрРСОтносительноУстановившегося = CType(mFiguresManager(EnumFigures.ПровалN1ОтносительноУстановившегося, parameter), ПровалN1ОтносительноУстановившегося)
+            With mПровалДиаметрРСОтносительноУстановившегося
+                .IndexTstart = mДлительностьЗабросаПровалаКлапанСУНА.IndexTstart
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' значение ДиаметрРС в точке окончания СУНА
+                    Dim mЗначениеПараметраВИндексеДиаметрРС = CType(mFiguresManager(EnumFigures.ЗначениеПараметраВИндексе, parameter), ЗначениеПараметраВИндексе)
+                    With mЗначениеПараметраВИндексеДиаметрРС
+                        .IndexTstart = mДлительностьЗабросаПровалаКлапанСУНА.IndexTstop - 1S
+                        .Calculation()
+                    End With
+                    ' отрисовать стрелки
                     Parent.TracingDecodingArrow(
-                    clsДлительностьЗабросаПровала.Тконечное - 1 / Parent.FrequencyBackgroundSnapshot,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, clsЗначениеПараметраВИндексе.ЗначениеПараметра),
-                    .Тконечное,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                    ArrowType.Vertical,
-                    параметр & ":dA=" & Round(clsЗначениеПараметраВИндексе.ЗначениеПараметра - .Аконечное, 2) & " дел.")
-                    Protocol(8, 2) = ":dA=" & Round(clsЗначениеПараметраВИндексе.ЗначениеПараметра - .Аконечное, 2) & " дел."
-                End With
-            End If
-
-            'находим значение a2 в точке окончания СУНА
-            параметр = cona2
-            Dim clsЗначениеПараметраА2ВИндексе As New ЗначениеПараметраВИндексе(параметр,
-                                                                                Parent.FrequencyBackgroundSnapshot,
-                                                                                Parent.MeasuredValues,
-                                                                                Parent.SnapshotSmallParameters,
-                                                                                Parent.XAxisTime.Range.Minimum,
-                                                                                Parent.XAxisTime.Range.Maximum)
-            With clsЗначениеПараметраА2ВИндексе
-                .ИндексТначальное = CShort(clsДлительностьЗабросаПровала.ИндексТконечное - 1)
-                .Расчет()
+                        mДлительностьЗабросаПровалаКлапанСУНА.Tstop - 1 / Parent.FrequencyBackgroundSnapshot,
+                        CastToAxesStandard(.IndexParameter, mЗначениеПараметраВИндексеДиаметрРС.ParameterValue),
+                        .Tstop,
+                        CastToAxesStandard(.IndexParameter, .Astop),
+                        ArrowType.Vertical,
+                        $"{parameter}:dA={Round(mЗначениеПараметраВИндексеДиаметрРС.ParameterValue - .Astop, 2)} дел.")
+                    Protocol(8, 2) = $":dA={Round(mЗначениеПараметраВИндексеДиаметрРС.ParameterValue - .Astop, 2)} дел."
+                End If
             End With
-            If clsЗначениеПараметраА2ВИндексе.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsЗначениеПараметраА2ВИндексе.ТекстОшибки & vbCrLf
-            Else
-                'строим стрелки
-                With clsЗначениеПараметраА2ВИндексе
-                    Parent.TracingDecodingArrow(
-                    clsДлительностьЗабросаПровала.Тконечное - 1 / Parent.FrequencyBackgroundSnapshot,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, clsЗначениеПараметраА2ВИндексе.ЗначениеПараметра - 2),
-                    clsДлительностьЗабросаПровала.Тконечное - 1 / Parent.FrequencyBackgroundSnapshot,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, clsЗначениеПараметраА2ВИндексе.ЗначениеПараметра + 2),
-                    ArrowType.Inclined,
-                    параметр & ":=" & Round(clsЗначениеПараметраА2ВИндексе.ЗначениеПараметра, 2) & " дел.")
-                    Protocol(9, 2) = Round(clsЗначениеПараметраА2ВИндексе.ЗначениеПараметра, 2) & " дел."
-                End With
-            End If
 
-            'находим значение N2приведенное в точке перед СУНА
-            параметр = conN2
-            Dim clsЗначениеПараметраN2ВИндексе As New ЗначениеПараметраВИндексе(параметр,
-                                                                                Parent.FrequencyBackgroundSnapshot,
-                                                                                Parent.MeasuredValues,
-                                                                                Parent.SnapshotSmallParameters,
-                                                                                Parent.XAxisTime.Range.Minimum,
-                                                                                Parent.XAxisTime.Range.Maximum) '
-            With clsЗначениеПараметраN2ВИндексе
-                .ИндексТначальное = clsДлительностьЗабросаПровала.ИндексТначальное - 5S
-                .Расчет()
-            End With
-            If clsЗначениеПараметраN2ВИндексе.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsЗначениеПараметраN2ВИндексе.ТекстОшибки & vbCrLf
-            Else
-                Dim КоэПриведения As Double = System.Math.Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin))
-                'строим стрелки
-                With clsЗначениеПараметраN2ВИндексе
+            ' значение a2 в точке окончания СУНА
+            parameter = cona2
+            Dim mЗначениеПараметраА2ВИндексе = CType(mFiguresManager(EnumFigures.ЗначениеПараметраВИндексе, parameter), ЗначениеПараметраВИндексе)
+            With mЗначениеПараметраА2ВИндексе
+                .IndexTstart = CInt(mДлительностьЗабросаПровалаКлапанСУНА.IndexTstop - 1)
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
                     Parent.TracingDecodingArrow(
-                    clsДлительностьЗабросаПровала.Тначальное - 5 / Parent.FrequencyBackgroundSnapshot,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, clsЗначениеПараметраN2ВИндексе.ЗначениеПараметра - 2),
-                    clsДлительностьЗабросаПровала.Тначальное - 5 / Parent.FrequencyBackgroundSnapshot,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, clsЗначениеПараметраN2ВИндексе.ЗначениеПараметра + 2),
-                    ArrowType.Inclined,
-                    параметр & "привед:=" & Round(clsЗначениеПараметраN2ВИндексе.ЗначениеПараметра * КоэПриведения, 2) & " дел.")
-                    Protocol(5, 2) = Round(clsЗначениеПараметраN2ВИндексе.ЗначениеПараметра * КоэПриведения, 2) & " дел."
-                End With
-            End If
+                        mДлительностьЗабросаПровалаКлапанСУНА.Tstop - 1 / Parent.FrequencyBackgroundSnapshot,
+                        CastToAxesStandard(.IndexParameter, .ParameterValue - 2),
+                        mДлительностьЗабросаПровалаКлапанСУНА.Tstop - 1 / Parent.FrequencyBackgroundSnapshot,
+                        CastToAxesStandard(.IndexParameter, .ParameterValue + 2),
+                        ArrowType.Inclined,
+                        $"{parameter}:={Round(.ParameterValue, 2)} дел.")
+                    Protocol(9, 2) = Round(.ParameterValue, 2) & " дел."
+                End If
+            End With
+
+            ' значение N2приведенное в точке перед СУНА
+            parameter = conN2
+            Dim mЗначениеПараметраN2ВИндексе = CType(mFiguresManager(EnumFigures.ЗначениеПараметраВИндексе, parameter), ЗначениеПараметраВИндексе)
+            With mЗначениеПараметраN2ВИндексе
+                .IndexTstart = mДлительностьЗабросаПровалаКлапанСУНА.IndexTstart - 5S
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    Dim transferConstant As Double = Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin))
+                    ' отрисовать стрелки
+                    Parent.TracingDecodingArrow(
+                        mДлительностьЗабросаПровалаКлапанСУНА.Tstart - 5 / Parent.FrequencyBackgroundSnapshot,
+                        CastToAxesStandard(.IndexParameter, .ParameterValue - 2),
+                        mДлительностьЗабросаПровалаКлапанСУНА.Tstart - 5 / Parent.FrequencyBackgroundSnapshot,
+                        CastToAxesStandard(.IndexParameter, .ParameterValue + 2),
+                        ArrowType.Inclined,
+                        $"{parameter}привед:={Round(.ParameterValue * transferConstant, 2)} дел.")
+                    Protocol(5, 2) = Round(.ParameterValue * transferConstant, 2) & " дел."
+                End If
+            End With
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
-

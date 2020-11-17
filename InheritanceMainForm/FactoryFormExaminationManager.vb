@@ -84,9 +84,9 @@ Friend Class FactoryFormExaminationManager
 
     Private Property Mediator As FormMainMDI
     'Private formMainToLoadList As List(Of String)      ' список подлежащих загрузке классов Основного Окна
-    Private loadedFormsMain As New Dictionary(Of String, FormMain) ' внутренняя коллекция для управления расшифровками
-    Private enumDescriptionsList As List(Of String)    ' список описаний из типа перечислителя
-    Private enumNamesList As List(Of String)           ' список значений элементов из типа перечислителя
+    Private ReadOnly loadedFormsMain As New Dictionary(Of String, FormMain) ' внутренняя коллекция для управления расшифровками
+    Private descriptionsFormExamination As List(Of String)    ' список описаний из типа перечислителя
+    Private namesFormExamination As List(Of String)           ' список значений элементов из типа перечислителя
     Private mFormMainCreated As Integer ' внутренний счетчик для подсчета созданных форм можно использовать в заголовке
     Private Shared ReadOnly ChildWindows As Dictionary(Of FormExamination, Creator) = New Dictionary(Of FormExamination, Creator) From {
         {FormExamination.RegistrationSCXI, New CreatorRegistrationSCXI},
@@ -149,8 +149,8 @@ Friend Class FactoryFormExaminationManager
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub PopulateListEnumNamesAndDescriptions()
-        enumDescriptionsList = New List(Of String)
-        enumNamesList = New List(Of String)
+        descriptionsFormExamination = New List(Of String)
+        namesFormExamination = New List(Of String)
 
         ' получить все аттрибуты перечислителя для создания списка возможных окон в системе
         For Each value In [Enum].GetValues(GetType(FormExamination))
@@ -158,9 +158,9 @@ Friend Class FactoryFormExaminationManager
             Dim dna As DescriptionAttribute = DirectCast(Attribute.GetCustomAttribute(fi, GetType(DescriptionAttribute)), DescriptionAttribute)
 
             If dna IsNot Nothing Then
-                enumDescriptionsList.Add(dna.Description)
+                descriptionsFormExamination.Add(dna.Description)
             Else
-                enumDescriptionsList.Add("Нет описания")
+                descriptionsFormExamination.Add("Нет описания")
             End If
         Next
 
@@ -174,7 +174,7 @@ Friend Class FactoryFormExaminationManager
         '    End If
         'Next     
 
-        enumNamesList.AddRange([Enum].GetNames(GetType(FormExamination)).ToArray)
+        namesFormExamination.AddRange([Enum].GetNames(GetType(FormExamination)).ToArray)
     End Sub
 
     ''' <summary>

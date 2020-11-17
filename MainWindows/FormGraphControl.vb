@@ -1369,310 +1369,6 @@ Friend Class FormGraphControl
         parentFormRegistration.IsShowGraphControl = True
     End Sub
 
-    Private Sub FormSelectiveControl_Resize(ByVal eventSender As Object, ByVal eventArgs As EventArgs) Handles MyBase.Resize
-        If IsHandleCreated Then
-            Dim J, I, K As Integer
-            Dim WidthDivHeight As Single
-            Dim mWidth As Single = ClientRectangle.Width
-            Dim mHeight As Single = ClientRectangle.Height
-
-            WidthDivHeight = mWidth / mHeight
-            If WidthDivHeight < 0.2 Then
-                arrLocationSize(1).Left = 0
-                arrLocationSize(1).Top = 0
-                K = 1
-
-                For J = 2 To countControl - 1
-                    arrLocationSize(J).Left = 0
-                    arrLocationSize(J).Top = mHeight - mHeight * (countControl - K) / countControl
-                    K += 1
-                Next
-
-                arrLocationSize(countControl).Left = 0
-                arrLocationSize(countControl).Top = mHeight - mHeight / countControl
-
-                For I = 1 To countControl
-                    arrLocationSize(I).Height = mHeight / countControl
-                    arrLocationSize(I).Width = mWidth
-                Next
-            ElseIf WidthDivHeight >= 0.2 And WidthDivHeight < 0.4 Then
-                Select Case countControl
-                    Case 4
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth / 2
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = 0
-                        arrLocationSize(3).Top = mHeight - mHeight / 2
-                        arrLocationSize(4).Left = mWidth - mWidth / 2
-                        arrLocationSize(4).Top = mHeight - mHeight / 2
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 2
-                            arrLocationSize(I).Width = mWidth / 2
-                        Next
-                        Exit Select
-                    Case 9
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = 0
-                        arrLocationSize(2).Top = mHeight - mHeight * 4 / 5
-                        arrLocationSize(3).Left = 0
-                        arrLocationSize(3).Top = mHeight - mHeight * 3 / 5
-                        arrLocationSize(4).Left = 0
-                        arrLocationSize(4).Top = mHeight - mHeight * 2 / 5
-                        arrLocationSize(5).Left = 0
-                        arrLocationSize(5).Top = mHeight - mHeight * 1 / 5
-
-                        arrLocationSize(6).Left = mWidth / 2
-                        arrLocationSize(6).Top = 0
-                        arrLocationSize(7).Left = mWidth / 2
-                        arrLocationSize(7).Top = mHeight - mHeight * 4 / 5
-                        arrLocationSize(8).Left = mWidth / 2
-                        arrLocationSize(8).Top = mHeight - mHeight * 3 / 5
-                        arrLocationSize(9).Left = mWidth / 2
-                        arrLocationSize(9).Top = mHeight - mHeight * 2 / 5
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 5
-                            arrLocationSize(I).Width = mWidth / 2
-                        Next
-                        Exit Select
-                    Case 16
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = 0
-                        arrLocationSize(2).Top = mHeight - mHeight * 7 / 8
-                        arrLocationSize(3).Left = 0
-                        arrLocationSize(3).Top = mHeight - mHeight * 6 / 8
-                        arrLocationSize(4).Left = 0
-                        arrLocationSize(4).Top = mHeight - mHeight * 5 / 8
-                        arrLocationSize(5).Left = 0
-                        arrLocationSize(5).Top = mHeight - mHeight * 4 / 8
-                        arrLocationSize(6).Left = 0
-                        arrLocationSize(6).Top = mHeight - mHeight * 3 / 8
-                        arrLocationSize(7).Left = 0
-                        arrLocationSize(7).Top = mHeight - mHeight * 2 / 8
-                        arrLocationSize(8).Left = 0
-                        arrLocationSize(8).Top = mHeight - mHeight / 8
-                        arrLocationSize(9).Left = mWidth / 2
-                        arrLocationSize(9).Top = 0
-                        arrLocationSize(10).Left = mWidth / 2
-                        arrLocationSize(10).Top = mHeight - mHeight * 7 / 8
-                        arrLocationSize(11).Left = mWidth / 2
-                        arrLocationSize(11).Top = mHeight - mHeight * 6 / 8
-                        arrLocationSize(12).Left = mWidth / 2
-                        arrLocationSize(12).Top = mHeight - mHeight * 5 / 8
-                        arrLocationSize(13).Left = mWidth / 2
-                        arrLocationSize(13).Top = mHeight - mHeight * 4 / 8
-                        arrLocationSize(14).Left = mWidth / 2
-                        arrLocationSize(14).Top = mHeight - mHeight * 3 / 8
-                        arrLocationSize(15).Left = mWidth / 2
-                        arrLocationSize(15).Top = mHeight - mHeight * 2 / 8
-                        arrLocationSize(16).Left = mWidth / 2
-                        arrLocationSize(16).Top = mHeight - mHeight / 8
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 8
-                            arrLocationSize(I).Width = mWidth / 2
-                        Next
-                        Exit Select
-                End Select
-            ElseIf WidthDivHeight >= 0.4 And WidthDivHeight < 2.5 Then
-                Select Case countControl
-                    Case 4
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth / 2
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = 0
-                        arrLocationSize(3).Top = mHeight - mHeight / 2
-                        arrLocationSize(4).Left = mWidth - mWidth / 2
-                        arrLocationSize(4).Top = mHeight - mHeight / 2
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 2
-                            arrLocationSize(I).Width = mWidth / 2
-                        Next
-                        Exit Select
-                    Case 9
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth * 2 / 3
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = mWidth - mWidth / 3
-                        arrLocationSize(3).Top = 0
-                        arrLocationSize(4).Left = 0
-                        arrLocationSize(4).Top = mHeight - mHeight * 2 / 3
-                        arrLocationSize(5).Left = mWidth - mWidth * 2 / 3
-                        arrLocationSize(5).Top = mHeight - mHeight * 2 / 3
-                        arrLocationSize(6).Left = mWidth - mWidth / 3
-                        arrLocationSize(6).Top = mHeight - mHeight * 2 / 3
-                        arrLocationSize(7).Left = 0
-                        arrLocationSize(7).Top = mHeight - mHeight / 3
-                        arrLocationSize(8).Left = mWidth - mWidth * 2 / 3
-                        arrLocationSize(8).Top = mHeight - mHeight / 3
-                        arrLocationSize(9).Left = mWidth - mWidth / 3
-                        arrLocationSize(9).Top = mHeight - mHeight / 3
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 3
-                            arrLocationSize(I).Width = mWidth / 3
-                        Next
-                        Exit Select
-                    Case 16
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth * 3 / 4
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = mWidth - mWidth * 2 / 4
-                        arrLocationSize(3).Top = 0
-                        arrLocationSize(4).Left = mWidth - mWidth / 4
-                        arrLocationSize(4).Top = 0
-
-                        arrLocationSize(5).Left = 0
-                        arrLocationSize(5).Top = mHeight - mHeight * 3 / 4
-                        arrLocationSize(6).Left = mWidth - mWidth * 3 / 4
-                        arrLocationSize(6).Top = mHeight - mHeight * 3 / 4
-                        arrLocationSize(7).Left = mWidth - mWidth * 2 / 4
-                        arrLocationSize(7).Top = mHeight - mHeight * 3 / 4
-                        arrLocationSize(8).Left = mWidth - mWidth / 4
-                        arrLocationSize(8).Top = mHeight - mHeight * 3 / 4
-
-                        arrLocationSize(9).Left = 0
-                        arrLocationSize(9).Top = mHeight - mHeight * 2 / 4
-                        arrLocationSize(10).Left = mWidth - mWidth * 3 / 4
-                        arrLocationSize(10).Top = mHeight - mHeight * 2 / 4
-                        arrLocationSize(11).Left = mWidth - mWidth * 2 / 4
-                        arrLocationSize(11).Top = mHeight - mHeight * 2 / 4
-                        arrLocationSize(12).Left = mWidth - mWidth / 4
-                        arrLocationSize(12).Top = mHeight - mHeight * 2 / 4
-
-                        arrLocationSize(13).Left = 0
-                        arrLocationSize(13).Top = mHeight - mHeight / 4
-                        arrLocationSize(14).Left = mWidth - mWidth * 3 / 4
-                        arrLocationSize(14).Top = mHeight - mHeight / 4
-                        arrLocationSize(15).Left = mWidth - mWidth * 2 / 4
-                        arrLocationSize(15).Top = mHeight - mHeight / 4
-                        arrLocationSize(16).Left = mWidth - mWidth / 4
-                        arrLocationSize(16).Top = mHeight - mHeight / 4
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 4
-                            arrLocationSize(I).Width = mWidth / 4
-                        Next
-                        Exit Select
-                End Select
-            ElseIf WidthDivHeight >= 2.5 And WidthDivHeight < 5 Then
-                Select Case countControl
-                    Case 4
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth / 2
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = 0
-                        arrLocationSize(3).Top = mHeight - mHeight / 2
-                        arrLocationSize(4).Left = mWidth - mWidth / 2
-                        arrLocationSize(4).Top = mHeight - mHeight / 2
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 2
-                            arrLocationSize(I).Width = mWidth / 2
-                        Next
-                        Exit Select
-                    Case 9
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth * 4 / 5
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = mWidth - mWidth * 3 / 5
-                        arrLocationSize(3).Top = 0
-                        arrLocationSize(4).Left = mWidth - mWidth * 2 / 5
-                        arrLocationSize(4).Top = 0
-                        arrLocationSize(5).Left = mWidth - mWidth / 5
-                        arrLocationSize(5).Top = 0
-
-                        arrLocationSize(6).Left = 0
-                        arrLocationSize(6).Top = mHeight / 2
-                        arrLocationSize(7).Left = mWidth - mWidth * 4 / 5
-                        arrLocationSize(7).Top = mHeight / 2
-                        arrLocationSize(8).Left = mWidth - mWidth * 3 / 5
-                        arrLocationSize(8).Top = mHeight / 2
-                        arrLocationSize(9).Left = mWidth - mWidth * 2 / 5
-                        arrLocationSize(9).Top = mHeight / 2
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 2
-                            arrLocationSize(I).Width = mWidth / 5
-                        Next
-                        Exit Select
-                    Case 16
-                        arrLocationSize(1).Left = 0
-                        arrLocationSize(1).Top = 0
-                        arrLocationSize(2).Left = mWidth - mWidth * 7 / 8
-                        arrLocationSize(2).Top = 0
-                        arrLocationSize(3).Left = mWidth - mWidth * 6 / 8
-                        arrLocationSize(3).Top = 0
-                        arrLocationSize(4).Left = mWidth - mWidth * 5 / 8
-                        arrLocationSize(4).Top = 0
-                        arrLocationSize(5).Left = mWidth - mWidth * 4 / 8
-                        arrLocationSize(5).Top = 0
-                        arrLocationSize(6).Left = mWidth - mWidth * 3 / 8
-                        arrLocationSize(6).Top = 0
-                        arrLocationSize(7).Left = mWidth - mWidth * 2 / 8
-                        arrLocationSize(7).Top = 0
-                        arrLocationSize(8).Left = mWidth - mWidth / 8
-                        arrLocationSize(8).Top = 0
-
-                        arrLocationSize(9).Left = 0
-                        arrLocationSize(9).Top = mHeight / 2
-                        arrLocationSize(10).Left = mWidth - mWidth * 7 / 8
-                        arrLocationSize(10).Top = mHeight / 2
-                        arrLocationSize(11).Left = mWidth - mWidth * 6 / 8
-                        arrLocationSize(11).Top = mHeight / 2
-                        arrLocationSize(12).Left = mWidth - mWidth * 5 / 8
-                        arrLocationSize(12).Top = mHeight / 2
-                        arrLocationSize(13).Left = mWidth - mWidth * 4 / 8
-                        arrLocationSize(13).Top = mHeight / 2
-                        arrLocationSize(14).Left = mWidth - mWidth * 3 / 8
-                        arrLocationSize(14).Top = mHeight / 2
-                        arrLocationSize(15).Left = mWidth - mWidth * 2 / 8
-                        arrLocationSize(15).Top = mHeight / 2
-                        arrLocationSize(16).Left = mWidth - mWidth / 8
-                        arrLocationSize(16).Top = mHeight / 2
-
-                        For I = 1 To countControl
-                            arrLocationSize(I).Height = mHeight / 2
-                            arrLocationSize(I).Width = mWidth / 8
-                        Next
-                        Exit Select
-                End Select
-            ElseIf WidthDivHeight >= 5 Then
-                arrLocationSize(1).Left = 0
-                arrLocationSize(1).Top = 0
-                K = 1
-
-                For J = 2 To countControl - 1
-                    arrLocationSize(J).Left = mWidth - mWidth * (countControl - K) / countControl
-                    arrLocationSize(J).Top = 0
-                    K += 1
-                Next
-
-                arrLocationSize(countControl).Left = mWidth - mWidth / countControl
-                arrLocationSize(countControl).Top = 0
-
-                For I = 1 To countControl
-                    arrLocationSize(I).Height = mHeight
-                    arrLocationSize(I).Width = mWidth / countControl
-                Next
-            End If
-
-            For I = 1 To countControl
-                indicatorControls(I - 1).SetBounds(CInt(arrLocationSize(I).Left), CInt(arrLocationSize(I).Top), CInt(arrLocationSize(I).Width), CInt(arrLocationSize(I).Height))
-            Next
-        End If
-    End Sub
-
     Private Sub FormSelectiveControl_Closed(ByVal eventSender As Object, ByVal e As FormClosedEventArgs) Handles Me.FormClosed
         RegistrationEventLog.EventLog_AUDIT_SUCCESS("Закрытие окна " & Text)
 
@@ -1690,8 +1386,28 @@ Friend Class FormGraphControl
         parentFormRegistration = Nothing
     End Sub
 
+    ''' <summary>
+    ''' Задать значение параметра для индикатора с последующим обновлением
+    ''' </summary>
+    Friend Sub UpdateValueIndicatorControls(ByRef arrСреднее(,) As Double, ByVal x As Integer)
+        For Each itemIndicator As IBaseClassIndicator In indicatorControls
+            If itemIndicator.Name <> EmptyName Then
+                itemIndicator.Value = arrСреднее(itemIndicator.NumberParameter, x)
+            End If
+        Next
+    End Sub
+
+    Public Sub UpdateControls() Implements IUpdateSelectiveControls.UpdateControls
+        parentFormRegistration.IsShowGraphControl = False
+        PopulateSelectiveControl()
+        FormSelectiveControl_Resize(Me, New EventArgs)
+        parentFormRegistration.IsShowGraphControl = True
+    End Sub
+
+    ''' <summary>
+    ''' Считать из файла строку с параметрами контроля и расшифровать ее в массив
+    ''' </summary>
     Private Sub PopulateSelectiveControl()
-        ' считать из файла строку с параметрами контроля и расшифровать ее в массив
         Dim I, J As Integer
         Dim countSelected As Integer ' счетчики количества элементов в коллекции
         Dim unitOfMeasure As String ' Единица Измерения
@@ -1757,9 +1473,9 @@ Friend Class FormGraphControl
 
         If countSelected <= 4 Then
             countControl = 4
-        ElseIf countSelected > 4 And countSelected <= 9 Then
+        ElseIf countSelected > 4 AndAlso countSelected <= 9 Then
             countControl = 9
-        ElseIf countSelected > 9 And countSelected <= 16 Then
+        ElseIf countSelected > 9 AndAlso countSelected <= 16 Then
             countControl = 16
         End If
 
@@ -1771,9 +1487,9 @@ Friend Class FormGraphControl
 
         If countSelected <= 4 Then
             MinimumSize = New Size(300, 300)
-        ElseIf countSelected > 4 And countSelected <= 9 Then
+        ElseIf countSelected > 4 AndAlso countSelected <= 9 Then
             MinimumSize = New Size(450, 450)
-        ElseIf countSelected > 9 And countSelected <= 16 Then
+        ElseIf countSelected > 9 AndAlso countSelected <= 16 Then
             MinimumSize = New Size(600, 600)
         End If
 
@@ -1789,21 +1505,303 @@ Friend Class FormGraphControl
         Next
     End Sub
 
-    ''' <summary>
-    ''' Задать значение параметра для индикатора с последующим обновлением
-    ''' </summary>
-    Friend Sub UpdateValueIndicatorControls(ByRef arrСреднее(,) As Double, ByVal x As Integer)
-        For Each itemIndicator As IBaseClassIndicator In indicatorControls
-            If itemIndicator.Name <> EmptyName Then
-                itemIndicator.Value = arrСреднее(itemIndicator.NumberParameter, x)
+#Region "FormSelectiveControl_Resize"
+    Private Const tillOneColumn As Single = 0.2 ' до одного столбца
+    Private Const tillTwoColumns As Single = 0.4 ' до двух столбцов
+    Private Const tillSquare As Single = 2.5 ' до квадрата
+    Private Const tillTwoRows As Single = 5.0 ' до двух строк
+
+    Private Sub FormSelectiveControl_Resize(ByVal eventSender As Object, ByVal eventArgs As EventArgs) Handles MyBase.Resize
+        If IsHandleCreated Then
+            Dim WidthDivHeight As Single
+            Dim mWidth As Single = ClientRectangle.Width
+            Dim mHeight As Single = ClientRectangle.Height
+            Dim halfHeight As Single = mHeight / 2
+            Dim halfWidth As Single = mWidth / 2
+
+            WidthDivHeight = mWidth / mHeight
+            If WidthDivHeight < tillOneColumn Then
+                SetLocationSizeVeryNarrowlyAll(mWidth, mHeight)
+            ElseIf WidthDivHeight >= tillOneColumn AndAlso WidthDivHeight < tillTwoColumns Then
+                Select Case countControl
+                    Case 4
+                        SetLocationSize4(halfWidth, halfHeight)
+                    Case 9
+                        SetLocationSizeNarrowly9(halfWidth, mHeight)
+                    Case 16
+                        SetLocationSizeNarrowly16(halfWidth, mHeight)
+                End Select
+            ElseIf WidthDivHeight >= tillTwoColumns AndAlso WidthDivHeight < tillSquare Then
+                Select Case countControl
+                    Case 4
+                        SetLocationSize4(halfWidth, halfHeight)
+                    Case 9
+                        SetLocationSizeMiddling9(mWidth, mHeight)
+                    Case 16
+                        SetLocationSizeMiddling16(mWidth, mHeight)
+                End Select
+            ElseIf WidthDivHeight >= tillSquare AndAlso WidthDivHeight < tillTwoRows Then
+                Select Case countControl
+                    Case 4
+                        SetLocationSize4(halfWidth, halfHeight)
+                    Case 9
+                        SetLocationSizeWidely9(mWidth, halfHeight)
+                    Case 16
+                        SetLocationSizeWidely16(mWidth, halfHeight)
+                End Select
+            ElseIf WidthDivHeight >= tillTwoRows Then
+                SetLocationSizeVeryWidelyAll(mWidth, mHeight)
             End If
-        Next
+
+            For I As Integer = 1 To countControl
+                indicatorControls(I - 1).SetBounds(CInt(arrLocationSize(I).Left), CInt(arrLocationSize(I).Top), CInt(arrLocationSize(I).Width), CInt(arrLocationSize(I).Height))
+            Next
+        End If
     End Sub
 
-    Public Sub UpdateControls() Implements IUpdateSelectiveControls.UpdateControls
-        parentFormRegistration.IsShowGraphControl = False
-        PopulateSelectiveControl()
-        FormSelectiveControl_Resize(Me, New EventArgs)
-        parentFormRegistration.IsShowGraphControl = True
+    Private Sub SetLocationSizeVeryNarrowlyAll(mWidth As Single, mHeight As Single)
+        Dim count As Integer = 1
+
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(countControl).Left = 0
+        arrLocationSize(countControl).Top = mHeight - mHeight / countControl
+
+        For I As Integer = 2 To countControl - 1
+            arrLocationSize(I).Left = 0
+            arrLocationSize(I).Top = mHeight - mHeight * (countControl - count) / countControl
+            count += 1
+        Next
+
+        SetHeightWidthAll(mHeight / countControl, mWidth)
     End Sub
+
+    Private Sub SetLocationSizeVeryWidelyAll(mWidth As Single, mHeight As Single)
+        Dim count As Integer = 1
+
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(countControl).Left = mWidth - mWidth / countControl
+        arrLocationSize(countControl).Top = 0
+
+        For I As Integer = 2 To countControl - 1
+            arrLocationSize(I).Left = mWidth - mWidth * (countControl - count) / countControl
+            arrLocationSize(I).Top = 0
+            count += 1
+        Next
+
+        SetHeightWidthAll(mHeight, mWidth / countControl)
+    End Sub
+
+    Private Sub SetLocationSize4(halfWidth As Single, halfHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = halfWidth
+        arrLocationSize(2).Top = 0
+
+        arrLocationSize(3).Left = 0
+        arrLocationSize(3).Top = halfHeight
+        arrLocationSize(4).Left = halfWidth
+        arrLocationSize(4).Top = halfHeight
+
+        SetHeightWidthAll(halfHeight, halfWidth)
+    End Sub
+
+    Private Sub SetLocationSizeNarrowly9(halfWidth As Single, mHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = 0
+        arrLocationSize(2).Top = mHeight - mHeight * 4 / 5
+        arrLocationSize(3).Left = 0
+        arrLocationSize(3).Top = mHeight - mHeight * 3 / 5
+        arrLocationSize(4).Left = 0
+        arrLocationSize(4).Top = mHeight - mHeight * 2 / 5
+        arrLocationSize(5).Left = 0
+        arrLocationSize(5).Top = mHeight - mHeight * 1 / 5
+
+        arrLocationSize(6).Left = halfWidth
+        arrLocationSize(6).Top = 0
+        arrLocationSize(7).Left = halfWidth
+        arrLocationSize(7).Top = mHeight - mHeight * 4 / 5
+        arrLocationSize(8).Left = halfWidth
+        arrLocationSize(8).Top = mHeight - mHeight * 3 / 5
+        arrLocationSize(9).Left = halfWidth
+        arrLocationSize(9).Top = mHeight - mHeight * 2 / 5
+
+        SetHeightWidthAll(mHeight / 5, halfWidth)
+    End Sub
+
+    Private Sub SetLocationSizeMiddling9(mWidth As Single, mHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = mWidth - mWidth * 2 / 3
+        arrLocationSize(2).Top = 0
+        arrLocationSize(3).Left = mWidth - mWidth / 3
+        arrLocationSize(3).Top = 0
+        arrLocationSize(4).Left = 0
+        arrLocationSize(4).Top = mHeight - mHeight * 2 / 3
+        arrLocationSize(5).Left = mWidth - mWidth * 2 / 3
+        arrLocationSize(5).Top = mHeight - mHeight * 2 / 3
+        arrLocationSize(6).Left = mWidth - mWidth / 3
+        arrLocationSize(6).Top = mHeight - mHeight * 2 / 3
+        arrLocationSize(7).Left = 0
+        arrLocationSize(7).Top = mHeight - mHeight / 3
+        arrLocationSize(8).Left = mWidth - mWidth * 2 / 3
+        arrLocationSize(8).Top = mHeight - mHeight / 3
+        arrLocationSize(9).Left = mWidth - mWidth / 3
+        arrLocationSize(9).Top = mHeight - mHeight / 3
+
+        SetHeightWidthAll(mHeight / 3, mWidth / 3)
+    End Sub
+
+    Private Sub SetLocationSizeWidely9(mWidth As Single, halfHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = mWidth - mWidth * 4 / 5
+        arrLocationSize(2).Top = 0
+        arrLocationSize(3).Left = mWidth - mWidth * 3 / 5
+        arrLocationSize(3).Top = 0
+        arrLocationSize(4).Left = mWidth - mWidth * 2 / 5
+        arrLocationSize(4).Top = 0
+        arrLocationSize(5).Left = mWidth - mWidth / 5
+        arrLocationSize(5).Top = 0
+
+        arrLocationSize(6).Left = 0
+        arrLocationSize(6).Top = halfHeight
+        arrLocationSize(7).Left = mWidth - mWidth * 4 / 5
+        arrLocationSize(7).Top = halfHeight
+        arrLocationSize(8).Left = mWidth - mWidth * 3 / 5
+        arrLocationSize(8).Top = halfHeight
+        arrLocationSize(9).Left = mWidth - mWidth * 2 / 5
+        arrLocationSize(9).Top = halfHeight
+
+        SetHeightWidthAll(halfHeight, mWidth / 5)
+    End Sub
+
+    Private Sub SetLocationSizeNarrowly16(halfWidth As Single, mHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = 0
+        arrLocationSize(2).Top = mHeight - mHeight * 7 / 8
+        arrLocationSize(3).Left = 0
+        arrLocationSize(3).Top = mHeight - mHeight * 6 / 8
+        arrLocationSize(4).Left = 0
+        arrLocationSize(4).Top = mHeight - mHeight * 5 / 8
+        arrLocationSize(5).Left = 0
+        arrLocationSize(5).Top = mHeight - mHeight * 4 / 8
+        arrLocationSize(6).Left = 0
+        arrLocationSize(6).Top = mHeight - mHeight * 3 / 8
+        arrLocationSize(7).Left = 0
+        arrLocationSize(7).Top = mHeight - mHeight * 2 / 8
+        arrLocationSize(8).Left = 0
+        arrLocationSize(8).Top = mHeight - mHeight / 8
+
+        arrLocationSize(9).Left = halfWidth
+        arrLocationSize(9).Top = 0
+        arrLocationSize(10).Left = halfWidth
+        arrLocationSize(10).Top = mHeight - mHeight * 7 / 8
+        arrLocationSize(11).Left = halfWidth
+        arrLocationSize(11).Top = mHeight - mHeight * 6 / 8
+        arrLocationSize(12).Left = halfWidth
+        arrLocationSize(12).Top = mHeight - mHeight * 5 / 8
+        arrLocationSize(13).Left = halfWidth
+        arrLocationSize(13).Top = mHeight - mHeight * 4 / 8
+        arrLocationSize(14).Left = halfWidth
+        arrLocationSize(14).Top = mHeight - mHeight * 3 / 8
+        arrLocationSize(15).Left = halfWidth
+        arrLocationSize(15).Top = mHeight - mHeight * 2 / 8
+        arrLocationSize(16).Left = halfWidth
+        arrLocationSize(16).Top = mHeight - mHeight / 8
+
+        SetHeightWidthAll(mHeight / 8, halfWidth)
+    End Sub
+
+    Private Sub SetLocationSizeMiddling16(mWidth As Single, mHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = mWidth - mWidth * 3 / 4
+        arrLocationSize(2).Top = 0
+        arrLocationSize(3).Left = mWidth - mWidth * 2 / 4
+        arrLocationSize(3).Top = 0
+        arrLocationSize(4).Left = mWidth - mWidth / 4
+        arrLocationSize(4).Top = 0
+
+        Dim Top As Single = mHeight - mHeight * 3 / 4
+        arrLocationSize(5).Left = 0
+        arrLocationSize(5).Top = Top
+        arrLocationSize(6).Left = mWidth - mWidth * 3 / 4
+        arrLocationSize(6).Top = Top
+        arrLocationSize(7).Left = mWidth - mWidth * 2 / 4
+        arrLocationSize(7).Top = Top
+        arrLocationSize(8).Left = mWidth - mWidth / 4
+        arrLocationSize(8).Top = Top
+
+        arrLocationSize(9).Left = 0
+        arrLocationSize(9).Top = mHeight - mHeight * 2 / 4
+        arrLocationSize(10).Left = mWidth - mWidth * 3 / 4
+        arrLocationSize(10).Top = mHeight - mHeight * 2 / 4
+        arrLocationSize(11).Left = mWidth - mWidth * 2 / 4
+        arrLocationSize(11).Top = mHeight - mHeight * 2 / 4
+        arrLocationSize(12).Left = mWidth - mWidth / 4
+        arrLocationSize(12).Top = mHeight - mHeight * 2 / 4
+
+        Top = mHeight - mHeight / 4
+        arrLocationSize(13).Left = 0
+        arrLocationSize(13).Top = Top
+        arrLocationSize(14).Left = mWidth - mWidth * 3 / 4
+        arrLocationSize(14).Top = Top
+        arrLocationSize(15).Left = mWidth - mWidth * 2 / 4
+        arrLocationSize(15).Top = Top
+        arrLocationSize(16).Left = mWidth - mWidth / 4
+        arrLocationSize(16).Top = Top
+
+        SetHeightWidthAll(mHeight / 4, mWidth / 4)
+    End Sub
+
+    Private Sub SetLocationSizeWidely16(mWidth As Single, halfHeight As Single)
+        arrLocationSize(1).Left = 0
+        arrLocationSize(1).Top = 0
+        arrLocationSize(2).Left = mWidth - mWidth * 7 / 8
+        arrLocationSize(2).Top = 0
+        arrLocationSize(3).Left = mWidth - mWidth * 6 / 8
+        arrLocationSize(3).Top = 0
+        arrLocationSize(4).Left = mWidth - mWidth * 5 / 8
+        arrLocationSize(4).Top = 0
+        arrLocationSize(5).Left = mWidth - mWidth * 4 / 8
+        arrLocationSize(5).Top = 0
+        arrLocationSize(6).Left = mWidth - mWidth * 3 / 8
+        arrLocationSize(6).Top = 0
+        arrLocationSize(7).Left = mWidth - mWidth * 2 / 8
+        arrLocationSize(7).Top = 0
+        arrLocationSize(8).Left = mWidth - mWidth / 8
+        arrLocationSize(8).Top = 0
+
+        arrLocationSize(9).Left = 0
+        arrLocationSize(9).Top = halfHeight
+        arrLocationSize(10).Left = mWidth - mWidth * 7 / 8
+        arrLocationSize(10).Top = halfHeight
+        arrLocationSize(11).Left = mWidth - mWidth * 6 / 8
+        arrLocationSize(11).Top = halfHeight
+        arrLocationSize(12).Left = mWidth - mWidth * 5 / 8
+        arrLocationSize(12).Top = halfHeight
+        arrLocationSize(13).Left = mWidth - mWidth * 4 / 8
+        arrLocationSize(13).Top = halfHeight
+        arrLocationSize(14).Left = mWidth - mWidth * 3 / 8
+        arrLocationSize(14).Top = halfHeight
+        arrLocationSize(15).Left = mWidth - mWidth * 2 / 8
+        arrLocationSize(15).Top = halfHeight
+        arrLocationSize(16).Left = mWidth - mWidth / 8
+        arrLocationSize(16).Top = halfHeight
+
+        SetHeightWidthAll(halfHeight, mWidth / 8)
+    End Sub
+
+    Private Sub SetHeightWidthAll(inHeight As Single, inWidth As Single)
+        For I As Integer = 1 To countControl
+            arrLocationSize(I).Height = inHeight
+            arrLocationSize(I).Width = inWidth
+        Next
+    End Sub
+#End Region
+
 End Class

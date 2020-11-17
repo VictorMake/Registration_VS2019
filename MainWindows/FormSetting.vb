@@ -4,8 +4,9 @@ Imports System.IO
 Imports MathematicalLibrary
 Imports NationalInstruments.Analysis.Math
 Imports NationalInstruments.DAQmx
+Imports Registration.SettingConstantChannels
 
-Friend Class FormSetting
+Public Class FormSetting
     Private servers() As String
     Private clients() As String = {cClient}
     Private numberServerStend As String
@@ -31,6 +32,13 @@ Friend Class FormSetting
     Private Const cSnapshot As String = "Снимок"
     Private Const cClientТСР As String = "КлиентТСР"
 
+    ''' <summary>
+    ''' менеджер настроек списков константных каналов
+    ''' </summary>
+    Private mSettingSelectedParameters As SettingConstantChannels
+
+    'Является обязательной для конструктора форм Windows Forms для связывания с DataGridView
+    Public Property FormComponents As System.ComponentModel.IContainer
 #Region "Form"
     Public Sub New()
         ' Этот вызов является обязательным для конструктора.
@@ -44,14 +52,12 @@ Friend Class FormSetting
             mFrequencyBackground = FrequencyBackground
         End If
 
+        FormComponents = Me.components
         InitializeForm()
     End Sub
 
     Public Sub InitializeForm()
         ' сделать проверку был ли ввод формы чтобы записать прежде введенные данные, а не выводить пустые поля
-        Dim I As Integer
-        Dim regime As String
-
         ComboFrequencyCollection.Items.AddRange({"1", "2", "5", "10", "20", "50", "100"})
         ComboNumberStend.Items.AddRange(GetIni(PathOptions, "Stend", "Stends", "11,13,15,16,17,19,21,25,34,37,39,41,Клиент").Split(CType(",", Char())))
         'ReDim_servers(ComboNumberStend.Items.Count - 2) ' без Клиент
@@ -103,7 +109,7 @@ Friend Class FormSetting
             ' 1)номер стенда
             StandNumber = GetIni(PathOptions, "Stend", "Stend", "25")
 
-            For I = 0 To ComboNumberStend.Items.Count - 1
+            For I As Integer = 0 To ComboNumberStend.Items.Count - 1
                 If ComboNumberStend.Items(I).ToString = StandNumber Then
                     ComboNumberStend.SelectedIndex = I
                     Exit For
@@ -125,14 +131,13 @@ Friend Class FormSetting
             End If
 
             ' 9)режим
-            regime = GetIni(PathOptions, "Product", "Mode", B)
             ComboRegime.Items.Clear()
             ComboRegime.Items.Add(B)
             ComboRegime.Items.Add(UB)
 
             If ComboEngine.Text = cEngine99A Then ComboRegime.Items.Add(O_R)
 
-            Select Case regime
+            Select Case GetIni(PathOptions, "Product", "Mode", B)
                 Case B
                     ComboRegime.SelectedIndex = 0
                     Exit Select
@@ -171,7 +176,7 @@ Friend Class FormSetting
 
             '20)номер стенда сервера
             numberServerStend = GetIni(PathOptions, "Stend", "StendServer", "25")
-            For I = 0 To ComboPathServer.Items.Count - 1
+            For I As Integer = 0 To ComboPathServer.Items.Count - 1
                 If CStr(ComboPathServer.Items(I)) = numberServerStend Then
                     ComboPathServer.SelectedIndex = I
                     Exit For
@@ -180,7 +185,7 @@ Friend Class FormSetting
 
             '21)номер стенда клиента
             numberClientStend = GetIni(PathOptions, "Stend", "StendClient", "25")
-            For I = 0 To ComboPathClient.Items.Count - 1
+            For I As Integer = 0 To ComboPathClient.Items.Count - 1
                 If CStr(ComboPathClient.Items(I)) = numberClientStend Then
                     ComboPathClient.SelectedIndex = I
                     Exit For
@@ -247,6 +252,8 @@ Friend Class FormSetting
             ComboFrequencyCollection.Text = mFrequencyBackground.ToString
 
             Close()
+        Else
+            PopulateConstantChannels()
         End If
     End Sub
 
@@ -358,6 +365,7 @@ Friend Class FormSetting
         If Not isCompensationReferenceJunction Then SaveCoefficientBringingTBoxing()
 
         SaveINI()
+        If IsWorkWithController Then mSettingSelectedParameters.SaveAndRestoreAfterSaving()
         Hide()
         DialogResult = DialogResult.OK
         RegistrationEventLog.EventLog_MSG_USER_ACTION($"<Применение настроек Опции> Клиент={IsClient} , ТСРКлиент={IsTcpClient} , Работа с контроллером={IsWorkWithController} , Номер стенда={StandNumber} , Номер изделия={NumberEngine}")
@@ -368,29 +376,28 @@ Friend Class FormSetting
     ''' Найти последнюю по времени создания таблицу  данного стенда.
     ''' </summary>
     Private Sub SetLastChannelDBase()
-        Dim dblDate As Date
+        Dim dateCreated As Date
         Dim tableName As String = "Channel" & StandNumber
         Dim conn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
-        Dim row As DataRow
 
         conn.Open()
         Dim schemaTable As DataTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
         conn.Close()
-        dblDate = CDate(schemaTable.Rows(0)("DATE_CREATED"))
+        dateCreated = CDate(schemaTable.Rows(0)("DATE_CREATED"))
 
         ' найти дату создания первой таблицы данного стенда
-        For Each row In schemaTable.Rows
+        For Each row As DataRow In schemaTable.Rows
             If CBool(InStr(1, row("TABLE_NAME").ToString, tableName)) Then
-                dblDate = CDate(row("DATE_CREATED"))
+                dateCreated = CDate(row("DATE_CREATED"))
                 Exit For
             End If
         Next
 
         ' проверить есть, ли еще таблицы данного стенда и найти последнюю по времени создания
-        For Each row In schemaTable.Rows
+        For Each row As DataRow In schemaTable.Rows
             If CBool(InStr(1, row("TABLE_NAME").ToString, tableName)) Then
-                If CDate(row("DATE_CREATED")) >= dblDate Then
-                    dblDate = CDate(row("DATE_CREATED"))
+                If CDate(row("DATE_CREATED")) >= dateCreated Then
+                    dateCreated = CDate(row("DATE_CREATED"))
                     ChannelLast = row("TABLE_NAME").ToString
                 End If
             End If
@@ -509,10 +516,9 @@ Friend Class FormSetting
     ''' Взять с сервера базу
     ''' </summary>
     Private Sub TakeDBaseFromServer()
-        'копируем таблицу каналов сервера по номеру стенда, если копмпьютер сервера не локальный
+        ' копироаит таблицу каналов сервера по номеру стенда, если копмпьютер сервера не локальный
         Dim conn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
         Dim cmd As OleDbCommand = conn.CreateCommand
-        Dim row As DataRow
         cmd.CommandType = CommandType.Text
 
         conn.Open()
@@ -537,37 +543,31 @@ Friend Class FormSetting
         'Next row
 
         Dim tableName As String = "Channel" & StandNumber
-        Dim strSQL As String
 
         If CBool(InStr(1, ServerWorkingFolder, "\\")) Then 'другой компьютер
             pathWorkDataBase = Mid(ServerWorkingFolder, 1, InStr(3, ServerWorkingFolder, "\")) & Replace(pathWorkDataBase, ":\", "\")
         End If
 
-        For Each row In schemaTable.Rows
+        For Each row As DataRow In schemaTable.Rows
             If row("TABLE_NAME").ToString = tableName Then  'база есть
-                strSQL = "DELETE * FROM " & tableName
-                cmd.CommandText = strSQL
+                cmd.CommandText = "DELETE * FROM " & tableName
                 cmd.ExecuteNonQuery()
-
-                strSQL = "INSERT INTO " & tableName & " SELECT * FROM " & tableName & " IN " & """" & pathWorkDataBase & """" & ";"
-                cmd.CommandText = strSQL
+                cmd.CommandText = "INSERT INTO " & tableName & " SELECT * FROM " & tableName & " IN " & """" & pathWorkDataBase & """" & ";"
                 cmd.ExecuteNonQuery()
                 Exit For
             End If
-        Next row
+        Next
 
         tableName = "Режимы" & StandNumber
-        For Each row In schemaTable.Rows
+        For Each row As DataRow In schemaTable.Rows
             If row("TABLE_NAME").ToString = tableName Then  'база есть
-                strSQL = "DELETE * FROM " & tableName
-                cmd.CommandText = strSQL
+                cmd.CommandText = "DELETE * FROM " & tableName
                 cmd.ExecuteNonQuery()
-                strSQL = "INSERT INTO " & tableName & " SELECT * FROM " & tableName & " IN " & """" & pathWorkDataBase & """" & ";"
-                cmd.CommandText = strSQL
+                cmd.CommandText = "INSERT INTO " & tableName & " SELECT * FROM " & tableName & " IN " & """" & pathWorkDataBase & """" & ";"
                 cmd.ExecuteNonQuery()
                 Exit For
             End If
-        Next row
+        Next
         conn.Close()
     End Sub
 
@@ -825,6 +825,13 @@ Friend Class FormSetting
     End Sub
 #End Region
 
+    ''' <summary>
+    ''' Настройка константантных каналов измерения
+    ''' </summary>
+    Private Sub PopulateConstantChannels()
+        mSettingSelectedParameters = New SettingConstantChannels(PathResourses, Me)
+    End Sub
+
 #Region "Обработчики событий контролов"
     Private Sub ComboNumberStend_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboNumberStend.SelectedIndexChanged
         If ButtonWithClient.Checked Then
@@ -855,6 +862,8 @@ Friend Class FormSetting
         Dim limit As Integer = CInt(65536 / 1800) ' arraysize = 1800
         Dim stepDivide As Integer
 
+        ComboIntervalSnapshot.Items.Clear()
+
         Select Case inFrequency
             Case "1"
                 FrequencyBackground = 1
@@ -875,6 +884,7 @@ Friend Class FormSetting
                 RefreshScreen = 1
                 RefreshDataToNetwork = 1
                 stepDivide = 2
+                ComboIntervalSnapshot.Items.Add("15") ' при "15" LimitAddExel=1
                 Exit Select
             Case "5"
                 FrequencyBackground = 5
@@ -885,6 +895,7 @@ Friend Class FormSetting
                 RefreshScreen = 1
                 RefreshDataToNetwork = 1
                 stepDivide = 5
+                ComboIntervalSnapshot.Items.AddRange({"6", "12"}) ' при "6" LimitAddExel=1
                 Exit Select
             Case "10"
                 FrequencyBackground = 10
@@ -895,6 +906,7 @@ Friend Class FormSetting
                 RefreshScreen = 1
                 RefreshDataToNetwork = 1
                 stepDivide = 10
+                ComboIntervalSnapshot.Items.AddRange({"3", "6", "9", "15"}) ' при "3" LimitAddExel=1
                 Exit Select
             Case "20"
                 FrequencyBackground = 20
@@ -905,6 +917,7 @@ Friend Class FormSetting
                 RefreshScreen = 2
                 RefreshDataToNetwork = 1
                 stepDivide = 10
+                ComboIntervalSnapshot.Items.AddRange({"3", "6", "9"})
                 Exit Select
             Case "50"
                 FrequencyBackground = 50
@@ -940,7 +953,6 @@ Friend Class FormSetting
         LabelDiscreditFact.Text = CStr(LevelOversampling)
         TextFrequencySamplingChannel.Text = CStr(FrequencyBackground * LevelOversampling)
 
-        ComboIntervalSnapshot.Items.Clear()
         For I = 0 To limit Step stepDivide
             If I = 0 Then Continue For
             ComboIntervalSnapshot.Items.Add((TimeFrame * I) / 60)
@@ -1104,9 +1116,7 @@ Friend Class FormSetting
             .Filter = "Channels (*.mdb)|*.mdb"
 
             If .ShowDialog = DialogResult.OK Then
-                If Len(.FileName) = 0 Then
-                    Exit Sub
-                End If
+                If Len(.FileName) = 0 Then Exit Sub
 
                 pathServerStend = .FileName
                 TextPathServer.Text = pathServerStend
@@ -1128,9 +1138,7 @@ Friend Class FormSetting
             .Filter = "Channels (*.mdb)|*.mdb"
 
             If .ShowDialog = DialogResult.OK Then
-                If Len(.FileName) = 0 Then
-                    Exit Sub
-                End If
+                If Len(.FileName) = 0 Then Exit Sub
 
                 pathClientStend = .FileName
                 TextPathClient.Text = pathClientStend
@@ -1160,8 +1168,6 @@ Friend Class FormSetting
         Dim numberParameterXC As Integer ' номер Параметра ХС
         Dim numberParameterTbox As Integer ' номер Параметра Тбокса
         Dim acquireTempeatureXC As Double ' температура ХС
-        Dim strSQL As String
-        Dim rowsCount As Integer ' компенсация ХС
 
         If IsWorkWithController Then
             numberParameterXC = -1
@@ -1200,27 +1206,24 @@ Friend Class FormSetting
                     MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information)
                     RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
                 Else
-                    Dim odaDataAdapter As OleDbDataAdapter
-                    Dim dtDataTable As New DataTable
-                    Dim cb As OleDbCommandBuilder
-
                     TemperatureTxc = acquireTempeatureXC
 
                     Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
                         cn.Open()
-                        strSQL = $"SELECT * FROM [{ChannelLast}] WHERE ([КомпенсацияХС] = True)"
-                        odaDataAdapter = New OleDbDataAdapter(strSQL, cn)
-                        odaDataAdapter.Fill(dtDataTable)
-                        rowsCount = dtDataTable.Rows.Count
+                        Using odaDataAdapter As OleDbDataAdapter = New OleDbDataAdapter($"SELECT * FROM [{ChannelLast}] WHERE ([КомпенсацияХС] = True)", cn)
+                            Using dtDataTable As New DataTable
+                                odaDataAdapter.Fill(dtDataTable)
 
-                        If rowsCount <> 0 Then
-                            For I = 0 To rowsCount - 1
-                                dtDataTable.Rows(I)("Смещение") = acquireTempeatureXC
-                            Next
+                                If dtDataTable.Rows.Count <> 0 Then
+                                    For I = 0 To dtDataTable.Rows.Count - 1
+                                        dtDataTable.Rows(I)("Смещение") = acquireTempeatureXC
+                                    Next
 
-                            cb = New OleDbCommandBuilder(odaDataAdapter)
-                            odaDataAdapter.Update(dtDataTable)
-                        End If
+                                    Dim cb As OleDbCommandBuilder = New OleDbCommandBuilder(odaDataAdapter)
+                                    odaDataAdapter.Update(dtDataTable)
+                                End If
+                            End Using
+                        End Using
                     End Using
                 End If
             End If
@@ -1305,4 +1308,16 @@ Friend Class FormSetting
         mSearchChannel.SelectChannel()
     End Sub
 #End Region
+
+    ''' <summary>
+    ''' Обработчик события добавления нового константного параметра должен вызываться первым.
+    ''' Далее вызывается событие DataGridViewConstantChannels_RowsAdded. 
+    ''' При выносе подключения данного события в mSettingSelectedParameters нарушается последовательность 
+    ''' вызова обработчика события DataGridViewConstantChannels_RowsAdded.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub BindingNavigatorAddNewItem_Click(sender As Object, e As EventArgs) Handles BindingNavigatorAddNewItem.Click
+        mSettingSelectedParameters.BindingNavigatorAddNewItem()
+    End Sub
 End Class

@@ -1,105 +1,16 @@
 ﻿Friend Class ПровалN1ОтносительноУстановившегося
-    Dim mИндексПараметра, mИндексТначальное, mИндексТконечное As Integer
-    Dim mДлительностьТакта, mТначальное, mТконечное, mТдлительность As Double
-    Dim mАначальное, mАконечное As Double
-    Dim mDeltaA As Double
-    Dim mВремяОсреднения As Double
-    Dim mОшибка As Boolean
-    Dim mИмяПараметра, mТекстОшибки As String
-    Dim marrЗначения(,) As Double
-    Dim mmyTypeList() As TypeSmallParameter
-    Dim mGraphMinimum, mGraphMaximum As Short
+    Inherits Figure
 
-    Public Property GraphMinimum() As Double
+    '''' <summary>
+    '''' Индекс Т начальное
+    '''' </summary>
+    '''' <returns></returns>
+    Public Overloads Property IndexTstart() As Integer
         Get
-            Return CDbl(mGraphMinimum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMinimum = CShort(Value)
-        End Set
-    End Property
-
-    Public Property GraphMaximum() As Double
-        Get
-            Return CDbl(mGraphMaximum)
-        End Get
-        Set(ByVal Value As Double)
-            mGraphMaximum = CShort(Value)
-        End Set
-    End Property
-
-    Public ReadOnly Property ИндексПараметра() As Integer
-        Get
-            Return mИндексПараметра
-        End Get
-    End Property
-
-    Public Property ИндексТначальное() As Integer
-        Get
-            Return mИндексТначальное
+            Return mIndexTstart
         End Get
         Set(ByVal Value As Integer)
-            mИндексТначальное = Value
-        End Set
-    End Property
-
-    Public ReadOnly Property ИндексТконечное() As Integer
-        Get
-            Return mИндексТконечное
-        End Get
-    End Property
-
-    Public ReadOnly Property ДлительностьТакта() As Double
-        Get
-            Return mДлительностьТакта
-        End Get
-    End Property
-
-    Public ReadOnly Property Тначальное() As Double
-        Get
-            Return mТначальное
-        End Get
-    End Property
-
-    Public ReadOnly Property Тконечное() As Double
-        Get
-            Return mТконечное
-        End Get
-    End Property
-
-    Public ReadOnly Property Тдлительность() As Double
-        Get
-            Return mТдлительность
-        End Get
-    End Property
-
-    Public ReadOnly Property Ошибка() As Boolean
-        Get
-            Return mОшибка
-        End Get
-    End Property
-
-    Public ReadOnly Property ТекстОшибки() As String
-        Get
-            Return mТекстОшибки
-        End Get
-    End Property
-
-    Public Property Аначальное() As Double
-        Get
-            Return mАначальное
-        End Get
-        Set(ByVal Value As Double)
-            mАначальное = Value
-        End Set
-    End Property
-
-    Public Property Аконечное() As Double
-        Get
-            Return mАконечное
-        End Get
-        Set(ByVal Value As Double)
-            mАконечное = Value
+            mIndexTstart = Value
         End Set
     End Property
 
@@ -109,171 +20,130 @@
         End Get
     End Property
 
-    Public Property ВремяОсреднения() As Double
-        Get
-            Return mВремяОсреднения
-        End Get
-        Set(ByVal Value As Double)
-            mВремяОсреднения = Value
-        End Set
-    End Property
+    ''' <summary>
+    ''' Время Осреднения
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property TimeAverage() As Double
 
-    Public Sub New(ByVal ИмяПараметра As String,
-                   ByVal ЧастотаКадра As Short,
-                   ByVal arrЗначенияПараметров(,) As Double,
-                   ByVal myTypeList() As TypeSmallParameter,
-                   ByVal Minimum As Double,
-                   ByVal Maximum As Double)
+    Private mDeltaA As Double
 
-        mИмяПараметра = ИмяПараметра
-        marrЗначения = CType(arrЗначенияПараметров.Clone, Double(,))
-        mmyTypeList = CType(myTypeList.Clone, TypeSmallParameter())
-        mДлительностьТакта = 1 / ЧастотаКадра
-        mТекстОшибки = "Параметр: " & mИмяПараметра & vbCrLf
-        mВремяОсреднения = 2 'по умолчанию
-        GraphMinimum = Minimum
-        GraphMaximum = Maximum
+    Public Sub New(inNameParameter As String,
+                    frequency As Integer,
+                    inMeasuredValues(,) As Double,
+                    inTypeSmallParameter() As TypeSmallParameter,
+                    minimum As Double, ByVal maximum As Double)
+
+        MyBase.New(inNameParameter, frequency, inMeasuredValues, inTypeSmallParameter, minimum, maximum)
+        TimeAverage = 2 ' по умолчанию
+        IndexTstart = GraphMinimum
     End Sub
 
-    Public Sub Расчет()
-        Dim I, J, N As Integer
-        Dim параметрНайден, минимумНайден As Boolean
-        Dim количество As Integer
-        Dim минимальноеЗначение As Double = Double.MaxValue
-        Dim максимальноеЗначение As Double = Double.MinValue
-        Dim индексМаксимальногоЗначения, индексМинимальногоЗначения As Integer
-        Dim скачокЗначение As Double = 0.2
-        Dim скачокИндекс As Integer = CInt(0.2 / mДлительностьТакта) ' 0.2 секунды '2
+    Public Overrides Sub Calculation()
+        Dim I As Integer
+        Dim isMinimumFound As Boolean ' минимум Найден
+        Dim count As Integer
+        Dim minimum As Double = Double.MaxValue ' минимальное Значение
+        Dim maximum As Double = Double.MinValue ' максимальное Значение
+        Dim indexMaximum, indexMinimum As Integer
+        Dim jumpN1 As Double = 0.2 ' скачок Значение
+        Dim indexJump As Integer = CInt(jumpN1 / ClockPeriod) ' 0.2 секунды 
 
-        'находим индекс параметра
-        For J = 1 To UBound(mmyTypeList)
-            If mmyTypeList(J).NameParameter = mИмяПараметра AndAlso mmyTypeList(J).IsVisible Then
-                mИндексПараметра = J - 1
-                параметрНайден = True
-                Exit For
-            End If
-        Next J
-
-        If Not параметрНайден Then
-            mОшибка = True
-            mТекстОшибки += "Параметр " & mИмяПараметра & " не найден" & vbCrLf
+        If ShowTotalErrorsMessage.IsParameterNotCorrect(nameParameter, mErrorsMessage, Parameters, mIndexParameter) Then
+            mIsErrors = True
             Exit Sub
         End If
 
-        N = mGraphMaximum
-        'находим среднее за последние 2 сек
-        For I = N - CInt(mВремяОсреднения / mДлительностьТакта) To N
-            mАконечное += marrЗначения(mИндексПараметра, I)
-            количество += 1
-        Next I
+        ' среднее за последние 2 сек
+        For I = mGraphMaximum - CInt(TimeAverage / ClockPeriod) To mGraphMaximum
+            Astop += MeasuredValues(mIndexParameter, I)
+            count += 1
+        Next
 
-        mАконечное /= количество
+        Astop /= count
 
-        'находим первый максимум 
-        For I = mИндексТначальное To N
-            'поиск максимального
-            If marrЗначения(mИндексПараметра, I) > максимальноеЗначение Then
-                максимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                индексМаксимальногоЗначения = I
+        ' первый максимум 
+        For I = mIndexTstart To mGraphMaximum
+            ' поиск максимального
+            If MeasuredValues(mIndexParameter, I) > maximum Then
+                maximum = MeasuredValues(mIndexParameter, I)
+                indexMaximum = I
             End If
-        Next I
+        Next
 
-        If (индексМаксимальногоЗначения - mИндексТначальное) * mДлительностьТакта > 10 Then
-            'если максимальное значение отстоит от mИндексТначальное более 10 сек то от него ищем локальный минимум
-
-            '1 случай когда локальный максимум превышающего среднее зачение в пределах 10 сек до абсолютного максимума есть
-            Dim ИндексПервогоПревышенияСреднего, ИндексПоследнегоПревышенияСреднего As Integer
-            For I = mИндексТначальное To индексМаксимальногоЗначения
-                If marrЗначения(mИндексПараметра, I) > mАконечное Then
-                    ИндексПервогоПревышенияСреднего = I
+        If (indexMaximum - mIndexTstart) * ClockPeriod > 10 Then
+            ' если максимальное значение отстоит от mIndexTstart более 10 сек, то от него ищем локальный минимум
+            ' 1 случай когда локальный максимум превышающего среднее зачение в пределах 10 сек до абсолютного максимума есть
+            Dim indexFirstExcessAverage, indexLastExcessAverage As Integer ' ИндексПервогоПревышенияСреднего, ИндексПоследнегоПревышенияСреднего
+            For I = mIndexTstart To indexMaximum
+                If MeasuredValues(mIndexParameter, I) > Astop Then
+                    indexFirstExcessAverage = I
                     Exit For
                 End If
-            Next I
+            Next
 
-            For I = индексМаксимальногоЗначения To mИндексТначальное Step -1
-                If marrЗначения(mИндексПараметра, I) < mАконечное Then
-                    ИндексПоследнегоПревышенияСреднего = I
+            For I = indexMaximum To mIndexTstart Step -1
+                If MeasuredValues(mIndexParameter, I) < Astop Then
+                    indexLastExcessAverage = I
                     Exit For
                 End If
-            Next I
+            Next
 
-            If ИндексПервогоПревышенияСреднего < ИндексПоследнегоПревышенияСреднего Then
-                For I = ИндексПервогоПревышенияСреднего To ИндексПоследнегоПревышенияСреднего
-                    'поиск минимального
-                    If marrЗначения(mИндексПараметра, I) < минимальноеЗначение Then
-                        минимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                        индексМинимальногоЗначения = I
-                        минимумНайден = True
+            If indexFirstExcessAverage < indexLastExcessAverage Then
+                For I = indexFirstExcessAverage To indexLastExcessAverage
+                    ' поиск минимального
+                    If MeasuredValues(mIndexParameter, I) < minimum Then
+                        minimum = MeasuredValues(mIndexParameter, I)
+                        indexMinimum = I
+                        isMinimumFound = True
                     End If
-                Next I
+                Next
             End If
 
-            'For I = mИндексМаксимальногоЗначения To mИндексТначальное Step -1
-            '    If blnНайдемМеньшеСреднего = False AndAlso marrЗначения(mИндексПараметра, I) < mАконечное Then
-            '        blnНайдемМеньшеСреднего = True
-            '    End If
-            '    If blnНайдемМеньшеСреднего = True Then
-            '        'до первого превышения
-            '        If marrЗначения(mИндексПараметра, I) > mАконечное Then
-            '            blnМинимумНайден = True
-            '            Exit For
-            '        End If
-
-            '        'поиск минимального
-            '        If marrЗначения(mИндексПараметра, I) < mМинимальноеЗначение Then
-            '            mМинимальноеЗначение = marrЗначения(mИндексПараметра, I)
-            '            mИндексМинимальногоЗначения = I
-            '        End If
-            '    End If
-            'Next I
-
-            If минимумНайден = False Then
-                минимальноеЗначение = 1.0E+38
-                '2 случай когда локальный максимум превышающего среднее зачение в пределах 10 сек до абсолютного максимума нет
-                For I = mИндексТначальное To индексМаксимальногоЗначения - скачокИндекс * 2
-                    'поиск локального минимального
-                    If (marrЗначения(mИндексПараметра, I) - marrЗначения(mИндексПараметра, I + скачокИндекс) > скачокЗначение) AndAlso (marrЗначения(mИндексПараметра, I + скачокИндекс * 2) - marrЗначения(mИндексПараметра, I + скачокИндекс) > скачокЗначение) Then
-                        If I - скачокИндекс > 0 Then
-                            минимальноеЗначение = marrЗначения(mИндексПараметра, I - скачокИндекс)
-                            индексМинимальногоЗначения = I + скачокИндекс
-                            минимумНайден = True
+            If isMinimumFound = False Then
+                minimum = Double.MaxValue
+                ' 2 случай когда локальный максимум превышающего среднее зачение в пределах 10 сек до абсолютного максимума нет
+                For I = mIndexTstart To indexMaximum - indexJump * 2
+                    ' поиск локального минимального
+                    If (MeasuredValues(mIndexParameter, I) - MeasuredValues(mIndexParameter, I + indexJump) > jumpN1) AndAlso (MeasuredValues(mIndexParameter, I + indexJump * 2) - MeasuredValues(mIndexParameter, I + indexJump) > jumpN1) Then
+                        If I - indexJump > 0 Then
+                            minimum = MeasuredValues(mIndexParameter, I - indexJump)
+                            indexMinimum = I + indexJump
+                            isMinimumFound = True
                             Exit For
                         End If
                     End If
-                Next I
+                Next
             End If
 
-            If минимумНайден = False Then
-                For I = индексМаксимальногоЗначения To mИндексТначальное Step -1
-                    'поиск минимального
-                    If marrЗначения(mИндексПараметра, I) < минимальноеЗначение Then
-                        минимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                        индексМинимальногоЗначения = I
+            If isMinimumFound = False Then
+                For I = indexMaximum To mIndexTstart Step -1
+                    ' поиск минимального
+                    If MeasuredValues(mIndexParameter, I) < minimum Then
+                        minimum = MeasuredValues(mIndexParameter, I)
+                        indexMinimum = I
                     End If
-                Next I
+                Next
             End If
         Else
-            'находим минимум начиная с mИндексМаксимальногоЗначения
-            For I = индексМаксимальногоЗначения To N
+            ' минимум начиная с mIndexMaxValue
+            For I = indexMaximum To mGraphMaximum
                 'поиск минимального
-                If marrЗначения(mИндексПараметра, I) < минимальноеЗначение Then
-                    минимальноеЗначение = marrЗначения(mИндексПараметра, I)
-                    индексМинимальногоЗначения = I
+                If MeasuredValues(mIndexParameter, I) < minimum Then
+                    minimum = MeasuredValues(mIndexParameter, I)
+                    indexMinimum = I
                 End If
-            Next I
+            Next
         End If
 
-        mИндексТконечное = N
-        mИндексТначальное = индексМинимальногоЗначения
-        mАначальное = marrЗначения(mИндексПараметра, mИндексТначальное)
-        mТначальное = mИндексТначальное * mДлительностьТакта
-        mТконечное = mИндексТконечное * mДлительностьТакта
-        mТдлительность = mТконечное - mТначальное
-        mDeltaA = mАконечное - mАначальное
+        mIndexTstop = mGraphMaximum
+        mIndexTstart = indexMinimum
+        Astart = MeasuredValues(mIndexParameter, mIndexTstart)
+        mTstart = mIndexTstart * ClockPeriod
+        mTstop = mIndexTstop * ClockPeriod
+        mTimeDuration = mTstop - mTstart
+        mDeltaA = Astop - Astart
 
-        If (mИндексТначальное = mИндексТконечное) AndAlso Not (mИндексТначальное = mGraphMinimum And mИндексТконечное = mGraphMinimum) Then
-            mОшибка = True
-            mТекстОшибки += "Тначальное и Тконечное равны" & vbCrLf
-        End If
+        mIsErrors = ShowTotalErrorsMessage.IsTimeFound(mIndexTstart, mIndexTstop, mGraphMinimum, mErrorsMessage)
     End Sub
 End Class

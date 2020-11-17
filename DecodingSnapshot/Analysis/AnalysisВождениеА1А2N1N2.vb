@@ -13,453 +13,290 @@ Friend Class AnalysisВождениеА1А2N1N2
 
     Private Sub AllocateProtocol()
         EngineDefineTU()
-        'ReDim_Protocol(11, 3)
         Re.Dim(Protocol, 11, 3)
-        Protocol(1, 1) = "Контрольный лист №"
-        Protocol(2, 1) = "Кадр предъявляется"
-        Protocol(3, 1) = "Температура бокса"
-        Protocol(4, 1) = "N1пр.min"
-        Protocol(5, 1) = "N1пр.max"
-        Protocol(6, 1) = "a1min-a1max"
-        Protocol(7, 1) = "a1min-a1max без влияния N1"
-        Protocol(8, 1) = "N2пр.min"
-        Protocol(9, 1) = "N2пр.max"
-        Protocol(10, 1) = "a2min-a2max"
-        Protocol(11, 1) = "a2min-a2max без влияния N2"
-
-        Protocol(1, 2) = CStr(Parent.NumberProductionSnapshot)
-        Protocol(2, 2) = "п/заказчика"
-        Protocol(3, 2) = TemperatureOfBox & "град."
-        Protocol(4, 2) = "%"
-        Protocol(5, 2) = "%"
-        Protocol(6, 2) = "дел."
-        Protocol(7, 2) = "дел."
-        Protocol(8, 2) = "%"
-        Protocol(9, 2) = "%"
-        Protocol(10, 2) = "дел."
-        Protocol(11, 2) = "дел."
-
-        Protocol(1, 3) = ""
-        Protocol(2, 3) = ""
-        Protocol(3, 3) = ""
-        Protocol(4, 3) = ""
-        Protocol(5, 3) = ""
-        Protocol(6, 3) = ""
-        Protocol(7, 3) = GetEngineNormTUParameter(33)
-        Protocol(8, 3) = ""
-        Protocol(9, 3) = ""
-        Protocol(10, 3) = ""
-        Protocol(11, 3) = GetEngineNormTUParameter(33)
+        PopulateProtocol(1, {"Контрольный лист №", CStr(Parent.NumberProductionSnapshot), ""})
+        PopulateProtocol(2, {"Кадр предъявляется", "п/заказчика", ""})
+        PopulateProtocol(3, {"Температура бокса", TemperatureOfBox & "град.", ""})
+        PopulateProtocol(4, {"N1пр.min", "%", ""})
+        PopulateProtocol(5, {"N1пр.max", "%", ""})
+        PopulateProtocol(6, {"a1min-a1max", "дел.", ""})
+        PopulateProtocol(7, {"a1min-a1max без влияния N1", "дел.", GetEngineNormTUParameter(33)})
+        PopulateProtocol(8, {"N2пр.min", "%", ""})
+        PopulateProtocol(9, {"N2пр.max", "%", ""})
+        PopulateProtocol(10, {"a2min-a2max", "дел.", ""})
+        PopulateProtocol(11, {"a2min-a2max без влияния N2", "дел.", GetEngineNormTUParameter(33)})
     End Sub
 
     Public Overrides Sub DecodingRegimeSnapshot()
         AllocateProtocol()
-        Dim общийТекстОшибок As String = Nothing
-        Dim общаяОшибка As Boolean
-        Dim параметр As String
-        Dim КоэПриведения As Double = System.Math.Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin))
-        Dim J As Integer
-        'J=1 для 99 изделия, J=2 для 39 изделия
-        Dim arrТочкиА1(5) As КоординатыОборотыУглы 'для графика а1'КНД
-        Dim arrТочкиА2(4) As КоординатыОборотыУглы 'для графика а2'КНД
-        Dim МинимальноеПриведенноеЗначениеN1, МинимальноеПриведенноеЗначениеN2, МаксимальноеПриведенноеЗначениеN1, МаксимальноеПриведенноеЗначениеN2 As Double
-        Dim МинимальноеПриведенноеЗначениеА1, МинимальноеПриведенноеЗначениеА2, МаксимальноеПриведенноеЗначениеА1, МаксимальноеПриведенноеЗначениеА2 As Double
 
-        J = 1 'КНД
+        Dim transferConstant As Double = Sqrt(Const288 / (TemperatureBoxInSnaphot + Kelvin)) ' КоэПриведения
+        Dim pointsA1(5) As RotationAngleCoordinate ' для графика а1 КНД
+        Dim pointsA2(4) As RotationAngleCoordinate ' для графика а2 КНД
+        ' Приведенные значения
+        Dim minTransferN1, minTransferN2, maxTransferN1, maxTransferN2 As Double
+        Dim minTransferA1, minTransferA2, maxTransferA1, maxTransferA2 As Double
+
+        ' J=1 для 99 изделия, J=2 для 39 изделия
         Select Case Parent.TypeKRDinSnapshot
-            Case "КРД-А", "КРД-Б"
-                J = 1
-                'j=1 - 99 изделие
+            Case cKRD_A, cKRD_B
                 'график теоретическая 5 точек
-                '1
-                arrТочкиА1(1).ОборотыПриведенные = 70
-                arrТочкиА1(1).Угол = 4
-                '2
-                arrТочкиА1(2).ОборотыПриведенные = 80
-                arrТочкиА1(2).Угол = 4
-                '3
-                arrТочкиА1(3).ОборотыПриведенные = 87.5
-                arrТочкиА1(3).Угол = 74
-                '4
-                arrТочкиА1(4).ОборотыПриведенные = 95
-                arrТочкиА1(4).Угол = 104
-                '5
-                arrТочкиА1(5).ОборотыПриведенные = 105
-                arrТочкиА1(5).Угол = 104
+                pointsA1(1).RotationReduced = 70
+                pointsA1(1).Angle = 4
+                pointsA1(2).RotationReduced = 80
+                pointsA1(2).Angle = 4
+                pointsA1(3).RotationReduced = 87.5
+                pointsA1(3).Angle = 74
+                pointsA1(4).RotationReduced = 95
+                pointsA1(4).Angle = 104
+                pointsA1(5).RotationReduced = 105
+                pointsA1(5).Angle = 104
 
-                '*********************************
-                'j=1 - 99 изделие
                 'график теоретическая 4 точки
-                '1
-                arrТочкиА2(1).ОборотыПриведенные = 68
-                arrТочкиА2(1).Угол = 4
-                '2
-                arrТочкиА2(2).ОборотыПриведенные = 73.5
-                arrТочкиА2(2).Угол = 4
-                '3
-                arrТочкиА2(3).ОборотыПриведенные = 88
-                arrТочкиА2(3).Угол = 104
-                '4
-                arrТочкиА2(4).ОборотыПриведенные = 105
-                arrТочкиА2(4).Угол = 104
-
-                'Case "КРД-Б"
-                '    J = 1
-                Exit Select
-            Case "АРД-39"
-                J = 2
-                '************************************
-                'j=2 - 39 изделие
+                pointsA2(1).RotationReduced = 68
+                pointsA2(1).Angle = 4
+                pointsA2(2).RotationReduced = 73.5
+                pointsA2(2).Angle = 4
+                pointsA2(3).RotationReduced = 88
+                pointsA2(3).Angle = 104
+                pointsA2(4).RotationReduced = 105
+                pointsA2(4).Angle = 104
+            Case cARD_39
                 'график теоретическая 5 точек
-                '1
-                arrТочкиА1(1).ОборотыПриведенные = 70
-                arrТочкиА1(1).Угол = 4
-                '2
-                arrТочкиА1(2).ОборотыПриведенные = 80
-                arrТочкиА1(2).Угол = 4
-                '3
-                arrТочкиА1(3).ОборотыПриведенные = 87.5
-                arrТочкиА1(3).Угол = 74
-                '4
-                arrТочкиА1(4).ОборотыПриведенные = 95
-                arrТочкиА1(4).Угол = 104
-                '5
-                arrТочкиА1(5).ОборотыПриведенные = 105
-                arrТочкиА1(5).Угол = 104
+                pointsA1(1).RotationReduced = 70
+                pointsA1(1).Angle = 4
+                pointsA1(2).RotationReduced = 80
+                pointsA1(2).Angle = 4
+                pointsA1(3).RotationReduced = 87.5
+                pointsA1(3).Angle = 74
+                pointsA1(4).RotationReduced = 95
+                pointsA1(4).Angle = 104
+                pointsA1(5).RotationReduced = 105
+                pointsA1(5).Angle = 104
 
-                '************************************
-                'j=2 - 39 изделие
                 'график теоретическая 4 точки
-                '1
-                arrТочкиА2(1).ОборотыПриведенные = 68
-                arrТочкиА2(1).Угол = 4
-                '2
-                arrТочкиА2(2).ОборотыПриведенные = 73.25
-                arrТочкиА2(2).Угол = 4
-                '3
-                arrТочкиА2(3).ОборотыПриведенные = 88
-                arrТочкиА2(3).Угол = 104
-                '4
-                arrТочкиА2(4).ОборотыПриведенные = 105
-                arrТочкиА2(4).Угол = 104
+                pointsA2(1).RotationReduced = 68
+                pointsA2(1).Angle = 4
+                pointsA2(2).RotationReduced = 73.25
+                pointsA2(2).Angle = 4
+                pointsA2(3).RotationReduced = 88
+                pointsA2(3).Angle = 104
+                pointsA2(4).RotationReduced = 105
+                pointsA2(4).Angle = 104
                 Exit Select
-            Case "КНД924"
-                J = 3
+            Case Else 'cKRD_99_C, cCRD_99, 99 изделие КНД924
                 'j=3 - 99 изделие КНД924
                 'график теоретическая 5 точек
-                '1
-                arrТочкиА1(1).ОборотыПриведенные = 70
-                arrТочкиА1(1).Угол = 4
-                '2
-                arrТочкиА1(2).ОборотыПриведенные = 82
-                arrТочкиА1(2).Угол = 4
-                '3
-                arrТочкиА1(3).ОборотыПриведенные = 90
-                arrТочкиА1(3).Угол = 70
-                '4
-                arrТочкиА1(4).ОборотыПриведенные = 94
-                arrТочкиА1(4).Угол = 104
-                '5
-                arrТочкиА1(5).ОборотыПриведенные = 105
-                arrТочкиА1(5).Угол = 104
-                'j=3 - 99 изделие КНД924
+                pointsA1(1).RotationReduced = 70
+                pointsA1(1).Angle = 4
+                pointsA1(2).RotationReduced = 82
+                pointsA1(2).Angle = 4
+                pointsA1(3).RotationReduced = 90
+                pointsA1(3).Angle = 70
+                pointsA1(4).RotationReduced = 94
+                pointsA1(4).Angle = 104
+                pointsA1(5).RotationReduced = 105
+                pointsA1(5).Angle = 104
+
                 'график теоретическая 4 точки
-                '1
-                arrТочкиА2(1).ОборотыПриведенные = 68
-                arrТочкиА2(1).Угол = 4
-                '2
-                arrТочкиА2(2).ОборотыПриведенные = 73.5
-                arrТочкиА2(2).Угол = 4
-                '3
-                arrТочкиА2(3).ОборотыПриведенные = 88
-                arrТочкиА2(3).Угол = 104
-                '4
-                arrТочкиА2(4).ОборотыПриведенные = 105
-                arrТочкиА2(4).Угол = 104
+                pointsA2(1).RotationReduced = 68
+                pointsA2(1).Angle = 4
+                pointsA2(2).RotationReduced = 73.5
+                pointsA2(2).Angle = 4
+                pointsA2(3).RotationReduced = 88
+                pointsA2(3).Angle = 104
+                pointsA2(4).RotationReduced = 105
+                pointsA2(4).Angle = 104
         End Select
 
         Protocol(3, 2) = CStr(Round(TemperatureBoxInSnaphot, 2)) & "град."
 
-        'находим заброс N1 относительно установившегося
-        параметр = conN1
-        Dim clsЗабросN1ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
-                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                              Parent.MeasuredValues,
-                                                                                              Parent.SnapshotSmallParameters,
-                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsЗабросN1ОтносительноУстановившегося
-            '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТконечное 
-            .Расчет()
-        End With
-
-        If clsЗабросN1ОтносительноУстановившегося.Ошибка = True Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросN1ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+        ' заброс N1 относительно установившегося
+        parameter = conN1
+        Dim mЗабросN1ОтносительноУстановившегося = CType(mFiguresManager(EnumFigures.ЗабросN1ОтносительноУстановившегося, parameter), ЗабросN1ОтносительноУстановившегося)
+        mЗабросN1ОтносительноУстановившегося.Calculation()
+        If mЗабросN1ОтносительноУстановившегося.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
+            IsTotalErrors = True
+            totalErrorsMessage += mЗабросN1ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsЗабросN1ОтносительноУстановившегося
-                'If .DeltaA > 0 Then
+            ' отрисовать стрелки
+            With mЗабросN1ОтносительноУстановившегося
                 Parent.TracingDecodingArrow(
-                Parent.XAxisTime.Range.Maximum - 5,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                Parent.XAxisTime.Range.Maximum,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " %")
-                'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
-                'End If
+                    Parent.XAxisTime.Range.Maximum - 5,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    Parent.XAxisTime.Range.Maximum,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Inclined,
+                    $"{parameter}:уст.={Round(.Astop, 2)} %")
             End With
-            '************************************************
-            'нахождение минимального и максимального значения параметра N1
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраN1 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
-                                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                                              Parent.MeasuredValues,
-                                                                                                              Parent.SnapshotSmallParameters,
-                                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                                              Parent.XAxisTime.Range.Maximum)
-            With clsМинимальноеМаксимальноеЗначениеПараметраN1
-                '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Расчет()
-            End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраN1.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраN1.ТекстОшибки & vbCrLf
-            Else
-                'строим стрелки
-                With clsМинимальноеМаксимальноеЗначениеПараметраN1
-                    МинимальноеПриведенноеЗначениеN1 = .МинимальноеЗначение * КоэПриведения
-                    МаксимальноеПриведенноеЗначениеN1 = .МаксимальноеЗначение * КоэПриведения
+
+            ' нахождение минимального и максимального значения параметра N1
+            Dim mМинимальноеМаксимальноеЗначениеN1 = CType(mFiguresManager(EnumFigures.МинимальноеМаксимальноеЗначениеПараметра, parameter), МинимальноеМаксимальноеЗначениеПараметра)
+            With mМинимальноеМаксимальноеЗначениеN1
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
+                    minTransferN1 = .MinValue * transferConstant
+                    maxTransferN1 = .MaxValue * transferConstant
 
                     Parent.TracingDecodingArrow(
-                    .ТМаксимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                    .ТМинимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
-                    ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " %")
-                    Protocol(4, 2) = "привед.min=" & Round(МинимальноеПриведенноеЗначениеN1, 2) & " %"
-                    Protocol(5, 2) = "привед.max=" & Round(МаксимальноеПриведенноеЗначениеN1, 2) & " %"
-                End With
-            End If
+                        .TimeMaxValue,
+                        CastToAxesStandard(.IndexParameter, .MaxValue),
+                        .TimeMinValue,
+                        CastToAxesStandard(.IndexParameter, .MinValue),
+                        ArrowType.Vertical,
+                        $"{parameter}:max-min={Round(.MaxValue - .MinValue, 2)} %")
+                    Protocol(4, 2) = $"привед.min={Round(minTransferN1, 2)} %"
+                    Protocol(5, 2) = $"привед.max={Round(maxTransferN1, 2)} %"
+                End If
+            End With
         End If
 
-        'находим заброс N2 относительно установившегося
-        параметр = conN2
-        Dim clsЗабросN2ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
-                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                              Parent.MeasuredValues,
-                                                                                              Parent.SnapshotSmallParameters,
-                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsЗабросN2ОтносительноУстановившегося
-            '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТконечное 
-            .Расчет()
-        End With
-
-        If clsЗабросN2ОтносительноУстановившегося.Ошибка = True Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросN2ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+        ' заброс N2 относительно установившегося
+        parameter = conN2
+        Dim mЗабросN2ОтносительноУстановившегося = CType(mFiguresManager(EnumFigures.ЗабросN1ОтносительноУстановившегося, parameter), ЗабросN1ОтносительноУстановившегося)
+        mЗабросN2ОтносительноУстановившегося.Calculation()
+        If mЗабросN2ОтносительноУстановившегося.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
+            IsTotalErrors = True
+            totalErrorsMessage += mЗабросN2ОтносительноУстановившегося.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsЗабросN2ОтносительноУстановившегося
-                'If .DeltaA > 0 Then
+            ' отрисовать стрелки
+            With mЗабросN2ОтносительноУстановившегося
                 Parent.TracingDecodingArrow(
-                Parent.XAxisTime.Range.Maximum - 5,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                Parent.XAxisTime.Range.Maximum,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " %")
-                'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
-                'End If
+                    Parent.XAxisTime.Range.Maximum - 5,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    Parent.XAxisTime.Range.Maximum,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Inclined,
+                    $"{parameter}:уст.={Round(.Astop, 2)} %")
             End With
-            '************************************************
-            'нахождение минимального и максимального значения параметра N2
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраN2 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
-                                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                                              Parent.MeasuredValues,
-                                                                                                              Parent.SnapshotSmallParameters,
-                                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                                              Parent.XAxisTime.Range.Maximum)
-            With clsМинимальноеМаксимальноеЗначениеПараметраN2
-                '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Расчет()
-            End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраN2.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраN2.ТекстОшибки & vbCrLf
-            Else
-                'строим стрелки
-                With clsМинимальноеМаксимальноеЗначениеПараметраN2
-                    МинимальноеПриведенноеЗначениеN2 = .МинимальноеЗначение * КоэПриведения
-                    МаксимальноеПриведенноеЗначениеN2 = .МаксимальноеЗначение * КоэПриведения
+
+            ' нахождение минимального и максимального значения параметра N2
+            Dim mМинимальноеМаксимальноеЗначениеN2 = CType(mFiguresManager(EnumFigures.МинимальноеМаксимальноеЗначениеПараметра, parameter), МинимальноеМаксимальноеЗначениеПараметра)
+            With mМинимальноеМаксимальноеЗначениеN2
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
+                    minTransferN2 = .MinValue * transferConstant
+                    maxTransferN2 = .MaxValue * transferConstant
 
                     Parent.TracingDecodingArrow(
-                    .ТМаксимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                    .ТМинимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
-                    ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " %")
-                    Protocol(8, 2) = "привед.min=" & Round(МинимальноеПриведенноеЗначениеN2, 2) & " %"
-                    Protocol(9, 2) = "привед.max=" & Round(МаксимальноеПриведенноеЗначениеN2, 2) & " %"
-                End With
-            End If
+                        .TimeMaxValue,
+                        CastToAxesStandard(.IndexParameter, .MaxValue),
+                        .TimeMinValue,
+                        CastToAxesStandard(.IndexParameter, .MinValue),
+                        ArrowType.Vertical,
+                        $"{parameter}:max-min={Round(.MaxValue - .MinValue, 2)} %")
+                    Protocol(8, 2) = $"привед.min={Round(minTransferN2, 2)} %"
+                    Protocol(9, 2) = $"привед.max={Round(maxTransferN2, 2)} %"
+                End If
+            End With
         End If
 
-        'находим заброс a1 относительно установившегося
-        параметр = cona1
-        Dim clsЗабросa1ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
-                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                              Parent.MeasuredValues,
-                                                                                              Parent.SnapshotSmallParameters,
-                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsЗабросa1ОтносительноУстановившегося
-            '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТконечное 
-            .Расчет()
-        End With
-
-        If clsЗабросa1ОтносительноУстановившегося.Ошибка = True Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросa1ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+        ' заброс a1 относительно установившегося
+        parameter = cona1
+        Dim mЗабросaОтносительноУстановившегосяA1 = CType(mFiguresManager(EnumFigures.ЗабросN1ОтносительноУстановившегося, parameter), ЗабросN1ОтносительноУстановившегося)
+        mЗабросaОтносительноУстановившегосяA1.Calculation()
+        If mЗабросaОтносительноУстановившегосяA1.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
+            IsTotalErrors = True
+            totalErrorsMessage += mЗабросaОтносительноУстановившегосяA1.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsЗабросa1ОтносительноУстановившегося
-                'If .DeltaA > 0 Then
+            ' отрисовать стрелки
+            With mЗабросaОтносительноУстановившегосяA1
                 Parent.TracingDecodingArrow(
-                Parent.XAxisTime.Range.Maximum - 5,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                Parent.XAxisTime.Range.Maximum,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " дел.")
-                'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
-                'End If
+                        Parent.XAxisTime.Range.Maximum - 5.0,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    Parent.XAxisTime.Range.Maximum,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Inclined,
+                    $"{parameter}:уст.={Round(.Astop, 2)} дел.")
             End With
-            '************************************************
-            'нахождение минимального и максимального значения параметра a1
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраa1 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
-                                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                                              Parent.MeasuredValues,
-                                                                                                              Parent.SnapshotSmallParameters,
-                                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                                              Parent.XAxisTime.Range.Maximum)
-            With clsМинимальноеМаксимальноеЗначениеПараметраa1
-                '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Расчет()
-            End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраa1.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраa1.ТекстОшибки & vbCrLf
-            Else
-                'строим стрелки
-                With clsМинимальноеМаксимальноеЗначениеПараметраa1
-                    Parent.TracingDecodingArrow(
-                    .ТМаксимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                    .ТМинимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
-                    ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел.")
-                    Protocol(6, 2) = Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел."
 
-                    МинимальноеПриведенноеЗначениеА1 = ПромежуточныеОборотыПриведАльфа(МинимальноеПриведенноеЗначениеN1, arrТочкиА1)
-                    МаксимальноеПриведенноеЗначениеА1 = ПромежуточныеОборотыПриведАльфа(МаксимальноеПриведенноеЗначениеN1, arrТочкиА1)
-                    Dim ВождениеУглаА1БезN1 As Double
-                    ВождениеУглаА1БезN1 = (.МаксимальноеЗначение - .МинимальноеЗначение) - (МаксимальноеПриведенноеЗначениеА1 - МинимальноеПриведенноеЗначениеА1)
-                    Protocol(7, 2) = Round(ВождениеУглаА1БезN1, 2) & " дел."
-                End With
-            End If
+            ' нахождение минимального и максимального значения параметра a1
+            Dim mМинимальноеМаксимальноеЗначениеA1 = CType(mFiguresManager(EnumFigures.МинимальноеМаксимальноеЗначениеПараметра, parameter), МинимальноеМаксимальноеЗначениеПараметра)
+            With mМинимальноеМаксимальноеЗначениеA1
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
+                    Parent.TracingDecodingArrow(
+                        .TimeMaxValue,
+                        CastToAxesStandard(.IndexParameter, .MaxValue),
+                        .TimeMinValue,
+                        CastToAxesStandard(.IndexParameter, .MinValue),
+                        ArrowType.Vertical,
+                        parameter & ":max-min=" & Round(.MaxValue - .MinValue, 2) & " дел.")
+
+                    Protocol(6, 2) = Round(.MaxValue - .MinValue, 2) & " дел."
+                    minTransferA1 = IntermediateRotationReducedAlpha(minTransferN1, pointsA1)
+                    maxTransferA1 = IntermediateRotationReducedAlpha(maxTransferN1, pointsA1)
+                    ' Вождение Угла А1 Без N1
+                    Protocol(7, 2) = Round((.MaxValue - .MinValue) - (maxTransferA1 - minTransferA1), 2) & " дел."
+                End If
+            End With
         End If
 
-        'находим заброс a2 относительно установившегося
-        параметр = cona2
-        Dim clsЗабросa2ОтносительноУстановившегося As New ЗабросN1ОтносительноУстановившегося(параметр,
-                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                              Parent.MeasuredValues,
-                                                                                              Parent.SnapshotSmallParameters,
-                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                              Parent.XAxisTime.Range.Maximum)
-        With clsЗабросa2ОтносительноУстановившегося
-            '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТконечное 
-            .Расчет()
-        End With
-
-        If clsЗабросa2ОтносительноУстановившегося.Ошибка = True Then
-            'анализируем для последующих построений
-            'накапливаем ошибку
-            общаяОшибка = True
-            общийТекстОшибок += clsЗабросa2ОтносительноУстановившегося.ТекстОшибки & vbCrLf
+        ' заброс a2 относительно установившегося
+        parameter = cona2
+        Dim mЗабросaОтносительноУстановившегосяA2 = CType(mFiguresManager(EnumFigures.ЗабросN1ОтносительноУстановившегося, parameter), ЗабросN1ОтносительноУстановившегося)
+        mЗабросaОтносительноУстановившегосяA2.Calculation()
+        If mЗабросaОтносительноУстановившегосяA2.IsErrors Then
+            ' анализ для последующих построений, накапливаем ошибку
+            IsTotalErrors = True
+            totalErrorsMessage += mЗабросaОтносительноУстановившегосяA2.ErrorsMessage & vbCrLf
         Else
-            'строим стрелки
-            With clsЗабросa2ОтносительноУстановившегося
-                'If .DeltaA > 0 Then
+            ' отрисовать стрелки
+            With mЗабросaОтносительноУстановившегосяA2
                 Parent.TracingDecodingArrow(
-                Parent.XAxisTime.Range.Maximum - 5,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                Parent.XAxisTime.Range.Maximum,
-                Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .Аконечное),
-                ArrowType.Inclined,
-                параметр & ":уст.=" & Round(.Аконечное, 2) & " дел.")
-                'Protocol(10, 2) = параметр & ":уст. заброс=" & Round(.DeltaA, 2) & " %"
-                'End If
+                    Parent.XAxisTime.Range.Maximum - 5,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    Parent.XAxisTime.Range.Maximum,
+                    CastToAxesStandard(.IndexParameter, .Astop),
+                    ArrowType.Inclined,
+                    $"{parameter}:уст.={Round(.Astop, 2)} дел.")
             End With
-            '************************************************
-            'нахождение минимального и максимального значения параметра a2
-            Dim clsМинимальноеМаксимальноеЗначениеПараметраa2 As New МинимальноеМаксимальноеЗначениеПараметра(параметр,
-                                                                                                              Parent.FrequencyBackgroundSnapshot,
-                                                                                                              Parent.MeasuredValues,
-                                                                                                              Parent.SnapshotSmallParameters,
-                                                                                                              Parent.XAxisTime.Range.Minimum,
-                                                                                                              Parent.XAxisTime.Range.Maximum)
-            With clsМинимальноеМаксимальноеЗначениеПараметраa2
-                '.ИндексТначальное = clsДлительностьФронтаСпада.ИндексТначальное
-                .Расчет()
-            End With
-            If clsМинимальноеМаксимальноеЗначениеПараметраa2.Ошибка = True Then
-                'анализируем для последующих построений
-                'накапливаем ошибку
-                общаяОшибка = True
-                общийТекстОшибок += clsМинимальноеМаксимальноеЗначениеПараметраa2.ТекстОшибки & vbCrLf
-            Else
-                'строим стрелки
-                With clsМинимальноеМаксимальноеЗначениеПараметраa2
+
+            ' нахождение минимального и максимального значения параметра a2
+            Dim mМинимальноеМаксимальноеЗначениеA2 = CType(mFiguresManager(EnumFigures.МинимальноеМаксимальноеЗначениеПараметра, parameter), МинимальноеМаксимальноеЗначениеПараметра)
+            With mМинимальноеМаксимальноеЗначениеA2
+                .Calculation()
+                If .IsErrors Then
+                    ' анализ для последующих построений, накапливаем ошибку
+                    IsTotalErrors = True
+                    totalErrorsMessage += .ErrorsMessage & vbCrLf
+                Else
+                    ' отрисовать стрелки
                     Parent.TracingDecodingArrow(
-                    .ТМаксимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МаксимальноеЗначение),
-                    .ТМинимальногоЗначения,
-                    Parent.CastToAxesStandard(Parent.NumberParameterAxes, .ИндексПараметра + 1, .МинимальноеЗначение),
-                    ArrowType.Vertical,
-                    параметр & ":max-min=" & Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел.")
-                    Protocol(10, 2) = Round(.МаксимальноеЗначение - .МинимальноеЗначение, 2) & " дел."
+                        .TimeMaxValue,
+                        CastToAxesStandard(.IndexParameter, .MaxValue),
+                        .TimeMinValue,
+                        CastToAxesStandard(.IndexParameter, .MinValue),
+                        ArrowType.Vertical,
+                        parameter & ":max-min=" & Round(.MaxValue - .MinValue, 2) & " дел.")
 
-                    МинимальноеПриведенноеЗначениеА2 = ПромежуточныеОборотыПриведАльфа(МинимальноеПриведенноеЗначениеN2, arrТочкиА2)
-                    МаксимальноеПриведенноеЗначениеА2 = ПромежуточныеОборотыПриведАльфа(МаксимальноеПриведенноеЗначениеN2, arrТочкиА2)
-                    Dim ВождениеУглаА2БезN2 As Double
-                    ВождениеУглаА2БезN2 = (.МаксимальноеЗначение - .МинимальноеЗначение) - (МаксимальноеПриведенноеЗначениеА2 - МинимальноеПриведенноеЗначениеА2)
-                    Protocol(11, 2) = Round(ВождениеУглаА2БезN2, 2) & " дел."
-                End With
-            End If
+                    Protocol(10, 2) = Round(.MaxValue - .MinValue, 2) & " дел."
+                    minTransferA2 = IntermediateRotationReducedAlpha(minTransferN2, pointsA2)
+                    maxTransferA2 = IntermediateRotationReducedAlpha(maxTransferN2, pointsA2)
+                    ' Вождение Угла А2 Без N2
+                    Protocol(11, 2) = Round((.MaxValue - .MinValue) - (maxTransferA2 - minTransferA2), 2) & " дел."
+                End If
+            End With
         End If
 
-        'если накопленная ошибка во всех классах
-        If общаяОшибка = True Then
-            MessageBox.Show(общийТекстОшибок, "Ошибка автоматической расшифровки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        End If
+        ShowTotalErrorsMessage.ShowMessage(IsTotalErrors, totalErrorsMessage)
     End Sub
 End Class
-

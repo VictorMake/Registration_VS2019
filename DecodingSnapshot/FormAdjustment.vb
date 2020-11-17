@@ -1,20 +1,32 @@
 ﻿Public Class FormAdjustment
-    Public ReadOnly Property N1НастройкаКРД() As Double
+    ''' <summary>
+    ''' N1 Настройка КРД
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property N1TuningKrd() As Double
         Get
-            Return CalcKrd.N1НастройкаКРД
+            Return CalcKrd.N1TuningKrd
         End Get
     End Property
 
-    Public ReadOnly Property N2НастройкаКРД() As Double
+    ''' <summary>
+    ''' N2 Настройка КРД
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property N2TuningKrd() As Double
         Get
-            Return CalcKrd.N2НастройкаКРД
+            Return CalcKrd.N2TuningKrd
         End Get
     End Property
 
-    Private mТ4КРД As Double
-    Public ReadOnly Property Т4КРД() As Double
+    Private mT4Krd As Double
+    ''' <summary>
+    ''' Т4КРД
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property T4Krd() As Double
         Get
-            Return mТ4КРД
+            Return mT4Krd
         End Get
     End Property
 
@@ -30,8 +42,8 @@
 
     Private Sub FormAdjustment_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         ' 13)Т4 настройки КРД
-        mТ4КРД = CSng(GetIni(PathOptions, "KRD", "T4KRD", "840"))
-        TextT4KRD.Text = CStr(Т4КРД)
+        mT4Krd = CSng(GetIni(PathOptions, "KRD", "T4KRD", "840"))
+        TextT4KRD.Text = CStr(T4Krd)
         '14)Настройка N1 КРД при +15 град.
         TextN1KRD15.Text = Format(CDbl(GetIni(PathOptions, "KRD", "N1KRD", "90")), "##0.0##")
         '15)Настройка N2 КРД при +15 град.
@@ -55,16 +67,16 @@
     End Sub
 
     Private Sub Calculate()
-        Dim inTbox, inN1КРД15, inN2КРД15 As Double ' Настройка N1 N2 КРД при +15 град.
+        Dim inTbox, inN1Krd15, inN2Krd15 As Double ' Настройка N1 N2 КРД при +15 град.
 
         If Double.TryParse(TextTbox.Text, inTbox) AndAlso
-            Double.TryParse(TextT4KRD.Text, mТ4КРД) AndAlso
-            Double.TryParse(TextN1KRD15.Text, inN1КРД15) AndAlso
-            Double.TryParse(TextN2KRD15.Text, inN2КРД15) Then
+            Double.TryParse(TextT4KRD.Text, mT4Krd) AndAlso
+            Double.TryParse(TextN1KRD15.Text, inN1Krd15) AndAlso
+            Double.TryParse(TextN2KRD15.Text, inN2Krd15) Then
 
-            CalcKrd.Calculate(inTbox, inN1КРД15, inN2КРД15)
-            TextN1KRD.Text = Format(CalcKrd.N1НастройкаКРД, "fixed")
-            TextN2KRD.Text = Format(CalcKrd.N2НастройкаКРД, "fixed")
+            CalcKrd.Calculate(inTbox, inN1Krd15, inN2Krd15)
+            TextN1KRD.Text = Format(CalcKrd.N1TuningKrd, "fixed")
+            TextN2KRD.Text = Format(CalcKrd.N2TuningKrd, "fixed")
             WriteSetting()
         Else
             MessageBox.Show(Me, "В полях ввода должны быть цифровые значения.", "Некорректный ввод", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
@@ -73,7 +85,7 @@
 
     Private Sub WriteSetting()
         '13)Т4 настройки КРД
-        WriteINI(PathOptions, "KRD", "T4KRD", CStr(Т4КРД))
+        WriteINI(PathOptions, "KRD", "T4KRD", CStr(T4Krd))
         '14)Настройка N1 КРД при +15 град.
         WriteINI(PathOptions, "KRD", "N1KRD", CStr(CSng(TextN1KRD15.Text)))
         '15)Настройка N2 КРД при +15 град.

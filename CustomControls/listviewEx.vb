@@ -28,7 +28,7 @@ Namespace ListViewCustomReorder
                         If itemOver.Index >= 0 AndAlso itemOver.Index < Items.Count Then
                             Dim p As Point = PointToClient(New Point(MousePosition.X, MousePosition.Y))
                             Dim rc As Rectangle = Items(itemOver.Index).GetBounds(ItemBoundsPortion.Entire)
-                            rc.Width = MyBase.ClientRectangle.Width
+                            rc.Width = ClientRectangle.Width
 
                             If p.Y - Items(itemOver.Index).Bounds.Top < Items(itemOver.Index).Bounds.Height / 2 Then
                                 dropIndex = itemOver.Index
@@ -42,13 +42,13 @@ Namespace ListViewCustomReorder
                         dropIndex = -1
                         Dim rc As Rectangle
 
-                        If MyBase.Items.Count > 0 Then
-                            rc = Items(MyBase.Items.Count - 1).GetBounds(ItemBoundsPortion.Entire)
+                        If Items.Count > 0 Then
+                            rc = Items(Items.Count - 1).GetBounds(ItemBoundsPortion.Entire)
                         Else
-                            rc = New Rectangle(0, 0, MyBase.ClientRectangle.Width, 0)
+                            rc = New Rectangle(0, 0, ClientRectangle.Width, 0)
                         End If
 
-                        rc.Width = MyBase.ClientRectangle.Width
+                        rc.Width = ClientRectangle.Width
                         DrawInsertionLine(rc.Left, rc.Right, rc.Bottom)
                     End If
                 End If
@@ -81,10 +81,10 @@ Namespace ListViewCustomReorder
 
             Dim p As Point = PointToClient(New Point(drgevent.X, drgevent.Y))
             ' использовать 0 взамен e.X так как невозможно сохранить внутри колонуи пока происходит перетягивание
-            itemOver = MyBase.GetItemAt(0, p.Y)
+            itemOver = GetItemAt(0, p.Y)
 
             ' вызвать перерисовку LV так как вставляемая линия должна быть показана
-            MyBase.Invalidate()
+            Invalidate()
         End Sub
 
         Protected Overrides Sub OnDragDrop(ByVal drgevent As DragEventArgs)
@@ -92,13 +92,13 @@ Namespace ListViewCustomReorder
 
             isDragging = False
             ' вызвать перерисовку LV так как вставляемая линия должна быть показана
-            MyBase.Invalidate()
+            Invalidate()
         End Sub
 
         Protected Overrides Sub OnMouseLeave(ByVal e As EventArgs)
             itemOver = Nothing
             ' вызвать перерисовку LV так как вставляемая линия должна быть удалена
-            MyBase.Invalidate()
+            Invalidate()
             MyBase.OnMouseLeave(e)
         End Sub
     End Class
