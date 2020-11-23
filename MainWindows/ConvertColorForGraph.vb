@@ -1,7 +1,7 @@
 ﻿Imports NationalInstruments.UI.WindowsForms
 Public Class ConvertColorForGraph
-    Private scatterXYWaveformGraph As XYGraph ' родительский класс для ScatterGraph и WaveformGraph
-    Private isGraphParamByParam As Boolean
+    Private ReadOnly scatterXYWaveformGraph As XYGraph ' родительский класс для ScatterGraph и WaveformGraph
+    Private ReadOnly isGraphParamByParam As Boolean
 
     ''' <summary>
     ''' Принимает ScatterGraph.

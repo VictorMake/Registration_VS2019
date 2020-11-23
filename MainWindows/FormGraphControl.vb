@@ -7,96 +7,7 @@ Friend Class FormGraphControl
     Implements IUpdateSelectiveControls
 
 #Region "Interface IBaseClassIndicator"
-
-    'Friend Class BaseClassIndicator
-    '    Friend WithEvents mControlBase As NationalInstruments.UI.WindowsForms.ControlBase
-    '    Dim mИмя As String
-    '    Dim mLocation As System.Drawing.Point
-    '    Dim mSize As System.Drawing.Size
-    '    Dim mValue As Double
-    '    Dim mParameterName As String
-
-    '    'Public Sub New(ByVal Имя As String, ByVal Родитель As System.Windows.Forms.Form)
-    '    '    MyBase.New()
-    '    '    mLocation = New System.Drawing.Point(0, 0)
-    '    '    mSize = New System.Drawing.Size(100, 100)
-    '    '    MyClass.Имя = Имя
-    '    '    'mControlBase = New NationalInstruments.UI.WindowsForms.ControlBase
-    '    '    mControlBase.Name = mИмя
-
-    '    '    'CType(mControlBase, System.ComponentModel.ISupportInitialize).BeginInit()
-    '    '    'inParentForm.Controls.Add(mControlBase)
-    '    '    'CType(mControlBase, System.ComponentModel.ISupportInitialize).EndInit()
-    '    '    'ContinueCreate()
-    '    'End Sub
-
-    '    Public Overridable ReadOnly Property Экземпляр() As NationalInstruments.UI.WindowsForms.ControlBase 'WindowsForms.ControlBase
-    '        Get
-    '            Return mControlBase
-    '        End Get
-    '    End Property
-
-    '    Public Overridable Property Имя() As String
-    '        Get
-    '            Return mИмя
-    '        End Get
-    '        Set(ByVal Value As String)
-    '            mИмя = Value
-    '        End Set
-    '    End Property
-
-    '    Public Overridable Property Точка() As System.Drawing.Point
-    '        Get
-    '            Return mLocation
-    '        End Get
-    '        Set(ByVal Value As System.Drawing.Point)
-    '            mLocation = Value
-    '        End Set
-    '    End Property
-
-    '    Public Overridable Property Размер() As System.Drawing.Size
-    '        Get
-    '            Return mSize
-    '        End Get
-    '        Set(ByVal Value As System.Drawing.Size)
-    '            mSize = Value
-    '        End Set
-    '    End Property
-
-    '    Public Overridable Property Значение() As Double
-    '        Get
-    '            Return mValue
-    '        End Get
-    '        Set(ByVal Value As Double)
-    '            mValue = Value
-    '        End Set
-    '    End Property
-
-    '    Public Overridable Property ИмяПараметра() As String
-    '        Get
-    '            Return mParameterName
-    '        End Get
-    '        Set(ByVal Value As String)
-    '            mParameterName = Value
-    '        End Set
-    '    End Property
-
-    '    Private Sub ContinueCreate()
-    '    End Sub
-
-    '    Public Overridable Sub SetBounds(x As Integer, y As Integer, width As Integer, height As Integer)
-    '    End Sub
-
-    '    Public Overridable Property ДопускМинимум As Double
-    '    Public Overridable Property ДопускМаксимум As Double
-    '    Public Overridable Property АварийноеЗначениеМин As Double
-    '    Public Overridable Property АварийноеЗначениеМакс As Double
-    '    Public Overridable Property Range As NationalInstruments.UI.Range
-
-    'End Class
-
     Friend Interface IBaseClassIndicator
-        'ReadOnly Property Экземпляр() As NationalInstruments.UI.WindowsForms.ControlBase
         Property Name() As String
         Property LocationIndicator() As Point
         Property SizeIndicator() As Size
@@ -259,13 +170,6 @@ Friend Class FormGraphControl
             ContinueCreate()
         End Sub
 
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр As WindowsForms.Gauge 
-        '    Get
-        '        Return ДавлениеKnob
-        '    End Get
-        'End Property
-
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
         Public Property LocationIndicator() As Point Implements IBaseClassIndicator.LocationIndicator
@@ -405,13 +309,6 @@ Friend Class FormGraphControl
             ContinueCreate()
         End Sub
 
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As WindowsForms.Knob
-        '    Get
-        '        Return ОборотыKnob
-        '    End Get
-        'End Property
-
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
         Public Property LocationIndicator() As Point Implements IBaseClassIndicator.LocationIndicator
@@ -549,13 +446,6 @@ Friend Class FormGraphControl
             CType(mMeter, ISupportInitialize).EndInit()
             ContinueCreate()
         End Sub
-
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As WindowsForms.Meter
-        '    Get
-        '        Return ТокKnob
-        '    End Get
-        'End Property
 
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
@@ -698,13 +588,6 @@ Friend Class FormGraphControl
             CType(mSlide, ISupportInitialize).EndInit()
             ContinueCreate()
         End Sub
-
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As WindowsForms.Slide
-        '    Get
-        '        Return ВибрацияKnob
-        '    End Get
-        'End Property
 
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
@@ -849,13 +732,6 @@ Friend Class FormGraphControl
             ContinueCreate()
         End Sub
 
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As WindowsForms.Thermometer
-        '    Get
-        '        Return ТемператураKnob
-        '    End Get
-        'End Property
-
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
         Public Property LocationIndicator() As Point Implements IBaseClassIndicator.LocationIndicator
@@ -987,13 +863,6 @@ Friend Class FormGraphControl
             CType(mTank, ISupportInitialize).EndInit()
             ContinueCreate()
         End Sub
-
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As WindowsForms.Tank
-        '    Get
-        '        Return СтолбыKnob
-        '    End Get
-        'End Property
 
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
@@ -1132,13 +1001,6 @@ Friend Class FormGraphControl
             ContinueCreate()
         End Sub
 
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As WindowsForms.Slide
-        '    Get
-        '        Return РасходKnob
-        '    End Get
-        'End Property
-
         Public Property Name() As String Implements IBaseClassIndicator.Name
 
         Public Property LocationIndicator() As Point Implements IBaseClassIndicator.LocationIndicator
@@ -1274,13 +1136,6 @@ Friend Class FormGraphControl
             ContinueCreate()
         End Sub
 
-        'Public ReadOnly Property Экземпляр As NationalInstruments.UI.WindowsForms.ControlBase Implements IBaseClassIndicator.Экземпляр
-        '    'Public ReadOnly Property Экземпляр() As GroupBox
-        '    Get
-        '        Return mGroupBox
-        '    End Get
-        'End Property
-
         Public Property Name() As String Implements IBaseClassIndicator.Name
         Public Property NumberParameter As Integer Implements IBaseClassIndicator.NumberParameter
 
@@ -1389,10 +1244,10 @@ Friend Class FormGraphControl
     ''' <summary>
     ''' Задать значение параметра для индикатора с последующим обновлением
     ''' </summary>
-    Friend Sub UpdateValueIndicatorControls(ByRef arrСреднее(,) As Double, ByVal x As Integer)
+    Friend Sub UpdateValueIndicatorControls(ByRef measuredValues(,) As Double, ByVal x As Integer)
         For Each itemIndicator As IBaseClassIndicator In indicatorControls
             If itemIndicator.Name <> EmptyName Then
-                itemIndicator.Value = arrСреднее(itemIndicator.NumberParameter, x)
+                itemIndicator.Value = measuredValues(itemIndicator.NumberParameter, x)
             End If
         Next
     End Sub
@@ -1455,10 +1310,6 @@ Friend Class FormGraphControl
                             Exit Select
                     End Select
                     ' мин, мах, наименование из arrПараметры
-                    'Контроль(intОтмечено - 1).Экземпляр.Axis.Minimum = arrПараметры(arrСписокПараметровКонтроля(I)).sgnДопускМинимум
-                    'Контроль(intОтмечено - 1).Экземпляр.Axis.Maximum = arrПараметры(arrСписокПараметровКонтроля(I)).sgnДопускМаксимум
-                    'Контроль(intОтмечено - 1).Экземпляр.Range = New NationalInstruments.UI.Range(arrПараметры(arrСписокПараметровКонтроля(I)).sgnДопускМинимум, arrПараметры(arrСписокПараметровКонтроля(I)).sgnДопускМаксимум)
-
                     indicatorControls(countSelected - 1).Range = New Range(ParametersType(IndexParametersForControl(I)).LowerLimit, ParametersType(IndexParametersForControl(I)).UpperLimit)
                     indicatorControls(countSelected - 1).LimitMin = ParametersType(IndexParametersForControl(I)).LowerLimit
                     indicatorControls(countSelected - 1).LimitMax = ParametersType(IndexParametersForControl(I)).UpperLimit
