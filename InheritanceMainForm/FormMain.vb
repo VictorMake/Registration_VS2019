@@ -512,7 +512,7 @@ Friend MustInherit Class FormMain
         InitializeControlsMain()
 
         StatusStripMain.Items(NameOf(LabelProduct)).Text = "Установка " & StandNumber
-        HelpProviderAdvancedCHM.HelpNamespace = Path.Combine(PathResourses, "HelpRegistrationTCP.chm")
+        HelpProviderAdvancedCHM.HelpNamespace = Path.Combine(PathResourses, "HelpRegistration.chm")
         'LedStyleДискретныхИндикаторов()' проба с шаманством
         isFormLoaded = True
         ButtonGraphParameter.Checked = False
