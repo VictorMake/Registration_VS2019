@@ -2451,7 +2451,7 @@ Partial Class FormMain
         '
         'HelpProviderAdvancedCHM
         '
-        Me.HelpProviderAdvancedCHM.HelpNamespace = "..\..\HelpRegistrationTCP.chm"
+        Me.HelpProviderAdvancedCHM.HelpNamespace = "..\..\HelpRegistration.chm"
         '
         'PulseButtonTakeOffAlarm
         '

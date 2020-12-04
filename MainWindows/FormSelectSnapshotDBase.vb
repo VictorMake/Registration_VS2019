@@ -875,7 +875,7 @@ Friend Class FormSelectSnapshotDBase
         End Using
 
         ' 200 каналов * 8 символов * 54000 строк(максимум) = 86 400 000
-        Dim dataMeasuredValuesString As New StringBuilder(86_400_000)
+        Dim dataMeasuredValuesString As New StringBuilder(86400000)
 
         ' делаем ссылку и открываем поток
         Using FS As New FileStream(newPathTXT, FileMode.Create, FileAccess.Write)

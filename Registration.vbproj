@@ -163,12 +163,10 @@
     <Reference Include="BarometersBRS1M">
       <HintPath>DLL\BarometersBRS1M.dll</HintPath>
     </Reference>
-    <Reference Include="BaseForm, Version=1.0.4849.16252, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BaseForm">
       <HintPath>..\BaseForm\BaseForm\bin\Release\BaseForm.dll</HintPath>
     </Reference>
-    <Reference Include="BaseFormKT, Version=1.0.4228.28654, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BaseFormKT">
       <HintPath>..\BaseFormKT\bin\Release\BaseFormKT.dll</HintPath>
     </Reference>
     <Reference Include="DataTreeViewDLL">
