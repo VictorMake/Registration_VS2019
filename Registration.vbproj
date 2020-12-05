@@ -383,6 +383,10 @@
     <Compile Include="CalculationModule\PassportModule.vb" />
     <Compile Include="DecodingSnapshot\Analysis\ShowTotalErrorsMessage.vb" />
     <Compile Include="DecodingSnapshot\CreatorFigure.vb" />
+    <Compile Include="DecodingSnapshot\FactoryMethod\Creator.vb" />
+    <Compile Include="DecodingSnapshot\FactoryMethod\Factory.vb" />
+    <Compile Include="DecodingSnapshot\FactoryMethod\AnalysisFactory.vb" />
+    <Compile Include="DecodingSnapshot\FactoryMethod\TAnalysis.vb" />
     <Compile Include="DecodingSnapshot\Figure.vb" />
     <Compile Include="DecodingSnapshot\FiguresManager.vb" />
     <Compile Include="DigitalPort\Port.vb" />
