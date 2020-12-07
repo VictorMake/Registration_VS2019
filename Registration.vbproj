@@ -378,6 +378,17 @@
     <None Include="Resources\recycled1.png" />
     <None Include="Resources\binary.png" />
     <None Include="Resources\recycled.png" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\AbstractFactory.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\AbstractProducts.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\Client.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\CloneFactory.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\ConcreteFactories.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\IAbstractFactory.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\ICloneFactory.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\ICloneMethod.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\IFactoryMethod.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\Products.vb" />
+    <Compile Include="DecodingSnapshot\AbstractFactory\TestingAbstractFactory.vb" />
     <Compile Include="DecodingSnapshot\Analysis\Analysis.vb" />
     <Compile Include="DecodingSnapshot\Analysis\CreatorAnalysis.vb" />
     <Compile Include="CalculationModule\PassportModule.vb" />
