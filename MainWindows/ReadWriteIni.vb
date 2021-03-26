@@ -40,21 +40,17 @@ Public Class ReadWriteIni
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function GetIni(ByRef xmlDoc As XElement, inPartition As String, inSection As String, inKey As String, sDefault As String) As String
-        Dim nodePartition As XElement = Nothing
-        Dim nodeSection As XElement = Nothing
-        Dim nodeKey As XElement = Nothing
-
         Try
-            nodeKey = xmlDoc.Elements(inPartition).Elements(inSection).Elements(inKey).FirstOrDefault()
+            Dim nodeKey As XElement = xmlDoc.Elements(inPartition).Elements(inSection).Elements(inKey).FirstOrDefault()
 
             If nodeKey Is Nothing Then
                 ' проверка существования раздела
-                nodePartition = xmlDoc.Elements(inPartition).FirstOrDefault()
+                Dim nodePartition As XElement = xmlDoc.Elements(inPartition).FirstOrDefault()
 
                 If nodePartition Is Nothing Then Return CreatePartition(xmlDoc, inPartition, inSection, inKey, sDefault)
 
                 ' проверка существования секции
-                nodeSection = xmlDoc.Elements(inPartition).Elements(inSection).FirstOrDefault()
+                Dim nodeSection As XElement = xmlDoc.Elements(inPartition).Elements(inSection).FirstOrDefault()
                 If (nodeSection Is Nothing) Then Return CreateSection(xmlDoc, nodePartition, inSection, inKey, sDefault)
 
                 ' проверка существования ключа
@@ -126,10 +122,10 @@ Public Class ReadWriteIni
     ''' <param name="inKey"></param>
     ''' <param name="sValue"></param>
     ''' <remarks></remarks>
-    Public Sub writeINI(inPartition As String, inSection As String, inKey As String, sValue As Object)
+    Public Sub WriteINI(inPartition As String, inSection As String, inKey As String, sValue As Object)
         'создать документ
         Dim xmlDoc As XElement = XElement.Load(PathXmlFile)
-        writeINI(xmlDoc, inPartition, inSection, inKey, sValue)
+        WriteINI(xmlDoc, inPartition, inSection, inKey, sValue)
     End Sub
 
     ''' <summary>
@@ -142,18 +138,15 @@ Public Class ReadWriteIni
     ''' <param name="inKey"></param>
     ''' <param name="sValue"></param>
     ''' <remarks></remarks>
-    Public Sub writeINI(ByRef xmlDoc As XElement, inPartition As String, inSection As String, inKey As String, sValue As Object)
-        Dim nodeKey As XElement = Nothing
-        Dim sFindValue As String = Nothing
-
+    Public Sub WriteINI(ByRef xmlDoc As XElement, inPartition As String, inSection As String, inKey As String, sValue As Object)
         Dim convValue As String = Convert.ToString(sValue)
 
         Try
-            nodeKey = xmlDoc.Elements(inPartition).Elements(inSection).Elements(inKey).FirstOrDefault()
+            Dim nodeKey As XElement = xmlDoc.Elements(inPartition).Elements(inSection).Elements(inKey).FirstOrDefault()
 
             If nodeKey Is Nothing Then
                 ' ключа нет значит создать новый в методе GetIni
-                sFindValue = GetIni(xmlDoc, inPartition, inSection, inKey, convValue)
+                Dim sFindValue As String = GetIni(xmlDoc, inPartition, inSection, inKey, convValue)
             Else
                 ' как правило ключи уже созданы
                 nodeKey.Value = convValue

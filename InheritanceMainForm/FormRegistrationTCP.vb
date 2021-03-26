@@ -604,7 +604,7 @@ Friend Class FormRegistrationTCP
     ''' <param name="e">массив собранных клиентом данных</param>
     ''' <remarks></remarks>
     Private Sub MainMDIFormReference_EventMainAcquiredDataForChannelsForm(sender As Object, e As FormMainMDI.AcquiredDataEventArgs) ' Handles MainMDIFormParentReference.EventMainAcquiredDataForChannelsForm
-        DataValuesFromServer = e.ArrПарамНакопленные
+        DataValuesFromServer = e.ParametersAcquiredData
         AcquiredData()
     End Sub
 

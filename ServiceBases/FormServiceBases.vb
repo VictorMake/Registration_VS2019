@@ -1822,7 +1822,7 @@ Friend Class FormServiceBases
 
                 If aRows.Length > 0 Then
                     For Each itemDataRow In aRows
-                        If IsDBNull(itemDataRow.НомерМодуляКорзины) And IsDBNull(itemDataRow.НомерКаналаМодуля) Then
+                        If IsDBNull(itemDataRow.НомерМодуляКорзины) AndAlso IsDBNull(itemDataRow.НомерКаналаМодуля) Then
                             ' корзины нет, значит плата
                             Dim numberDAQBoard As String = CStr(itemDataRow.НомерУстройства)
 

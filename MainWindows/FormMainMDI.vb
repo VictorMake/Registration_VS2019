@@ -1238,8 +1238,8 @@ Public Class FormMainMDI
         End Sub
 
         ' получить массив собранных значений
-        Public Sub New(ByRef arrПарамНакопленные As Double())
-            Me.ArrПарамНакопленные = arrПарамНакопленные
+        Public Sub New(ByRef parametersAcquiredData As Double())
+            Me.ParametersAcquiredData = parametersAcquiredData
         End Sub
 
         ' можно передать все накопленные
@@ -1247,7 +1247,7 @@ Public Class FormMainMDI
         ' а можно и конкретно осредненные или собранные
         ' arrПарамНакопленные(N) = dblСреднее
 
-        Public Property ArrПарамНакопленные() As Double()
+        Public Property ParametersAcquiredData() As Double()
     End Class
 
     Private Sub ConnectionClient_SyncSocketClientAcquiredData(sender As Object, e As ConnectionInfoClient.AcquiredDataEventArgs) Handles ConnectionClient.SyncSocketClientAcquiredData

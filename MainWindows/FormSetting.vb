@@ -1077,7 +1077,6 @@ Public Class FormSetting
     ''' </summary>
     ''' <param name="inTextBox"></param>
     Private Sub ValidatingTextBoxEmpty(ByRef inTextBox As TextBox)
-        Dim dblTemp As Double
 
         ' Если поле не заполнено, сообщить пользователю
         If Trim(inTextBox.Text) = vbNullString Then
@@ -1091,7 +1090,7 @@ Public Class FormSetting
 
         Try
             'If Not IsNumeric(txtПолнК1.Text)
-            dblTemp = CDbl(inTextBox.Text)
+            Dim dblTemp As Double = CDbl(inTextBox.Text)
         Catch ex As Exception
             Const caption As String = "Ввод шапки"
             Const text As String = "Это поле должно быть числом!"

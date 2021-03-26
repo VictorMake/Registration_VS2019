@@ -353,7 +353,7 @@ Module DigitalModule
                                     Next I
 
                                     K = K + UBound(rowBuffer) + 1
-                                Next key
+                                Next
                             End If
 
                             SnaphotMain.ProcesSnapshot()
@@ -370,7 +370,7 @@ Module DigitalModule
                 End Select
             End If
         Catch ex As DaqException
-            Const caption As String = "MultiAnalogInCallback"
+            Const caption As String = NameOf(MultiAnalogInCallback)
             Dim text As String = ex.ToString
 
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)

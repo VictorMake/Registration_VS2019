@@ -313,7 +313,6 @@
     <None Include="Resources\ledCornerGray.bmp" />
     <None Include="Resources\1385_Disable_16x16_7211.png" />
     <None Include="Resources\command_link_16x1611.png" />
-    <None Include="bin\Promt.txt" />
     <None Include="ServiceBases\ChannelsNDataSet.xsc">
       <DependentUpon>ChannelsNDataSet.xsd</DependentUpon>
     </None>
@@ -1290,6 +1289,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bin\" />
     <Folder Include="DLL\" />
   </ItemGroup>
   <ItemGroup>
