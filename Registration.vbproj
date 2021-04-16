@@ -377,6 +377,22 @@
     <None Include="Resources\recycled1.png" />
     <None Include="Resources\binary.png" />
     <None Include="Resources\recycled.png" />
+    <Compile Include="CompactRio\FormTestCompactRio.Designer.vb">
+      <DependentUpon>FormTestCompactRio.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\FormTestCompactRio.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\Option\AllEditors.vb" />
+    <Compile Include="CompactRio\Option\AllTypesConverter.vb" />
+    <Compile Include="CompactRio\Option\IPAddressCls.vb" />
+    <Compile Include="CompactRio\Option\IPAddressEditorForm.Designer.vb">
+      <DependentUpon>IPAddressEditorForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\Option\IPAddressEditorForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\Option\TargetCRIO.vb" />
     <Compile Include="DecodingSnapshot\AbstractFactory\AbstractFactory.vb" />
     <Compile Include="DecodingSnapshot\AbstractFactory\AbstractProducts.vb" />
     <Compile Include="DecodingSnapshot\AbstractFactory\Client.vb" />
@@ -405,6 +421,7 @@
     <Compile Include="InheritanceMainForm\Creator.vb" />
     <Compile Include="InheritanceMainForm\CreatorRegistrationClient.vb" />
     <Compile Include="InheritanceMainForm\CreatorRegistrationSCXI.vb" />
+    <Compile Include="InheritanceMainForm\CreatorRegistrationCompactRio.vb" />
     <Compile Include="InheritanceMainForm\CreatorRegistrationTCP.vb" />
     <Compile Include="InheritanceMainForm\CreatorSnapshotPhotograph.vb" />
     <Compile Include="InheritanceMainForm\CreatorSnapshotViewingDiagram.vb" />
@@ -513,6 +530,12 @@
       <DependentUpon>FormRegistrationClient.vb</DependentUpon>
     </Compile>
     <Compile Include="InheritanceMainForm\FormRegistrationClient.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationCompactRio.Designer.vb">
+      <DependentUpon>FormRegistrationCompactRio.vb</DependentUpon>
+    </Compile>
+    <Compile Include="InheritanceMainForm\FormRegistrationCompactRio.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="InheritanceMainForm\FormRegistrationTCP.Designer.vb">
@@ -1010,6 +1033,12 @@
     <Compile Include="FindSnapshot\ConditionCollection.vb">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="CompactRio\FormTestCompactRio.resx">
+      <DependentUpon>FormTestCompactRio.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompactRio\Option\IPAddressEditorForm.resx">
+      <DependentUpon>IPAddressEditorForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DecodingSnapshot\FormAdjustment.resx">
       <DependentUpon>FormAdjustment.vb</DependentUpon>
       <SubType>Designer</SubType>

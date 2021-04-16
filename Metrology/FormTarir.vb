@@ -41,6 +41,8 @@ Friend Class FormTarir
         End Set
     End Property
 
+    Private ReadOnly MainMDIFormParent As FormMainMDI
+
     Private Class ArrayMeasurement
         Public Property First As Double()
         Public Property Back As Double()
@@ -101,7 +103,6 @@ Friend Class FormTarir
     Private selectChannelName As String = String.Empty
     Private isFormLoaded As Boolean
 
-
 #Region "FormTarir"
     ''' <summary>
     ''' Матобработка Выделенного Параметра Из Группы
@@ -110,7 +111,6 @@ Friend Class FormTarir
     Public Sub MathematicalTreatmentSampleSelectedParameterFromGroup(ByVal selectedIndex As Integer)
         Dim I, J, K As Integer
 
-        'ReDim_sampleX(acquisitionCount - 1)
         Re.Dim(sampleX, acquisitionCount - 1)
 
         For I = 0 To acquisitionCount - 1
@@ -137,21 +137,21 @@ Friend Class FormTarir
     ''' Инициализация Переменных Группового Опроса
     ''' </summary>
     Public Sub InitializeVariablesGroupAcquire()
-        'ReDim_acquisitionGroupVolt(UBound(MetrologyGroup), PointTarirCount, acquisitionCount, 2)
         Re.Dim(acquisitionGroupVolt, UBound(MetrologyGroup), PointTarirCount, acquisitionCount, 2)
     End Sub
 
-    Public Sub New()
+    Public Sub New(ByVal frmParent As FormMainMDI)
         MyBase.New()
         ' This call is required by the Windows Form Designer.
         InitializeComponent()
         ' Add any initialization after the InitializeComponent() call.
-        MdiParent = MainMdiForm
+        MdiParent = frmParent
+        MainMDIFormParent = frmParent
         InstallQuestionForm(WhoIsExamine.Taring)
     End Sub
 
     Private Sub FormTarir_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
-        RegistrationEventLog.EventLog_AUDIT_SUCCESS("Загрузка окна " & Text)
+        RegistrationEventLog.EventLog_AUDIT_SUCCESS("Загрузка окна: " & Text)
 
         Dim I As Integer
 
@@ -161,6 +161,7 @@ Friend Class FormTarir
         MenuNewWindowTarir.Enabled = MainMdiForm.MenuNewWindowTarir.Enabled
         MenuNewWindowClient.Enabled = MainMdiForm.MenuNewWindowClient.Enabled
         MenuNewWindowDBaseChannels.Enabled = MainMdiForm.MenuNewWindowDBaseChannels.Enabled
+        MenuDebugExamineParameter.Enabled = Not IsCompactRio
 
         ' по умолчанию начальное присваивание
         indexChannel = 1
@@ -221,7 +222,7 @@ Friend Class FormTarir
     End Sub
 
     Private Sub FormTarir_FormClosed(ByVal sender As Object, ByVal e As FormClosedEventArgs) Handles Me.FormClosed
-        RegistrationEventLog.EventLog_AUDIT_SUCCESS("Закрытие окна " & Text)
+        RegistrationEventLog.EventLog_AUDIT_SUCCESS("Закрытие окна: " & Text)
 
         For I As Integer = 0 To maxCountTarir
             ButtonPoints(I).Checked = False
@@ -250,15 +251,6 @@ Friend Class FormTarir
     End Sub
 
     Private Sub InitializeVariables()
-        'ReDim_PhisicalEtalon(PointTarirCount)
-        'ReDim_acquisitionVolt(PointTarirCount, acquisitionCount, 2)
-        'ReDim_polynomialPhysical(PointTarirCount, acquisitionCount, 2)
-        'ReDim_AverageInput(PointTarirCount)
-        'ReDim_среднееФизикаПолином(PointTarirCount, 2)
-        'ReDim_оценкаСКО(PointTarirCount)
-        'ReDim_систематическаяПогрешности(PointTarirCount)
-        'ReDim_вариация(PointTarirCount)
-        'ReDim_доверительныйИнтервал(PointTarirCount, 2)
         Re.Dim(PhisicalEtalon, PointTarirCount)
         Re.Dim(acquisitionVolt, PointTarirCount, acquisitionCount, 2)
         Re.Dim(polynomialPhysical, PointTarirCount, acquisitionCount, 2)
@@ -277,14 +269,14 @@ Friend Class FormTarir
     ''' </summary>
     ''' <param name="pointsCount"></param>
     Private Sub LoadTableMetrology(ByVal pointsCount As Integer)
-        Dim strСтрока(8) As String
+        Dim tableRecord(8) As String
 
         ListMetrology.Items.Clear()
 
         ' Создать переменную, чтобы добавлять объекты ListItem.
         For I As Integer = 1 To pointsCount
-            strСтрока(0) = I.ToString
-            ListMetrology.Items.Add(New ListViewItem(strСтрока))
+            tableRecord(0) = I.ToString
+            ListMetrology.Items.Add(New ListViewItem(tableRecord))
         Next
     End Sub
 
@@ -353,9 +345,6 @@ Friend Class FormTarir
     ''' Замер Одного Параметра
     ''' </summary>
     Private Sub AcquisitionOneParameter()
-        Dim samplingRate As Double
-        Dim volts() As Double
-
         ButtonRunSample.Enabled = False
 
         If IsRunning = False Then
@@ -363,47 +352,20 @@ Friend Class FormTarir
             ComboBoxParameters_SelectedIndexChanged(ComboBoxParameters, New EventArgs)
         End If
 
-        If Val(NIEditWait.Value) = 0 Then
-            samplingRate = 1000 ' 10000 очень быстро
-        Else
-            samplingRate = 1 / (Val(NIEditWait.Value) / 1000)
-        End If
-
-        'ReDim_sampleX(acquisitionCount - 1)
         Re.Dim(sampleX, acquisitionCount - 1)
-        ' инициализация
+
         If IsTaskRunning = False Then
             Cursor = Cursors.WaitCursor
 
             Try
+                Dim volts() As Double
+
                 IsTaskRunning = True
-                ' создать задачу
-                If Not DAQmxTask Is Nothing Then
-                    DAQmxTask.Dispose()
-                    DAQmxTask = Nothing
-                    'Else
-                    '    myTask = New Task("aiTask")
+                If IsWorkWithDaqController Then
+                    volts = AcquisitionDAQmxTask()
+                ElseIf IsCompactRio Then
+                    volts = TestMeasurementCompactRio()
                 End If
-
-                DAQmxTask = New Task("aiTask")
-                ' создать виртуальный канал
-                CreateAiChannel(ParametersType(indexChannel).NumberChannel.ToString,
-                                ParametersType(indexChannel).NumberDevice.ToString,
-                                ParametersType(indexChannel).NumberModuleChassis.ToString,
-                                ParametersType(indexChannel).NumberChannelModule.ToString,
-                                Convert.ToDouble(ParametersType(indexChannel).LowerMeasure),
-                                Convert.ToDouble(ParametersType(indexChannel).UpperMeasure),
-                                ParametersType(indexChannel).TypeConnection,
-                                ParametersType(indexChannel).SignalType)
-
-                DAQmxTask.Timing.ConfigureSampleClock("", samplingRate, SampleClockActiveEdge.Rising, SampleQuantityMode.FiniteSamples)
-                ' проверить корректность задачи
-                DAQmxTask.Control(TaskAction.Verify)
-                'reader.SynchronizingObject = Me
-                Dim analogReader As AnalogSingleChannelReader = New AnalogSingleChannelReader(DAQmxTask.Stream) With {.SynchronizeCallbacks = True}
-                volts = analogReader.ReadMultiSample(acquisitionCount)
-                ' тест замера
-                'volts = TestMeasurement(числоОпросов)
                 IsTaskRunning = False
 
                 For I As Integer = 0 To acquisitionCount - 1
@@ -431,7 +393,7 @@ Friend Class FormTarir
                     TextBacks(currentPoint - 1).Text = TextAverage.Text
                 End If
             Catch ex As DaqException
-                Const caption As String = "ЗамерОдногоПараметра"
+                Const caption As String = NameOf(AcquisitionOneParameter)
                 Dim text As String = ex.ToString
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{caption}> {text}")
@@ -445,16 +407,104 @@ Friend Class FormTarir
         End If
     End Sub
 
-    'Private Function TestMeasurement(InЧислоОпросов As Integer) As Double()
-    '    Dim rnd As New Random()
-    '    Dim volts(InЧислоОпросов - 1) As Double
+    ' Здесь надо запускать задачу сбора с ожиданием окончания
+    ' по окончанию которого останавливается таймер и отдаётся массив собранных данных
+    ''' <summary>
+    ''' тест замера
+    ''' </summary>
+    ''' <returns></returns>
+    Private Function TestMeasurementCompactRio() As Double()
+        If RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun Then InstallQuestionForm(WhoIsExamine.Nobody)
+        If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
 
-    '    For I As Integer = 1 To InЧислоОпросов - 1
-    '        volts(I) = volts(I - 1) + rnd.[Next](10)
-    '    Next
+        MainMDIFormParent.GFormTestCompactRio.Initialize()
+        ' здесь надо awaite вызов
+        MainMDIFormParent.GFormTestCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormTestCompactRio.TarirTimerTick)
+        CounterAcquiredData = 0
+        average = 0
 
-    '    Return volts
+        ' создаётся задача и запускается с длительным ожиданием
+        ' внутри сбора вывести слайдер процесса выполнения
+        ' в задаче запускается цикл проверки, что таймер остановлен (условие If CounterAcquiredData > 100 Then)
+        ' Wait  ждать окончания этой задачи
+
+
+        Dim rnd As New Random()
+        Dim volts(acquisitionCount - 1) As Double
+
+        For I As Integer = 1 To acquisitionCount - 1
+            volts(I) = volts(I - 1) + rnd.[Next](10)
+        Next
+
+        Return volts
+    End Function
+
+    Dim CounterAcquiredData As Integer
+    Dim average As Double
+    '''' <summary>
+    '''' Данные значений каналов, полученные по сети от шасси CompactRio
+    '''' </summary>
+    '''' <returns></returns>
+    'Friend Property DataValuesFromServer As Double()
+
+    ''' <summary>
+    ''' Обновление данных на экране из события сбора
+    ''' </summary>
+    Friend Sub AcquiredData(DataValuesFromServer As Double())
+        average += DataValuesFromServer(indexChannel)
+        CounterAcquiredData += 1
+        If CounterAcquiredData > 100 Then
+            If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
+        End If
+    End Sub
+
+    '''' <summary>
+    '''' Упрощение сложного условия
+    '''' </summary>
+    '''' <returns></returns>
+    'Private Function IsConditionCompactRio() As Boolean
+    '    Return RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun AndAlso MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition
     'End Function
+
+    ''' <summary>
+    ''' Создать задачу и произвести опрос канала.
+    ''' </summary>
+    ''' <returns></returns>
+    Private Function AcquisitionDAQmxTask() As Double()
+        Dim samplingRate As Double
+        ' инициализация
+        If Val(NIEditWait.Value) = 0 Then
+            samplingRate = 1000 ' 10000 очень быстро
+        Else
+            samplingRate = 1 / (Val(NIEditWait.Value) / 1000)
+        End If
+
+        ' создать задачу
+        If DAQmxTask IsNot Nothing Then
+            DAQmxTask.Dispose()
+            DAQmxTask = Nothing
+            'Else
+            '    myTask = New Task("aiTask")
+        End If
+
+        DAQmxTask = New Task("aiTask")
+        ' создать виртуальный канал
+        CreateAiChannel(ParametersType(indexChannel).NumberChannel.ToString,
+                        ParametersType(indexChannel).NumberDevice.ToString,
+                        ParametersType(indexChannel).NumberModuleChassis.ToString,
+                        ParametersType(indexChannel).NumberChannelModule.ToString,
+                        Convert.ToDouble(ParametersType(indexChannel).LowerMeasure),
+                        Convert.ToDouble(ParametersType(indexChannel).UpperMeasure),
+                        ParametersType(indexChannel).TypeConnection,
+                        ParametersType(indexChannel).SignalType)
+
+        DAQmxTask.Timing.ConfigureSampleClock("", samplingRate, SampleClockActiveEdge.Rising, SampleQuantityMode.FiniteSamples)
+        ' проверить корректность задачи
+        DAQmxTask.Control(TaskAction.Verify)
+        'reader.SynchronizingObject = Me
+        Dim analogReader As AnalogSingleChannelReader = New AnalogSingleChannelReader(DAQmxTask.Stream) With {.SynchronizeCallbacks = True}
+        Return analogReader.ReadMultiSample(acquisitionCount)
+    End Function
 
     ''' <summary>
     ''' Переписать Лист
@@ -661,14 +711,14 @@ Friend Class FormTarir
     End Sub
 
     Private Sub MenuDebugExamineParameter_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MenuDebugExamineParameter.Click
-        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(MenuDebugExamineParameter_Click)}> загрузка формы Опрос Канала")
+        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(MenuDebugExamineParameter_Click)}> загрузка формы: <{NameOf(FormTestChannel)}> опроса канала")
         InstallQuestionForm(WhoIsExamine.Examination)
         TestChannelForm.ParentFormBase = Me
         TestChannelForm.Show()
     End Sub
 
     Private Sub MenuStendView_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MenuStendView.Click
-        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(MenuStendView_Click)}> загрузка формы состава каналов")
+        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(MenuStendView_Click)}> загрузка формы: <{NameOf(FormChannel)}> состава каналов")
         mFormChannel = New FormChannel
         mFormChannel.Show()
         mFormChannel.Activate()
@@ -756,7 +806,7 @@ Friend Class FormTarir
             cb = New OleDbCommandBuilder(odaDataAdapter)
             odaDataAdapter.Update(dtDataTable)
         Catch ex As Exception
-            Dim caption As String = $"Ошибка обновления коэффициентов тарировки в процедуре {NameOf(SavePolynomial)}."
+            Dim caption As String = $"Ошибка обновления коэффициентов тарировки в процедуре: {NameOf(SavePolynomial)}."
             Dim text As String = ex.ToString
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED(String.Format("<{0}> {1}", caption, text))
@@ -773,7 +823,7 @@ Friend Class FormTarir
 
             ' вычислить для проверки ' вычислить для построения графика
             TextResult.Text = CStr(mathData(0))
-            ShowMessageToStatusBar(String.Format("Произведена проверка качества вычисления коэффициентов тарировки для канала <{0}> со степенью полинома {1} ", selectChannelName, polynomialOrder))
+            ShowMessageToStatusBar($"Произведена проверка качества вычисления коэффициентов тарировки для канала: <{selectChannelName}> со степенью полинома {polynomialOrder}")
         Catch ex As Exception
             Const caption As String = NameOf(ButtonCheck_Click)
             Dim text As String = ex.ToString
@@ -1171,8 +1221,6 @@ Friend Class FormTarir
         End If
 
         ' подготовка для расчета полинома
-        'ReDim_XPhisical(PointTarirCount - 1)
-        'ReDim_YOutput(PointTarirCount - 1)
         Re.Dim(XPhisical, PointTarirCount - 1)
         Re.Dim(YOutput, PointTarirCount - 1)
 
@@ -1564,7 +1612,7 @@ Friend Class FormTarir
         Try
             PrintReport(reportExcel, isPrint)
         Catch ex As Exception
-            Const caption As String = "Печать"
+            Const caption As String = NameOf(SavePrintProtocolCalibrationTask)
             Dim text As String = ex.ToString
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
             RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{caption}> {text}")
@@ -1975,7 +2023,6 @@ Friend Class FormTarir
 
             '--- Graph -------------------------------------------------------
             .Sheets("Лист2").Select()
-            'ReDim_averageX(PointTarirCount - 1)
             Re.Dim(averageX, PointTarirCount - 1)
             For I = 0 To PointTarirCount - 1
                 averageX(I) = AverageInput(I + 1)

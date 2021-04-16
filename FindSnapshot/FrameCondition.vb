@@ -39,7 +39,6 @@ Public Class FrameCondition
     Public Property Text() As String
 
     Public Sub New(ByVal conditionsCount As Integer)
-        'ReDim_mConditionWhereOK(conditionsCount)
         Re.Dim(mConditionWhereOK, conditionsCount)
     End Sub
 

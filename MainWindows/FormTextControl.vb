@@ -448,7 +448,6 @@ Friend Class FormTextControl
         Next
 
         panels = mcolControls.ToArray
-        'ReDim_arrParameterStruct(panels.Length - 1)
         Re.Dim(arrParameterStruct, panels.Length - 1)
 
         If I > 0 Then

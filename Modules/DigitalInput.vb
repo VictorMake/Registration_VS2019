@@ -78,7 +78,6 @@ Friend Class DigitalInput
 
         ' считать из базы Channels параметры Расчет и если есть копировать в массив признаки
         If countChannels > 0 Then
-            'ReDim_arrTypeChannel(countChannels - 1)
             Re.Dim(arrTypeChannel, countChannels - 1)
             I = 0
             strSQL = "SELECT НаименованиеПараметра, Погрешность, РазносУмин, РазносУмакс, АварийноеЗначениеМин, АварийноеЗначениеМакс, Блокировка, Видимость, ВидимостьРегистратор " &
@@ -153,7 +152,6 @@ Friend Class DigitalInput
         countChannels = CInt(cmd.ExecuteScalar)
 
         ' intCount = intRecordCount 'для данного случая где нет дискретных слов в теге
-        'If countChannels > 0 Then ReDimarrDigitalBaseParameter(countChannels - 1)
         If countChannels > 0 Then Re.Dim(arrDigitalBaseParameter, countChannels - 1)
 
         strSQL = "SELECT * FROM ChannelDigitalInput;"
@@ -162,7 +160,6 @@ Friend Class DigitalInput
         rdr = cmd.ExecuteReader
 
         If countChannels > 0 Then ' And intRecordCount > 0
-            'ReDim_NameDigitalInputChannels(countChannels - 1)
             Re.Dim(NameDigitalInputChannels, countChannels - 1)
 
             Do While (rdr.Read)
@@ -277,7 +274,6 @@ Friend Class DigitalInput
         Application.DoEvents()
 
         ' 6 организуем массив с для DigitalInputValue() as double
-        'ReDim_DigitalInputValue(countChannels - 1)
         Re.Dim(DigitalInputValue, countChannels - 1)
 
         mDigitalInputsCount = countChannels

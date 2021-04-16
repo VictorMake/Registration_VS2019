@@ -3,7 +3,7 @@ Imports NationalInstruments.DAQmx
 
 Friend Class FormSnapshotPhotograph
     Protected Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormSnapshotPhotograph")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormSnapshotPhotograph))
         'InitializeComponent()
     End Sub
 
@@ -173,7 +173,6 @@ Friend Class FormSnapshotPhotograph
 
         ReadConfigurationRegime()
         UnpackStringConfigurationWithEmpty(ConfigurationString)
-        'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
 
         Dim I, J As Integer
@@ -181,7 +180,6 @@ Friend Class FormSnapshotPhotograph
         For I = 1 To UBound(NamesParameterRegime)
             For J = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = NamesParameterRegime(I) Then
-                    'ReDimPreserve IndexParameters(UBound(IndexParameters) + 1)
                     Re.DimPreserve(IndexParameters, UBound(IndexParameters) + 1)
                     IndexParameters(UBound(IndexParameters)) = J
                     Exit For
@@ -194,7 +192,6 @@ Friend Class FormSnapshotPhotograph
 
         If UBound(IndexParameters) > SnapshotLimit Then
             ' ограничить для снимка SnapshotLimit
-            'ReDimPreserve IndexParameters(SnapshotLimit)
             Re.DimPreserve(IndexParameters, SnapshotLimit)
         End If
 
@@ -207,7 +204,6 @@ Friend Class FormSnapshotPhotograph
         Next
 
         If Not IsNothing(IndexParameters) Then
-            'ReDim_CopyListOfParameter(IndexParameters.Length - 1)
             Re.Dim(CopyListOfParameter, IndexParameters.Length - 1)
             Array.Copy(IndexParameters, CopyListOfParameter, IndexParameters.Length)
         End If
@@ -351,9 +347,6 @@ Friend Class FormSnapshotPhotograph
                 ' доработка перенес из cmbВремяСбора_SelectedIndexChanged
                 J = MainModule.CountAcquisition \ DegreeDiscreditPhoto
 
-                'ReDim_MeasuredValues(UBound(IndexParameters) - 1, J)
-                'ReDim_MeasuredValuesToRange(UBound(IndexParameters) - 1, J)
-                'ReDim_PackOfParametersToRecord(UBound(IndexParameters) - 2)
                 Re.Dim(MeasuredValues, UBound(IndexParameters) - 1, J)
                 Re.Dim(MeasuredValuesToRange, UBound(IndexParameters) - 1, J)
                 Re.Dim(PackOfParametersToRecord, UBound(IndexParameters) - 2)

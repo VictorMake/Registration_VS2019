@@ -161,7 +161,6 @@ Friend Class FormEditiorGraphByParameter
         PropertyEditorDefaultYAxis.Source = New PropertyEditorSource(YAxis1, "Range")
 
         ' занести в список. эдесь работаем с копией
-        'ReDim_NameParameters(UBound(CopyListOfParameter) - 1)
         Re.Dim(NameParameters, UBound(CopyListOfParameter) - 1)
 
         For I As Integer = 1 To UBound(CopyListOfParameter)
@@ -182,7 +181,6 @@ Friend Class FormEditiorGraphByParameter
         tempDataGridViewComboBoxColumn = CType(DataGridViewAxisYARG.Columns(NameColumnNameY), DataGridViewComboBoxColumn)
         tempDataGridViewComboBoxColumn.Items.AddRange(arrTemp)
 
-        'ReDim_IndexesEmptyParameters(1)
         Re.Dim(IndexesEmptyParameters, 1)
         LoadChannels()
         LoadGraphsXmlDoc()
@@ -1717,11 +1715,16 @@ Friend Class FormEditiorGraphByParameter
         ' Эта процедура отличается от аналогичной в FormConditionFind
         Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
             Dim cmd As OleDbCommand = cn.CreateCommand
+            Dim strSQL As String
+            If IsCompactRio Then
+                strSQL = $"Select * FROM {ChannelLast} WHERE UseCompactRio <> 0 Order By НомерПараметра"
+            Else
+                strSQL = $"Select * FROM {ChannelLast} Order By НомерПараметра"
+            End If
 
             cmd.CommandType = CommandType.Text
-            cmd.CommandText = "SELECT * FROM " & ChannelLast
+            cmd.CommandText = strSQL
             cn.Open()
-            'ReDim_arrTypeNameUnit(NameParameters.Length - 1)
             Re.Dim(arrTypeNameUnit, NameParameters.Length - 1)
 
             Using rdr As OleDbDataReader = cmd.ExecuteReader

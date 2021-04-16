@@ -13,10 +13,8 @@ Public Class FormDeleteCondition
     Public Sub New(ByVal inCountConditions As Integer)
         ' Этот вызов является обязательным для конструктора.
         InitializeComponent()
-        ' Добавьте все инициализирующие действия после вызова InitializeComponent().
+        ' Добавbnm все инициализирующие действия после вызова InitializeComponent().
         Dim pointLocation As New Point(8, 24)
-        'ReDim_arrCheckBox(inCountConditions - 1)
-        'ReDim_IsConditionsToDelete(inCountConditions - 1)
         Re.Dim(arrCheckBox, inCountConditions - 1)
         Re.Dim(IsConditionsToDelete, inCountConditions - 1)
 

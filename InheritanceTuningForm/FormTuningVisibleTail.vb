@@ -91,7 +91,6 @@ Friend Class FormTuningVisibleTail
         cmd.CommandType = CommandType.Text
         cmd.CommandText = strSQL
         cn.Open()
-        'ReDim_arrTypeTuningMode(CInt(cmd.ExecuteScalar))
         Re.Dim(arrTypeTuningMode, CInt(cmd.ExecuteScalar))
 
         strSQL = $"SELECT * FROM [Режимы{StandNumber}] WHERE [Наименование]<> '{имяРежима}'"
@@ -225,9 +224,8 @@ Friend Class FormTuningVisibleTail
         dcDataColumn(0) = dtDataTable.Columns("НомерПараметра")
         dtDataTable.PrimaryKey = dcDataColumn
 
-
-        For I As Integer = 1 To dtDataTable.Rows.Count
-            aFindValue(0) = I
+        For I As Integer = 1 To parameters.Length - 1
+            aFindValue(0) = parameters(I).NumberParameter
             drDataRow = dtDataTable.Rows.Find(aFindValue)
 
             If drDataRow IsNot Nothing Then

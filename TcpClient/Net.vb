@@ -53,7 +53,7 @@ Module Net
 
         ' m = 0 'канал времени с индексом 0
         'timeString = "26.07.2011 09:00:32.93" 'для теста2
-        timeString = String.Format("{0} {1}.{2}", sysTime.ToShortDateString, sysTime.ToLongTimeString, sysTime.Millisecond)
+        timeString = $"{sysTime.ToShortDateString} {sysTime.ToLongTimeString}.{sysTime.Millisecond}"
 
         ''tasks(i).hash(k) канал времени  2TIME001 
         ChannelPacket(packetArray, HashTime, CommandSetServer.SmallString_51, 0, Nothing, timeString, 0, offset)

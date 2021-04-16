@@ -164,7 +164,7 @@ Friend MustInherit Class FormRegistrationBase
 
     Protected Sub New()
         'Public Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormRegistrationBase")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormRegistrationBase))
         'InitializeComponent()
     End Sub
     Public Sub New(ByVal frmParent As FormMainMDI, ByVal kindExamination As FormExamination, ByVal captionText As String)
@@ -494,7 +494,6 @@ Friend MustInherit Class FormRegistrationBase
         End If
 
         countVisibleTrendRegistrator = WaveformGraphTime.Plots.Count - 1
-        'ReDim_dataAllTrends(countVisibleTrendRegistrator, arraysize)
         Re.Dim(dataAllTrends, countVisibleTrendRegistrator, arraysize)
     End Sub
 
@@ -676,7 +675,11 @@ Friend MustInherit Class FormRegistrationBase
     ''' <param name="IsChannelShaphot"></param>
     Friend Overrides Sub GetSqlForDbase(ByRef outSQL As String, ByRef IsChannelShaphot As Boolean)
         IsChannelShaphot = False
-        outSQL = "SELECT * FROM " & ChannelLast
+        If IsCompactRio Then
+            outSQL = $"Select * FROM {ChannelLast} WHERE UseCompactRio <> 0 Order By НомерПараметра"
+        Else
+            outSQL = $"Select * FROM {ChannelLast} Order By НомерПараметра"
+        End If
     End Sub
 #End Region
 
@@ -946,10 +949,6 @@ Friend MustInherit Class FormRegistrationBase
         lastx = 0
         MainModule.CountAcquisition = CInt(DeltaX * (FrequencyBackground * LevelOversampling))
 
-        'ReDim_dataAllTrends(countVisibleTrendRegistrator, arraysize)
-        'ReDim_MeasuredValuesToRange(UBound(IndexParameters) - 1, MainModule.CountAcquisition \ LevelOversampling) ' частота сбора/передискретизацию
-        'ReDim_MeasuredValues(UBound(IndexParameters) - 1, arraysize)
-        'ReDim_PackOfParametersToRecord(UBound(IndexParameters) - 1)
         Re.Dim(dataAllTrends, countVisibleTrendRegistrator, arraysize)
         Re.Dim(MeasuredValuesToRange, UBound(IndexParameters) - 1, MainModule.CountAcquisition \ LevelOversampling) ' частота сбора/передискретизацию
         Re.Dim(MeasuredValues, UBound(IndexParameters) - 1, arraysize)
@@ -966,7 +965,6 @@ Friend MustInherit Class FormRegistrationBase
             ADCAcquisitionParametersCount = CountMeasurand - AdditionalParameterCount + 1
         End If
 
-        'ReDim_DataValuesFromServer(CountMeasurand + 1)
         Re.Dim(DataValuesFromServer, CountMeasurand + 1)
         ConfigureWaveformGraphScale(arraysize)
         YAxisTime.Range = New Range(RangesOfDeviation(NumberParameterAxes, 1), RangesOfDeviation(NumberParameterAxes, 2))
@@ -1141,7 +1139,6 @@ Friend MustInherit Class FormRegistrationBase
                 If Not IsUseTdms Then dataMeasuredValuesString.Remove(0, dataMeasuredValuesString.Length)
 
                 ' очистка массива чтобы не остались прежние значения
-                'ReDi_ MeasuredValues(UBound(IndexParameters) - 1, arraysize)
                 Re.Dim(MeasuredValues, UBound(IndexParameters) - 1, arraysize)
                 systemTime = TimeOfDay
                 ConfigureWaveformGraphScale(arraysize)
@@ -1225,7 +1222,7 @@ Friend MustInherit Class FormRegistrationBase
             isRecordingSnapshot = True
 
             Dim maximum As Double
-            Dim strTime As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
+            Dim strTime As String = $"({Now.Hour}ч{Now.Minute}м{Now.Second}с{Now.Millisecond}мс)"
             Dim descriptionFrame As String = "Фоновая запись - прерванный снимок"
 
             If xNewPos = 0 Then
@@ -1233,7 +1230,7 @@ Friend MustInherit Class FormRegistrationBase
                 descriptionFrame = "Фоновая запись " & Str(countFrameRegistrator)
             End If
 
-            Dim pathTextDataStream As String = $"{PathResourses}\База снимков\{ModificationEngine}-{NumberEngine} ({Today.ToShortDateString} {strTime}) {descriptionFrame}.txt"
+            Dim pathTextDataStream As String = $"{PathResourses}\База снимков\{NumberEngine}-{ModificationEngine} [{Today.ToShortDateString} {strTime}] {descriptionFrame}.txt"
 
             If IsRecordEnable = False Then 'значит запись прервана в середине
                 maximum = XyCursorTime.XPosition
@@ -1764,7 +1761,7 @@ Friend MustInherit Class FormRegistrationBase
 
         If configurationString IsNot Nothing Then
             Dim lenghtConfig As Integer = Len(configurationString)
-            Dim lostChannels As New List(Of String) 'отсутствуетКанал
+            Dim lostChannels As New List(Of String) 'отсутствует Канал
             Dim strTemp As String
             Dim success As Boolean
             Dim start As Integer = 1

@@ -242,9 +242,7 @@ Public Class SettingConstantChannels
     ''' </summary>
     Public Sub SaveConstantChannels()
         ' произвести полное отображение на прокси
-        Dim proxy As New ProxyConstantChannels With {
-            .ConstantChannels = ConstantChannels.ToList
-        }
+        Dim proxy As New ProxyConstantChannels With {.ConstantChannels = ConstantChannels.ToList}
         ' отображение текущего содержимого в временный прокси для записи
         SerializerConstantChannels(proxy)
     End Sub

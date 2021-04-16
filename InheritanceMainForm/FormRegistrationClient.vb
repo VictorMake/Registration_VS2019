@@ -26,7 +26,7 @@ Friend Class FormRegistrationClient
 
     Protected Sub New()
         'Public Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormRegistrationClient")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormRegistrationClient))
         'InitializeComponent()
     End Sub
 
@@ -45,7 +45,7 @@ Friend Class FormRegistrationClient
     ''' Main->Base->Inherit
     ''' </summary>
     Protected Overrides Sub InheritFormLoad()
-        IsServer = True
+        IsServer = False
         CheckModuleSolveKT()
     End Sub
     ''' <summary>
@@ -89,7 +89,6 @@ Friend Class FormRegistrationClient
         MenuConfigurationChannels.Enabled = False
         ButtonContinuously.Enabled = False
         ButtonRecord.Enabled = False
-        IsServer = False
     End Sub
     ''' <summary>
     ''' вызывается при образовании формы
@@ -160,7 +159,6 @@ Friend Class FormRegistrationClient
         If IsNewImitatorSnapshot = False Then ReadConfigurationRegime()
 
         UnpackStringConfigurationWithEmpty(ConfigurationString)
-        'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
         ' выгрузить индикаторы аварийных значений
         UnloadAlarmButton()
@@ -174,7 +172,6 @@ Friend Class FormRegistrationClient
         For I = 1 To UBound(NamesParameterRegime)
             For J = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = NamesParameterRegime(I) Then
-                    'ReDimPreserve IndexParameters(UBound(IndexParameters) + 1)
                     Re.DimPreserve(IndexParameters, UBound(IndexParameters) + 1)
                     IndexParameters(UBound(IndexParameters)) = J
 
@@ -209,7 +206,6 @@ Friend Class FormRegistrationClient
         If IsShowTextControl Then frmTextControl.Close()
         If IsShowGraphControl Then frmGraphControl.Close()
 
-        'ReDim_IndexParametersForControl(UBound(IndexParameters))
         Re.Dim(IndexParametersForControl, UBound(IndexParameters))
 
         For I = 1 To UBound(IndexParameters)
@@ -229,7 +225,6 @@ Friend Class FormRegistrationClient
         InitializeDiscreteLed()
 
         If Not IsNothing(IndexParameters) Then
-            'ReDim_CopyListOfParameter(IndexParameters.Length - 1)
             Re.Dim(CopyListOfParameter, IndexParameters.Length - 1)
             Array.Copy(IndexParameters, CopyListOfParameter, IndexParameters.Length)
         End If
@@ -494,7 +489,6 @@ Friend Class FormRegistrationClient
         ' СтрокаКонфигурации изменилась поэтому перегрузка
         ApplyRegimeRegistrator() ' идет первым
         ButtonContinuously.Checked = True
-        'ReDim_ParameterTwoGraph(UBound(ParametersType))
         Re.Dim(ParameterTwoGraph, UBound(ParametersType))
         RestoreDiagramFromParameter()
 

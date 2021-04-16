@@ -293,11 +293,8 @@ Friend Class TdmsFileProcessor
     ''' <remarks></remarks>
     Private Sub SetUpTDMSFile()
         ' обычно даже маленький остаточек будет в файле и должен быть записан при выключении кнопки запись, новой конфигурации, и закрытия окна и всего приложения
-        Dim nowToLongTime As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
-        fileName = $"{pathFile}\База снимков\{ModificationEngine}-{title} ({Today.ToShortDateString} {nowToLongTime}) {description}.tdms"
-
-        'strПутьТекстовогоПотока = strПутьРесурсы & "\База снимков\" & strМодификация & "-" & CStr(lngНомерИзделия) & " (" & Today.ToShortDateString & " " & strВремя & ") " & strПримечаниеСнимка & ".txt"
-        'lngНомерИзделия.ToString & ",'" & Today.ToString & "'," & [Время].ToOADate & "," & sgnТемператураБокса.ToString & ",'" & strТипКрд & "','" & режим & "','" & strСтрокаКонфигурации & "'," & chКолСтрок.ToString & "," & UBound(arrСреднее).ToString & "," & intЧастотаФонового.ToString & "," & CStr(XAxisTime.Range.Minimum) & "," & dblMaximum.ToString & ",'" & strПутьТекстовогоПотока & "','" & strChannelПоследняя & "','" & strПримечаниеСнимка & "')"
+        Dim nowToLongTime As String = $"({Now.Hour}ч{Now.Minute}м{Now.Second}с{Now.Millisecond}мс)"
+        fileName = $"{pathFile}\База снимков\{title}-{ModificationEngine} [{Today.ToShortDateString} {nowToLongTime}] {description}.tdms"
         todayString = Today.ToString
         timeStartCollectNumeric = TimeOfDay.ToOADate
 
@@ -366,8 +363,8 @@ Friend Class TdmsFileProcessor
     ''' </summary>
     Private Sub SetUpTDMSFileForDecoding()
         ' обычно даже маленький остаточек будет в файле и должен быть записан при выключении кнопки запись, новой конфигурации, и закрытия окна и всего приложения
-        Dim nowToLongTime As String = $"{Replace(Trim(Now.ToLongTimeString), ":", "-")}-{Now.Millisecond}"
-        fileName = $"{pathFile}\База снимков\{title}_{Today.ToShortDateString}_{nowToLongTime}_{description}.tdms"
+        Dim nowToLongTime As String = $"({Now.Hour}ч{Now.Minute}м{Now.Second}с{Now.Millisecond}мс)"
+        fileName = $"{pathFile}\База снимков\{title} {Today.ToShortDateString} {nowToLongTime} {description}.tdms"
 
         'lngНомерИзделия.ToString & ",'" & Today.ToString & "'," & [Время].ToOADate & "," & sgnТемператураБокса.ToString & ",'" & strТипКрд & "','" & режим & "','" & strСтрокаКонфигурации & "'," & chКолСтрок.ToString & "," & UBound(arrСреднее).ToString & "," & intЧастотаФонового.ToString & "," & CStr(XAxisTime.Range.Minimum) & "," & dblMaximum.ToString & ",'" & strПутьТекстовогоПотока & "','" & strChannelПоследняя & "','" & strПримечаниеСнимка & "')"
         todayString = Today.ToString
@@ -560,7 +557,6 @@ Friend Class TdmsFileProcessor
 
                 If tdmsChannels(0).DataCount > 0 Then
                     channelDataCount = CInt(tdmsChannels(0).DataCount - 1)
-                    'ReDim_dataChannels(channelsCount, channelDataCount)
                     Re.Dim(dataChannels, channelsCount, channelDataCount)
 
                     For Each tdmsChannel As TdmsChannel In tdmsChannels

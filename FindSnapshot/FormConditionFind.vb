@@ -328,7 +328,6 @@ Friend Class FormConditionFind
     Private Sub FormConditionFind_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         RegistrationEventLog.EventLog_AUDIT_SUCCESS("Загрузка окна " & Text)
         ParentFormSnapshot.IsLoadedFormConditionFind = True
-        'ReDim_IndexesAbsentParameters(1)
         Re.Dim(IndexesAbsentParameters, 1)
 
         ComboBoxEnumConditions.SelectedIndex = 0
@@ -1397,7 +1396,6 @@ Friend Class FormConditionFind
         Dim I As Integer = CInt(refDataRow("КолСтолбцов"))
         Dim J As Integer = CInt(refDataRow("КолСтрок"))
 
-        'If measureFromFile.GetUpperBound(0) <> J OrElse measureFromFile.GetUpperBound(1) <> I Then ReDim_measureFromFile(J, I)
         If measureFromFile.GetUpperBound(0) <> J OrElse measureFromFile.GetUpperBound(1) <> I Then Re.Dim(measureFromFile, J, I)
 
         fileName = CStr(refDataRow("ПутьНаДиске"))
@@ -1447,7 +1445,6 @@ Friend Class FormConditionFind
         UnpackStringConfiguration(CStr(refDataRow("СтрокаКонфигурации")))
 
         If Buf.GetUpperBound(0) <> measureFromFile.GetUpperBound(0) OrElse Buf.GetUpperBound(1) <> parameterNames.GetUpperBound(0) Then
-            'ReDim_Buf(measureFromFile.GetUpperBound(0), parameterNames.GetUpperBound(0))
             Re.Dim(Buf, measureFromFile.GetUpperBound(0), parameterNames.GetUpperBound(0))
         End If
 
@@ -1467,7 +1464,6 @@ Friend Class FormConditionFind
     ''' <param name="bufReceiver"></param>
     Private Sub CopyBuffer(ByRef bufSource(,) As Double, ByRef bufReceiver(,) As Double)
         If bufSource.GetUpperBound(0) <> bufReceiver.GetUpperBound(0) OrElse bufSource.GetUpperBound(1) <> bufReceiver.GetUpperBound(1) Then
-            'ReDim_bufReceiver(bufSource.GetUpperBound(0), bufSource.GetUpperBound(1))
             Re.Dim(bufReceiver, bufSource.GetUpperBound(0), bufSource.GetUpperBound(1))
         End If
         Array.Copy(bufSource, bufReceiver, bufSource.Length)
@@ -1516,7 +1512,6 @@ Friend Class FormConditionFind
         Dim nameParameterWithSeparate As String ' имя Параметр С Разделителем        
         Dim errorCount As Integer
         ' проверка наличия параметров в коллекции условий поиска
-        'ReDim_parameterNames(0)
         Re.Dim(parameterNames, 0)
         'Array.Clear(parameterNames, 0, parameterNames.Length)
 
@@ -1543,7 +1538,6 @@ Friend Class FormConditionFind
                             '    parameterNames(UBound(parameterNames)) = nameParameter
                             'Else
                             parameterNames(UBound(parameterNames)) = name
-                            'ReDimPreserve parameterNames(UBound(parameterNames) + 1)
                             Re.DimPreserve(parameterNames, UBound(parameterNames) + 1)
                             'End If
                         End If
@@ -1554,7 +1548,6 @@ Friend Class FormConditionFind
         Next
 
         ' обрезать последнюю пустую строку
-        'ReDimPreserve parameterNames(UBound(parameterNames) - 1)
         Re.DimPreserve(parameterNames, UBound(parameterNames) - 1)
 
         If reportAbsenceParameters Is String.Empty Then
@@ -1650,7 +1643,6 @@ Friend Class FormConditionFind
 
         Dim J As Integer
         ' индексы ненайденных соответствуют индексам в списках на форме
-        'ReDim_IndexesAbsentParameters(tableAbsentParameters.Count - 1)
         Re.Dim(IndexesAbsentParameters, tableAbsentParameters.Count - 1)
 
         For I As Integer = 1 To UBound(arrTypeNameUnit)
@@ -1960,7 +1952,6 @@ Friend Class FormConditionFind
         If CBool(InStr(e.Node.Tag.ToString, "Изделия")) Then
             numberEngine = CInt(e.Node.Text)
             PopulateAllSnapshotByEngine(numberEngine)
-            'ReDim_IndexesAbsentParameters(1) ' чтобы на записях нового изделия не отражались прежние индексы
             Re.Dim(IndexesAbsentParameters, 1) ' чтобы на записях нового изделия не отражались прежние индексы
             ButtonFind.Enabled = False
         End If
@@ -1994,7 +1985,6 @@ Friend Class FormConditionFind
             cmd.CommandType = CommandType.Text
             cmd.CommandText = "SELECT COUNT(*) FROM " & nameChannelsTable
             cn.Open()
-            'ReDim_arrTypeNameUnit(CInt(cmd.ExecuteScalar))
             Re.Dim(arrTypeNameUnit, CInt(cmd.ExecuteScalar))
             cmd.CommandText = "SELECT * FROM " & nameChannelsTable
 
@@ -2744,7 +2734,6 @@ Friend Class FormConditionFind
         Dim start As Integer = 1
         Dim lenghtString As Integer = Len(configurationString)
 
-        'ReDim_parameterNamesConfiguration(arrTypeNameUnit.Length) ' вначале определить массив максимально возможного размера
         Re.Dim(parameterNamesConfiguration, arrTypeNameUnit.Length) ' вначале определить массив максимально возможного размера
         Do
             parameterNamesConfiguration(count) = Mid(configurationString, start, InStr(start, configurationString, Separator) - start)
@@ -2752,8 +2741,7 @@ Friend Class FormConditionFind
             count += 1
         Loop While start < lenghtString
 
-        'ReDimPreserve parameterNamesConfiguration(count - 1) ' отсечь всё лишнее
-        Re.DimPreserve(parameterNamesConfiguration, count - 1)
+        Re.DimPreserve(parameterNamesConfiguration, count - 1) ' отсечь всё лишнее
     End Sub
 #End Region
 

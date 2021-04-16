@@ -47,14 +47,12 @@ Friend Class FormFormulaEditor
 
     Private Sub FormulaEditorFormLoad()
         If DigitalPortForm.FormMainReference Is Nothing Then
-            'ReDim_CopyListOfParameter(ParametersType.Length - 1)
             Re.Dim(CopyListOfParameter, ParametersType.Length - 1)
             For I As Integer = 1 To ParametersType.Length - 1
                 CopyListOfParameter(I) = I
             Next
         End If
 
-        'ReDim_NameParameters(UBound(CopyListOfParameter) - 1)
         Re.Dim(NameParameters, UBound(CopyListOfParameter) - 1)
         For I = 1 To UBound(CopyListOfParameter)
             NameParameters(I - 1) = ParametersType(CopyListOfParameter(I)).NameParameter
@@ -245,11 +243,16 @@ Friend Class FormFormulaEditor
         Dim cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
         Dim rdr As OleDbDataReader
         Dim cmd As OleDbCommand = cn.CreateCommand
-        Dim strSQL As String = "SELECT * FROM " & ChannelLast
+        Dim strSQL As String
+
+        If IsCompactRio Then
+            strSQL = $"Select * FROM {ChannelLast} WHERE UseCompactRio <> 0  Order By НомерПараметра"
+        Else
+            strSQL = $"Select * FROM {ChannelLast} Order By НомерПараметра"
+        End If
 
         cmd.CommandType = CommandType.Text
         cn.Open()
-        'ReDim_arrMyTypeNameUnit(NameParameters.Length - 1)
         Re.Dim(arrMyTypeNameUnit, NameParameters.Length - 1)
         cmd.CommandText = strSQL
         rdr = cmd.ExecuteReader

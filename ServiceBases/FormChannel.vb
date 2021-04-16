@@ -42,17 +42,17 @@ Friend Class FormChannel
     ''' <param name="standNumber"></param>
     ''' <remarks></remarks>
     Private Sub PopulateChannelsNBaseDataSet(standNumber As String)
-        Dim tadleFrom As String = "Channel" & standNumber
+        Dim tableFrom As String = "Channel" & standNumber
 
         Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
             cn.Open()
-            If CheckExistTable(cn, tadleFrom) AndAlso CheckExistTable(cn, CHANNEL_N) Then
+            If CheckExistTable(cn, tableFrom) AndAlso CheckExistTable(cn, CHANNEL_N) Then
                 Try
                     Using cmd As OleDbCommand = cn.CreateCommand
                         cmd.CommandType = CommandType.Text
                         cmd.CommandText = $"DELETE * FROM {CHANNEL_N};"
                         cmd.ExecuteNonQuery()
-                        cmd.CommandText = $"INSERT INTO {CHANNEL_N} SELECT * FROM {tadleFrom}"
+                        cmd.CommandText = $"INSERT INTO {CHANNEL_N} SELECT * FROM {tableFrom}"
                         cmd.ExecuteNonQuery()
                     End Using
                     Thread.Sleep(500)
@@ -65,7 +65,7 @@ Friend Class FormChannel
                 End Try
             Else
                 Dim caption As String = $"Проверка наличия таблицы в процедуре <{NameOf(PopulateChannelsNBaseDataSet)}>."
-                Dim text As String = $"Таблицы {tadleFrom} или {CHANNEL_N} не существует!"
+                Dim text As String = $"Таблицы {tableFrom} или {CHANNEL_N} не существует!"
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
             End If

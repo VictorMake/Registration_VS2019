@@ -1057,24 +1057,23 @@ Friend Class FormSelectSnapshotDBase
     ''' копирование базы данных
     ''' </summary>
     ''' <param name="appointment"></param>
-    Private Sub CreateEngineFolder(appointment As String) 'As (fileReceiver As String, catalogReceiver As String)
+    Private Sub CreateEngineFolder(appointment As String)
         If InvokeRequired Then
             Invoke(New MethodInvoker(Sub() CreateEngineFolder(appointment)))
         Else
             ' создание папки с датой и временем
             Dim descriptionTimePeriod As String
             If isEnvokeFromTreeView Then
-                descriptionTimePeriod = $" записи с {ListViewSnapshot.Items(0).Text}_{Replace(Trim(ListViewSnapshot.Items(0).SubItems(1).Text), ":", "-")} по {ListViewSnapshot.Items(ListViewSnapshot.Items.Count - 1).Text}_{Replace(Trim(ListViewSnapshot.Items(ListViewSnapshot.Items.Count - 1).SubItems(1).Text), ":", "-")}"
+                descriptionTimePeriod = $" записи с {ListViewSnapshot.Items(0).Text} ({Replace(Trim(ListViewSnapshot.Items(0).SubItems(1).Text), ":", "-")}) по {ListViewSnapshot.Items(ListViewSnapshot.Items.Count - 1).Text} ({Replace(Trim(ListViewSnapshot.Items(ListViewSnapshot.Items.Count - 1).SubItems(1).Text), ":", "-")})"
             Else
-                descriptionTimePeriod = $" записи с {ListViewSnapshot.SelectedItems(0).Text}_{Replace(Trim(ListViewSnapshot.SelectedItems(0).SubItems(1).Text), ":", "-")} по {ListViewSnapshot.SelectedItems(ListViewSnapshot.SelectedItems.Count - 1).Text}_{Replace(Trim(ListViewSnapshot.SelectedItems(ListViewSnapshot.SelectedItems.Count - 1).SubItems(1).Text), ":", "-")}"
+                descriptionTimePeriod = $" записи с {ListViewSnapshot.SelectedItems(0).Text} ({Replace(Trim(ListViewSnapshot.SelectedItems(0).SubItems(1).Text), ":", "-")}) по {ListViewSnapshot.SelectedItems(ListViewSnapshot.SelectedItems.Count - 1).Text} ({Replace(Trim(ListViewSnapshot.SelectedItems(ListViewSnapshot.SelectedItems.Count - 1).SubItems(1).Text), ":", "-")})"
             End If
 
-            descriptionTimePeriod = $"{numberEngine.ToString & descriptionTimePeriod} {appointment} произведено {Today.ToShortDateString}_{Replace(Trim(Now.ToLongTimeString), ":", "-")}"
+            descriptionTimePeriod = $"{numberEngine.ToString & descriptionTimePeriod} {appointment} произведено {Today.ToShortDateString} ({Now.Hour}ч{Now.Minute}м{Now.Second}с)"
             Dim pathCopyFolder As String = Path.Combine(CreateFolderArchive, descriptionTimePeriod)
             Directory.CreateDirectory(pathCopyFolder) ' создать папку перед переносом
             fileReceiver = Path.Combine(pathCopyFolder, numberEngine.ToString & ".mdb")
             catalogReceiver = VB.Left(fileReceiver, InStrRev(fileReceiver, Separator))
-            'Return (Path.Combine(folderCopy, numberEngine.ToString & ".mdb"), VB.Left(fileReceiver, InStrRev(fileReceiver, Separator)))
         End If
     End Sub
 
@@ -1104,7 +1103,6 @@ Friend Class FormSelectSnapshotDBase
 
         If FolderBrowserDialog1.ShowDialog() = DialogResult.OK Then
             PathExportFolderXLS = FolderBrowserDialog1.SelectedPath
-            'ReDim_IndexForGroupExport(ListViewSnapshot.SelectedItems.Count - 1)
             Re.Dim(IndexForGroupExport, ListViewSnapshot.SelectedItems.Count - 1)
 
             For Each itemListView As ListView In ListViewSnapshot.SelectedItems()
@@ -1136,7 +1134,6 @@ Friend Class FormSelectSnapshotDBase
         Next
 
         If ListViewSnapshot.SelectedItems.Count > 1 Then
-            'ReDim_IndexForMergerSnapshot(ListViewSnapshot.SelectedItems.Count - 1)
             Re.Dim(IndexForMergerSnapshot, ListViewSnapshot.SelectedItems.Count - 1)
 
             For Each selectedItem As ListViewItem In ListViewSnapshot.SelectedItems()

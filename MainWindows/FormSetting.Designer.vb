@@ -23,12 +23,12 @@ Partial Class FormSetting
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSetting))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSetting))
         Me.OpenFileDialogPuth = New System.Windows.Forms.OpenFileDialog()
         Me.HelpProvider1 = New System.Windows.Forms.HelpProvider()
-        Me.ComboNumberStend = New System.Windows.Forms.ComboBox()
+        Me.ComboNumberStand = New System.Windows.Forms.ComboBox()
         Me.ComboEngine = New System.Windows.Forms.ComboBox()
         Me.TabOption = New System.Windows.Forms.TabControl()
         Me.TabPageProduct = New System.Windows.Forms.TabPage()
@@ -45,6 +45,7 @@ Partial Class FormSetting
         Me.LabelRegime = New System.Windows.Forms.Label()
         Me.LabelStend = New System.Windows.Forms.Label()
         Me.LabelDate = New System.Windows.Forms.Label()
+        Me.LinkLabelSettingCompactRio = New System.Windows.Forms.LinkLabel()
         Me.TabPageStartStop = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelStartStop = New System.Windows.Forms.TableLayoutPanel()
         Me.PanelNameVarStopWrite = New System.Windows.Forms.Panel()
@@ -68,13 +69,13 @@ Partial Class FormSetting
         Me.ComboBoxCountClientOrNumberClient = New System.Windows.Forms.ComboBox()
         Me.LabelComboBoxCountClientOrNumberClient = New System.Windows.Forms.Label()
         Me.LabelPrecision = New System.Windows.Forms.Label()
-        Me.FrameStendClient = New System.Windows.Forms.GroupBox()
+        Me.FrameStandClient = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanelClient = New System.Windows.Forms.TableLayoutPanel()
         Me.TextPathClient = New System.Windows.Forms.TextBox()
         Me.ButtonPathClientExplorer = New System.Windows.Forms.Button()
         Me.ComboPathClient = New System.Windows.Forms.ComboBox()
         Me.LabelPathClient = New System.Windows.Forms.Label()
-        Me.FrameStendServer = New System.Windows.Forms.GroupBox()
+        Me.FrameStandServer = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanelServer = New System.Windows.Forms.TableLayoutPanel()
         Me.TextPathServer = New System.Windows.Forms.TextBox()
         Me.ComboPathServer = New System.Windows.Forms.ComboBox()
@@ -128,7 +129,7 @@ Partial Class FormSetting
         Me.LabelNameTbox = New System.Windows.Forms.Label()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ButtonWithClientТСР = New System.Windows.Forms.RadioButton()
+        Me.ButtonCompactRio = New System.Windows.Forms.RadioButton()
         Me.ButtonWithClient = New System.Windows.Forms.RadioButton()
         Me.ButtonWithSnapshop = New System.Windows.Forms.RadioButton()
         Me.ButtonWithController = New System.Windows.Forms.RadioButton()
@@ -138,6 +139,8 @@ Partial Class FormSetting
         Me.hpPlainHTML = New System.Windows.Forms.HelpProvider()
         Me.TableLayoutPanelTypeWork = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageListChannel = New System.Windows.Forms.ImageList(Me.components)
+        Me.PanelSettingCompactRio = New System.Windows.Forms.Panel()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.TabOption.SuspendLayout()
         Me.TabPageProduct.SuspendLayout()
         Me.TableLayoutPanelProduct.SuspendLayout()
@@ -150,9 +153,9 @@ Partial Class FormSetting
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageMeasure.SuspendLayout()
         Me.TableLayoutPanel6.SuspendLayout()
-        Me.FrameStendClient.SuspendLayout()
+        Me.FrameStandClient.SuspendLayout()
         Me.TableLayoutPanelClient.SuspendLayout()
-        Me.FrameStendServer.SuspendLayout()
+        Me.FrameStandServer.SuspendLayout()
         Me.TableLayoutPanelServer.SuspendLayout()
         CType(Me.NumPrecision, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelKadr.SuspendLayout()
@@ -171,22 +174,24 @@ Partial Class FormSetting
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.FrameTypeWork.SuspendLayout()
         Me.TableLayoutPanelTypeWork.SuspendLayout()
+        Me.PanelSettingCompactRio.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'ComboNumberStend
+        'ComboNumberStand
         '
-        Me.ComboNumberStend.BackColor = System.Drawing.SystemColors.Window
-        Me.ComboNumberStend.Cursor = System.Windows.Forms.Cursors.Default
-        Me.ComboNumberStend.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboNumberStend.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.HelpProvider1.SetHelpString(Me.ComboNumberStend, "Выбор номера стенда")
-        Me.ComboNumberStend.Location = New System.Drawing.Point(209, 29)
-        Me.ComboNumberStend.Name = "ComboNumberStend"
-        Me.ComboNumberStend.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.HelpProvider1.SetShowHelp(Me.ComboNumberStend, True)
-        Me.ComboNumberStend.Size = New System.Drawing.Size(80, 21)
-        Me.ComboNumberStend.TabIndex = 72
-        Me.ToolTip1.SetToolTip(Me.ComboNumberStend, "Выбор номера стенда")
+        Me.ComboNumberStand.BackColor = System.Drawing.SystemColors.Window
+        Me.ComboNumberStand.Cursor = System.Windows.Forms.Cursors.Default
+        Me.ComboNumberStand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboNumberStand.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.HelpProvider1.SetHelpString(Me.ComboNumberStand, "Выбор номера стенда")
+        Me.ComboNumberStand.Location = New System.Drawing.Point(209, 29)
+        Me.ComboNumberStand.Name = "ComboNumberStand"
+        Me.ComboNumberStand.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.HelpProvider1.SetShowHelp(Me.ComboNumberStand, True)
+        Me.ComboNumberStand.Size = New System.Drawing.Size(80, 21)
+        Me.ComboNumberStand.TabIndex = 72
+        Me.ToolTip1.SetToolTip(Me.ComboNumberStand, "Выбор номера стенда")
         '
         'ComboEngine
         '
@@ -240,7 +245,8 @@ Partial Class FormSetting
         Me.TableLayoutPanelProduct.Controls.Add(Me.FraProduct, 0, 3)
         Me.TableLayoutPanelProduct.Controls.Add(Me.LabelStend, 0, 1)
         Me.TableLayoutPanelProduct.Controls.Add(Me.LabelDate, 0, 0)
-        Me.TableLayoutPanelProduct.Controls.Add(Me.ComboNumberStend, 1, 1)
+        Me.TableLayoutPanelProduct.Controls.Add(Me.ComboNumberStand, 1, 1)
+        Me.TableLayoutPanelProduct.Controls.Add(Me.PanelSettingCompactRio, 0, 4)
         Me.TableLayoutPanelProduct.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelProduct.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanelProduct.Name = "TableLayoutPanelProduct"
@@ -428,6 +434,17 @@ Partial Class FormSetting
         Me.LabelDate.TabIndex = 74
         Me.LabelDate.Text = "Дата:"
         Me.LabelDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'LinkLabelSettingCompactRio
+        '
+        Me.LinkLabelSettingCompactRio.AutoSize = True
+        Me.LinkLabelSettingCompactRio.Location = New System.Drawing.Point(41, 12)
+        Me.LinkLabelSettingCompactRio.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.LinkLabelSettingCompactRio.Name = "LinkLabelSettingCompactRio"
+        Me.LinkLabelSettingCompactRio.Size = New System.Drawing.Size(193, 13)
+        Me.LinkLabelSettingCompactRio.TabIndex = 79
+        Me.LinkLabelSettingCompactRio.TabStop = True
+        Me.LinkLabelSettingCompactRio.Text = "Конфигурировать шасси CompactRio"
         '
         'TabPageStartStop
         '
@@ -674,8 +691,8 @@ Partial Class FormSetting
         Me.TableLayoutPanel6.Controls.Add(Me.ComboBoxCountClientOrNumberClient, 1, 7)
         Me.TableLayoutPanel6.Controls.Add(Me.LabelComboBoxCountClientOrNumberClient, 0, 7)
         Me.TableLayoutPanel6.Controls.Add(Me.LabelPrecision, 0, 4)
-        Me.TableLayoutPanel6.Controls.Add(Me.FrameStendClient, 0, 6)
-        Me.TableLayoutPanel6.Controls.Add(Me.FrameStendServer, 0, 5)
+        Me.TableLayoutPanel6.Controls.Add(Me.FrameStandClient, 0, 6)
+        Me.TableLayoutPanel6.Controls.Add(Me.FrameStandServer, 0, 5)
         Me.TableLayoutPanel6.Controls.Add(Me.NumPrecision, 1, 4)
         Me.TableLayoutPanel6.Controls.Add(Me.LabelIntervalSnapshot, 0, 3)
         Me.TableLayoutPanel6.Controls.Add(Me.PanelKadr, 1, 3)
@@ -741,20 +758,20 @@ Partial Class FormSetting
         Me.LabelPrecision.Text = "Количество цифр после точки при отображении:"
         Me.LabelPrecision.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'FrameStendClient
+        'FrameStandClient
         '
-        Me.FrameStendClient.BackColor = System.Drawing.SystemColors.Control
-        Me.TableLayoutPanel6.SetColumnSpan(Me.FrameStendClient, 2)
-        Me.FrameStendClient.Controls.Add(Me.TableLayoutPanelClient)
-        Me.FrameStendClient.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.FrameStendClient.ForeColor = System.Drawing.Color.Blue
-        Me.FrameStendClient.Location = New System.Drawing.Point(3, 217)
-        Me.FrameStendClient.Name = "FrameStendClient"
-        Me.FrameStendClient.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.FrameStendClient.Size = New System.Drawing.Size(406, 72)
-        Me.FrameStendClient.TabIndex = 61
-        Me.FrameStendClient.TabStop = False
-        Me.FrameStendClient.Text = "Настройка путей к базе данных АРМ Клиент"
+        Me.FrameStandClient.BackColor = System.Drawing.SystemColors.Control
+        Me.TableLayoutPanel6.SetColumnSpan(Me.FrameStandClient, 2)
+        Me.FrameStandClient.Controls.Add(Me.TableLayoutPanelClient)
+        Me.FrameStandClient.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FrameStandClient.ForeColor = System.Drawing.Color.Blue
+        Me.FrameStandClient.Location = New System.Drawing.Point(3, 217)
+        Me.FrameStandClient.Name = "FrameStandClient"
+        Me.FrameStandClient.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.FrameStandClient.Size = New System.Drawing.Size(406, 72)
+        Me.FrameStandClient.TabIndex = 61
+        Me.FrameStandClient.TabStop = False
+        Me.FrameStandClient.Text = "Настройка путей к базе данных АРМ Клиент"
         '
         'TableLayoutPanelClient
         '
@@ -838,20 +855,20 @@ Partial Class FormSetting
         Me.LabelPathClient.Text = "Стенд АРМ Клиент"
         Me.LabelPathClient.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'FrameStendServer
+        'FrameStandServer
         '
-        Me.FrameStendServer.BackColor = System.Drawing.SystemColors.Control
-        Me.TableLayoutPanel6.SetColumnSpan(Me.FrameStendServer, 2)
-        Me.FrameStendServer.Controls.Add(Me.TableLayoutPanelServer)
-        Me.FrameStendServer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.FrameStendServer.ForeColor = System.Drawing.Color.Blue
-        Me.FrameStendServer.Location = New System.Drawing.Point(3, 139)
-        Me.FrameStendServer.Name = "FrameStendServer"
-        Me.FrameStendServer.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.FrameStendServer.Size = New System.Drawing.Size(406, 72)
-        Me.FrameStendServer.TabIndex = 55
-        Me.FrameStendServer.TabStop = False
-        Me.FrameStendServer.Text = "Настройка путей к базе данных АРМ Регистратор"
+        Me.FrameStandServer.BackColor = System.Drawing.SystemColors.Control
+        Me.TableLayoutPanel6.SetColumnSpan(Me.FrameStandServer, 2)
+        Me.FrameStandServer.Controls.Add(Me.TableLayoutPanelServer)
+        Me.FrameStandServer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FrameStandServer.ForeColor = System.Drawing.Color.Blue
+        Me.FrameStandServer.Location = New System.Drawing.Point(3, 139)
+        Me.FrameStandServer.Name = "FrameStandServer"
+        Me.FrameStandServer.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.FrameStandServer.Size = New System.Drawing.Size(406, 72)
+        Me.FrameStandServer.TabIndex = 55
+        Me.FrameStandServer.TabStop = False
+        Me.FrameStandServer.Text = "Настройка путей к базе данных АРМ Регистратор"
         '
         'TableLayoutPanelServer
         '
@@ -1513,23 +1530,23 @@ Partial Class FormSetting
         Me.ImageList1.Images.SetKeyName(5, "FileAssocTDMS.ico")
         Me.ImageList1.Images.SetKeyName(6, "")
         '
-        'ButtonWithClientТСР
+        'ButtonCompactRio
         '
-        Me.ButtonWithClientТСР.Appearance = System.Windows.Forms.Appearance.Button
-        Me.ButtonWithClientТСР.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ButtonWithClientТСР.Cursor = System.Windows.Forms.Cursors.Default
-        Me.ButtonWithClientТСР.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ButtonWithClientТСР.Image = CType(resources.GetObject("ButtonWithClientТСР.Image"), System.Drawing.Image)
-        Me.ButtonWithClientТСР.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ButtonWithClientТСР.Location = New System.Drawing.Point(6, 36)
-        Me.ButtonWithClientТСР.Name = "ButtonWithClientТСР"
-        Me.ButtonWithClientТСР.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.ButtonWithClientТСР.Size = New System.Drawing.Size(402, 25)
-        Me.ButtonWithClientТСР.TabIndex = 68
-        Me.ButtonWithClientТСР.Text = "С контроллером CompactRio (запись и передача другим АРМ Клиент)"
-        Me.ButtonWithClientТСР.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.ButtonWithClientТСР, "Получение значений каналов от CompactRio")
-        Me.ButtonWithClientТСР.UseVisualStyleBackColor = False
+        Me.ButtonCompactRio.Appearance = System.Windows.Forms.Appearance.Button
+        Me.ButtonCompactRio.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.ButtonCompactRio.Cursor = System.Windows.Forms.Cursors.Default
+        Me.ButtonCompactRio.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ButtonCompactRio.Image = CType(resources.GetObject("ButtonCompactRio.Image"), System.Drawing.Image)
+        Me.ButtonCompactRio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonCompactRio.Location = New System.Drawing.Point(6, 36)
+        Me.ButtonCompactRio.Name = "ButtonCompactRio"
+        Me.ButtonCompactRio.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.ButtonCompactRio.Size = New System.Drawing.Size(402, 25)
+        Me.ButtonCompactRio.TabIndex = 68
+        Me.ButtonCompactRio.Text = "Мобильный ИВК CompactRio (измерение, запись и передача Клиентам)"
+        Me.ButtonCompactRio.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.ToolTip1.SetToolTip(Me.ButtonCompactRio, "Мобильный Измерительно-Вычислительный Комплекс на шасси CompactRio")
+        Me.ButtonCompactRio.UseVisualStyleBackColor = False
         '
         'ButtonWithClient
         '
@@ -1544,9 +1561,9 @@ Partial Class FormSetting
         Me.ButtonWithClient.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.ButtonWithClient.Size = New System.Drawing.Size(402, 25)
         Me.ButtonWithClient.TabIndex = 52
-        Me.ButtonWithClient.Text = "АРМ Клиент (приём от АРМ Регистратор и отображение)"
+        Me.ButtonWithClient.Text = "Клиент (приём от Сервера и отображение)"
         Me.ButtonWithClient.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.ButtonWithClient, "Получение значений каналов от другого АРМ")
+        Me.ToolTip1.SetToolTip(Me.ButtonWithClient, "Получение значений каналов от Сервера")
         Me.ButtonWithClient.UseVisualStyleBackColor = False
         '
         'ButtonWithSnapshop
@@ -1582,7 +1599,8 @@ Partial Class FormSetting
         Me.ButtonWithController.TabIndex = 20
         Me.ButtonWithController.Text = "С контроллером DAQ (измерение, запись и передача Клиентам)"
         Me.ButtonWithController.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.ToolTip1.SetToolTip(Me.ButtonWithController, "Работа с измерительной аппаратурой")
+        Me.ToolTip1.SetToolTip(Me.ButtonWithController, "Работа с платами сбора и шасси DAQ (измерение, управление, запись и передача Клие" &
+        "нтам)")
         Me.ButtonWithController.UseVisualStyleBackColor = False
         '
         'ButtonApply
@@ -1610,7 +1628,7 @@ Partial Class FormSetting
         '
         Me.FrameTypeWork.BackColor = System.Drawing.SystemColors.Control
         Me.TableLayoutPanelTypeWork.SetColumnSpan(Me.FrameTypeWork, 2)
-        Me.FrameTypeWork.Controls.Add(Me.ButtonWithClientТСР)
+        Me.FrameTypeWork.Controls.Add(Me.ButtonCompactRio)
         Me.FrameTypeWork.Controls.Add(Me.ButtonWithClient)
         Me.FrameTypeWork.Controls.Add(Me.ButtonWithSnapshop)
         Me.FrameTypeWork.Controls.Add(Me.ButtonWithController)
@@ -1662,6 +1680,26 @@ Partial Class FormSetting
         Me.ImageListChannel.Images.SetKeyName(11, "")
         Me.ImageListChannel.Images.SetKeyName(12, "")
         '
+        'PanelSettingCompactRio
+        '
+        Me.TableLayoutPanelProduct.SetColumnSpan(Me.PanelSettingCompactRio, 2)
+        Me.PanelSettingCompactRio.Controls.Add(Me.PictureBox2)
+        Me.PanelSettingCompactRio.Controls.Add(Me.LinkLabelSettingCompactRio)
+        Me.PanelSettingCompactRio.Location = New System.Drawing.Point(100, 209)
+        Me.PanelSettingCompactRio.Margin = New System.Windows.Forms.Padding(100, 3, 3, 3)
+        Me.PanelSettingCompactRio.Name = "PanelSettingCompactRio"
+        Me.PanelSettingCompactRio.Size = New System.Drawing.Size(247, 39)
+        Me.PanelSettingCompactRio.TabIndex = 80
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(32, 32)
+        Me.PictureBox2.TabIndex = 0
+        Me.PictureBox2.TabStop = False
+        '
         'FormSetting
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1695,10 +1733,10 @@ Partial Class FormSetting
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPageMeasure.ResumeLayout(False)
         Me.TableLayoutPanel6.ResumeLayout(False)
-        Me.FrameStendClient.ResumeLayout(False)
+        Me.FrameStandClient.ResumeLayout(False)
         Me.TableLayoutPanelClient.ResumeLayout(False)
         Me.TableLayoutPanelClient.PerformLayout()
-        Me.FrameStendServer.ResumeLayout(False)
+        Me.FrameStandServer.ResumeLayout(False)
         Me.TableLayoutPanelServer.ResumeLayout(False)
         Me.TableLayoutPanelServer.PerformLayout()
         CType(Me.NumPrecision, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1722,6 +1760,9 @@ Partial Class FormSetting
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.FrameTypeWork.ResumeLayout(False)
         Me.TableLayoutPanelTypeWork.ResumeLayout(False)
+        Me.PanelSettingCompactRio.ResumeLayout(False)
+        Me.PanelSettingCompactRio.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1746,7 +1787,7 @@ Partial Class FormSetting
     Public WithEvents LabelNumberProduct As System.Windows.Forms.Label
     Public WithEvents LabelEngine As System.Windows.Forms.Label
     Public WithEvents ComboEngine As System.Windows.Forms.ComboBox
-    Public WithEvents ComboNumberStend As System.Windows.Forms.ComboBox
+    Public WithEvents ComboNumberStand As System.Windows.Forms.ComboBox
     Friend WithEvents TabPageMeasure As System.Windows.Forms.TabPage
     Friend WithEvents ComboIntervalSnapshot As System.Windows.Forms.ComboBox
     Public WithEvents ComboFrequencyCollection As System.Windows.Forms.ComboBox
@@ -1757,12 +1798,12 @@ Partial Class FormSetting
     Public WithEvents LabelDiscreditFact As System.Windows.Forms.Label
     Public WithEvents LabelDiscredit As System.Windows.Forms.Label
     Public WithEvents LabelFrequencyCollection As System.Windows.Forms.Label
-    Public WithEvents FrameStendServer As System.Windows.Forms.GroupBox
+    Public WithEvents FrameStandServer As System.Windows.Forms.GroupBox
     Public WithEvents ComboPathServer As System.Windows.Forms.ComboBox
     Public WithEvents TextPathServer As System.Windows.Forms.TextBox
     Public WithEvents ButtonPathServerExplorer As System.Windows.Forms.Button
     Public WithEvents LabelPathServer As System.Windows.Forms.Label
-    Public WithEvents FrameStendClient As System.Windows.Forms.GroupBox
+    Public WithEvents FrameStandClient As System.Windows.Forms.GroupBox
     Public WithEvents ButtonPathClientExplorer As System.Windows.Forms.Button
     Public WithEvents TextPathClient As System.Windows.Forms.TextBox
     Public WithEvents ComboPathClient As System.Windows.Forms.ComboBox
@@ -1781,7 +1822,7 @@ Partial Class FormSetting
     Friend WithEvents TextWaitStartWrite As System.Windows.Forms.TextBox
     Friend WithEvents LabelWaitStartWrite As System.Windows.Forms.Label
     Friend WithEvents LabelNameVarStartWrite As System.Windows.Forms.Label
-    Public WithEvents ButtonWithClientТСР As System.Windows.Forms.RadioButton
+    Public WithEvents ButtonCompactRio As System.Windows.Forms.RadioButton
     Friend WithEvents GroupBoxNameConst As System.Windows.Forms.GroupBox
     Friend WithEvents TableLayoutPanelAlias As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents LabelNameTbox As System.Windows.Forms.Label
@@ -1837,4 +1878,7 @@ Partial Class FormSetting
     Friend WithEvents BindingNavigatorMoveLastItem As ToolStripButton
     Friend WithEvents BindingNavigatorSeparator2 As ToolStripSeparator
     Public WithEvents BindingNavigatorConstantChannels As BindingNavigator
+    Friend WithEvents LinkLabelSettingCompactRio As LinkLabel
+    Friend WithEvents PanelSettingCompactRio As Panel
+    Friend WithEvents PictureBox2 As PictureBox
 End Class

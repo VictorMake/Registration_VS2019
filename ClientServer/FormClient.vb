@@ -293,10 +293,6 @@ Friend Class FormClient
 
         countInString \= 3
         lengthMemo = countInString
-        'ReDim_aNameDataServer(countInString)
-        'ReDim_aValueDataServer(countInString)
-        'ReDim_aIndexDataServer(countInString)
-        'ReDim_NameParametersFromServer(countInString)
         Re.Dim(aNameDataServer, countInString)
         Re.Dim(aValueDataServer, countInString)
         Re.Dim(aIndexDataServer, countInString)

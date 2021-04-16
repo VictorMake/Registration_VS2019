@@ -30,7 +30,7 @@ Public Class FormSearchChannelTuning
     Private dataTableChannel As DataTable
     Private dataView As DataView
 
-    Public Sub New() 'ByRef inDv As DataView, ByRef DataTableChannel As DataTable)
+    Public Sub New()
         ' Этот вызов является обязательным для конструктора.
         InitializeComponent()
     End Sub
@@ -50,19 +50,19 @@ Public Class FormSearchChannelTuning
     ''' <param name="standNumber"></param>
     ''' <remarks></remarks>
     Private Sub PopulateChannelsNBaseDataSet(standNumber As String)
-        Dim tadleFrom As String = "Channel" & standNumber
+        Dim tableFrom As String = "Channel" & standNumber
 
         Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
             cn.Open()
-            If CheckExistTable(cn, tadleFrom) AndAlso CheckExistTable(cn, CHANNEL_N) Then
+            If CheckExistTable(cn, tableFrom) AndAlso CheckExistTable(cn, CHANNEL_N) Then
                 Try
                     Using cmd As OleDbCommand = cn.CreateCommand
                         cmd.CommandType = CommandType.Text
                         'strSQL = "DROP TABLE ChannelN;"
                         cmd.CommandText = $"DELETE * FROM {CHANNEL_N};"
                         cmd.ExecuteNonQuery()
-                        'strSQL = "SELECT " & tadleFrom & ".* INTO ChannelN FROM " & tadleFrom
-                        cmd.CommandText = $"INSERT INTO {CHANNEL_N} SELECT * FROM {tadleFrom}" '& " IN " & """" & strПутьChannels & """" & ";"
+                        'strSQL = "SELECT " & tableFrom & ".* INTO ChannelN FROM " & tableFrom
+                        cmd.CommandText = $"INSERT INTO {CHANNEL_N} SELECT * FROM {tableFrom}" '& " IN " & """" & strПутьChannels & """" & ";"
                         cmd.ExecuteNonQuery()
                     End Using
                     Thread.Sleep(500)
@@ -75,7 +75,7 @@ Public Class FormSearchChannelTuning
                 End Try
             Else
                 Dim caption As String = $"Проверка наличия таблицы в процедуре <{NameOf(PopulateChannelsNBaseDataSet)}>."
-                Dim text As String = $"Таблицы {tadleFrom} или {CHANNEL_N} не существует!"
+                Dim text As String = $"Таблицы {tableFrom} или {CHANNEL_N} не существует!"
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
             End If

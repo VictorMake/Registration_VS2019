@@ -62,7 +62,7 @@ Friend Class FormConfigChannelServer
     ''' <summary>
     ''' Номер Стенда Сменен
     ''' </summary>
-    Private IsNumberStendchanged As Boolean
+    Private IsNumberStandchanged As Boolean
 
 #Region "Таблицы и источники данных"
     ' это хранилища каналов
@@ -143,7 +143,7 @@ Friend Class FormConfigChannelServer
 
     Private lastModuleNumber As Integer
     Private mParentForm As FormMain
-    Private ReadOnly StendNumbers As New List(Of String)
+    Private ReadOnly StandNumbers As New List(Of String)
 
     ''' <summary>
     ''' глобальная, для того чтобы при повторных загрузках окна не обращаться к Серверу
@@ -178,7 +178,6 @@ Friend Class FormConfigChannelServer
         unitsTableAdapter.Fill(ChannelsDataSet.ЕдиницаИзмерения)
 
         Dim tableЕдиницаИзмерения As Channels_cfg_lmzDataSet.ЕдиницаИзмеренияDataTable = ChannelsDataSet.ЕдиницаИзмерения
-        'ReDim_Units(tableЕдиницаИзмерения.Rows.Count)
         Re.Dim(Units, tableЕдиницаИзмерения.Rows.Count)
         Units(0) = ""
 
@@ -195,7 +194,7 @@ Friend Class FormConfigChannelServer
 
         TSButtonRemoveChannels.Checked = IsSiftingChannels
         isFormLoaded = True
-        ConfigureByStend()
+        ConfigureByStand()
         DataGridViewInputChannel_Resize(Me, Nothing)
     End Sub
 
@@ -235,14 +234,14 @@ Friend Class FormConfigChannelServer
     ''' Вызывается при смене номера стенда из списка
     ''' </summary>
     ''' <remarks></remarks>
-    Private Sub ConfigureByStend()
+    Private Sub ConfigureByStand()
         If isFormLoaded = True Then
             EnableDisable(False)
 
             If CheckExistServerCfglmzXml(PathServerCfglmzXml) Then
                 Dim mfrmMessageBox As FormMessageBox = GetFormMessageBox("Подождите, идёт загрузка настроек", "Применить настройки стенда")
 
-                If IsFirstStatTcpClient OrElse IsNumberStendchanged Then
+                If IsFirstStatTcpClient OrElse IsNumberStandchanged Then
                     SaveTableChannels_cfg_lmz(GetTableServerChannelsConfigurationXML(PathServerCfglmzXml))
                     IsFirstStatTcpClient = False
                 Else
@@ -970,7 +969,7 @@ Friend Class FormConfigChannelServer
         End If
 
         ComboBoxConfigurations.Text = nameConfiguration ' выделить для загрузки
-        SaveChangeChannelStendAndChannelN(StandNumber)
+        SaveChangeChannelStandAndChannelN(StandNumber)
         RestoreSelectedConfiguration() ' там конфигурируется адаптер
         mfrmMessageBox.Close()
         isDirty = False
@@ -1889,9 +1888,9 @@ Friend Class FormConfigChannelServer
     ''' Перезагрузить Настройки Стенда
     ''' </summary>
     Private Sub ReloadStandOptions()
-        IsNumberStendchanged = True
-        ConfigureByStend()
-        IsNumberStendchanged = False
+        IsNumberStandchanged = True
+        ConfigureByStand()
+        IsNumberStandchanged = False
     End Sub
 
     ''' <summary>
@@ -1901,11 +1900,11 @@ Friend Class FormConfigChannelServer
     ''' <param name="inComboBox"></param>
     ''' <remarks></remarks>
     Private Sub PopulateComboBox(ByVal inComboBox As ComboBox)
-        For I As Integer = 0 To StendNumbers.Count - 1
-            inComboBox.Items.Add(StendNumbers(I))
+        For I As Integer = 0 To StandNumbers.Count - 1
+            inComboBox.Items.Add(StandNumbers(I))
 
             If inComboBox Is ComboBoxPathServerConfigXML Then
-                pathServerCfg_xml(I) = GetIni(PathOptions, "ServerCfg_xml", "Stend" & StendNumbers(I), "\\Stend_1\c\Нужно ввести путь.xml")
+                pathServerCfg_xml(I) = GetIni(PathOptions, "ServerCfg_xml", "Stend" & StandNumbers(I), "\\Stend_1\c\Нужно ввести путь.xml")
             End If
         Next
     End Sub
@@ -1914,15 +1913,14 @@ Friend Class FormConfigChannelServer
     ''' Считать Настройки
     ''' </summary>
     Private Sub LoadStandOptions()
-        StendNumbers.AddRange(GetIni(PathOptions, "Stend", "Stends", "1, 2, 3, 4").Split(CType(", ", Char())).ToArray)
-        'ReDim_pathServerCfg_xml(StendNumbers.Count - 1)
-        Re.Dim(pathServerCfg_xml, StendNumbers.Count - 1)
+        StandNumbers.AddRange(GetIni(PathOptions, "Stend", "Stends", "1, 2, 3, 4").Split(CType(", ", Char())).ToArray)
+        Re.Dim(pathServerCfg_xml, StandNumbers.Count - 1)
         PopulateComboBox(ComboBoxPathServerConfigXML)
 
         Try
             ' 1)номер стенда
-            For I As Integer = 0 To StendNumbers.Count - 1
-                If StendNumbers(I) = StandNumber Then
+            For I As Integer = 0 To StandNumbers.Count - 1
+                If StandNumbers(I) = StandNumber Then
                     ComboBoxPathServerConfigXML.SelectedIndex = I
                     TextBoxPathServerConfigXML.Text = pathServerCfg_xml(I)
                     Exit For
@@ -2240,19 +2238,19 @@ Friend Class FormConfigChannelServer
         ' и имеет поиск канала по имени
         Dim cn As OleDbConnection = New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
         Dim cmd As OleDbCommand = cn.CreateCommand
-        Dim tadleFrom As String = "Channel" & standNumber
+        Dim tableFrom As String = "Channel" & standNumber
         Dim strSQL As String
 
         cn.Open()
-        If CheckExistTable(cn, tadleFrom) Then
+        If CheckExistTable(cn, tableFrom) Then
             Try
                 cmd.CommandType = CommandType.Text
                 strSQL = $"DELETE * FROM {CHANNEL_N};"
                 'strSQL = "DROP TABLE ChannelN;"
                 cmd.CommandText = strSQL
                 cmd.ExecuteNonQuery()
-                strSQL = $"INSERT INTO {CHANNEL_N} SELECT * FROM " & tadleFrom '& " IN " & """" & strПутьChannels & """" & ";"
-                'strSQL = "SELECT " & tadleFrom & ".* INTO ChannelN FROM " & tadleFrom
+                strSQL = $"INSERT INTO {CHANNEL_N} SELECT * FROM " & tableFrom '& " IN " & """" & strПутьChannels & """" & ";"
+                'strSQL = "SELECT " & tableFrom & ".* INTO ChannelN FROM " & tableFrom
                 cmd.CommandText = strSQL
                 cmd.ExecuteNonQuery()
                 cn.Close()
@@ -2275,7 +2273,7 @@ Friend Class FormConfigChannelServer
                 cn.Close()
             End If
             Const caption As String = "Ошибка копирования данных."
-            Dim text As String = $"Таблицы {tadleFrom} или {CHANNEL_N} не существует!"
+            Dim text As String = $"Таблицы {tableFrom} или {CHANNEL_N} не существует!"
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
             Exit Sub
@@ -2370,7 +2368,7 @@ Friend Class FormConfigChannelServer
     ''' </summary>
     ''' <param name="standNumber"></param>
     ''' <remarks></remarks>
-    Private Sub SaveChangeChannelStendAndChannelN(standNumber As String)
+    Private Sub SaveChangeChannelStandAndChannelN(standNumber As String)
         ' с последней загруженной и редактируемой в памяти конфигурации берутся настройки допусков, ед. измерений и т.д.
         ' и сохраняются в отсоединённом наборе базы Me.ChannelsNBaseDataSet.ChannelN
         ' после прохождения по всем строкам и внесения изменений он сохраняется сам и так же как Channels(номер стенда)
@@ -2545,10 +2543,10 @@ Friend Class FormConfigChannelServer
         configuration &= "\"
 
         If mParentForm.IsUseCalculationModule Then
-            MainMdiForm.ModuleSolveManager.НастройкаКаналов()
+            MainMdiForm.ModuleSolveManager.ConfigurationCalculatedChannels()
             ' добавить все расчётные каналы в строку конфигурации
-            If MainMdiForm.ModuleSolveManager.ДобавкаКонфигурацииТсрКлиента IsNot Nothing Then
-                configuration &= MainMdiForm.ModuleSolveManager.ДобавкаКонфигурацииТсрКлиента
+            If MainMdiForm.ModuleSolveManager.AdditionConfigurationTcpClient IsNot Nothing Then
+                configuration &= MainMdiForm.ModuleSolveManager.AdditionConfigurationTcpClient
             End If
         End If
 

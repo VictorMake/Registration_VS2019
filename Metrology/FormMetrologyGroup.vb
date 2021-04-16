@@ -22,7 +22,6 @@ Friend Class FormMetrologyGroup
         RegistrationEventLog.EventLog_AUDIT_SUCCESS("Загрузка окна " & Text)
         InitializeListViewParameters()
         PopulateListViewParameters()
-        'ReDim_MetrologyGroup(0)
         Re.Dim(MetrologyGroup, 0)
         isFormLoaded = True
         FormMetrologyGroup_Resize(Me, New EventArgs)
@@ -70,7 +69,6 @@ Friend Class FormMetrologyGroup
     Private Sub ClearSendList(ByVal inConfiguration As String)
         Dim I, J As Integer
         Dim arrCleareNames() As String
-        'ReDim_arrCleareNames(0)
         Re.Dim(arrCleareNames, 0)
 
         ' список параметров в упаковке
@@ -85,7 +83,6 @@ Friend Class FormMetrologyGroup
                     Dim lvItem As New ListViewItem("NULL")
                     lvItem.SubItems.Add("NULL")
                     ListViewReceiver.Items.Add(lvItem)
-                    'ReDimPreserve arrCleareNames(UBound(arrCleareNames) + 1)
                     Re.DimPreserve(arrCleareNames, UBound(arrCleareNames) + 1)
                     arrCleareNames(UBound(arrCleareNames)) = names(I)
                     Exit For
@@ -261,17 +258,16 @@ Friend Class FormMetrologyGroup
         isHidePanel = True
         LabelCaption.Text = "Щелчок по параметру обновит его замер"
 
-        'ReDim_MetrologyGroup(ListViewReceiver.Items.Count)
         Re.Dim(MetrologyGroup, ListViewReceiver.Items.Count)
 
         For I As Integer = 0 To ListViewReceiver.Items.Count - 1
             For J As Integer = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = ListViewReceiver.Items(I).Text Then
-                    MetrologyGroup(I + 1) = ParametersType(J).NumberParameter
+                    MetrologyGroup(I + 1) = ParametersType(J).NumberParameter ' TODO: проверить NumberParameter
                     Exit For
                 End If
             Next J
-        Next I
+        Next
 
         mFormParent.InitializeVariablesGroupAcquire()
         Width \= 2

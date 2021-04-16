@@ -13,7 +13,7 @@ Friend Class FormRegistrationSCXI
 
     Protected Sub New()
         'Public Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormRegistrationSCXI")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormRegistrationSCXI))
         'InitializeComponent()
     End Sub
 
@@ -222,10 +222,8 @@ Friend Class FormRegistrationSCXI
         Cursor = Cursors.WaitCursor
         SlidePlot.Visible = False
         ComboBoxSelectAxis.Enabled = False
-
         ReadConfigurationRegime()
         UnpackStringConfigurationWithEmpty(ConfigurationString)
-        'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
         ' выгрузить индикаторы аварийных значений
         UnloadAlarmButton()
@@ -239,7 +237,6 @@ Friend Class FormRegistrationSCXI
         For I = 1 To UBound(NamesParameterRegime)
             For J = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = NamesParameterRegime(I) Then
-                    'ReDimPreserve IndexParameters(UBound(IndexParameters) + 1)
                     Re.DimPreserve(IndexParameters, UBound(IndexParameters) + 1)
                     IndexParameters(UBound(IndexParameters)) = J
 
@@ -274,7 +271,6 @@ Friend Class FormRegistrationSCXI
         If IsShowTextControl Then frmTextControl.Close()
         If IsShowGraphControl Then frmGraphControl.Close()
 
-        'ReDim_IndexParametersForControl(UBound(IndexParameters))
         Re.Dim(IndexParametersForControl, UBound(IndexParameters))
 
         For I = 1 To UBound(IndexParameters)
@@ -294,7 +290,6 @@ Friend Class FormRegistrationSCXI
         InitializeDiscreteLed()
 
         If Not IsNothing(IndexParameters) Then
-            'ReDim_CopyListOfParameter(IndexParameters.Length - 1)
             Re.Dim(CopyListOfParameter, IndexParameters.Length - 1)
             Array.Copy(IndexParameters, CopyListOfParameter, IndexParameters.Length)
         End If
@@ -307,7 +302,6 @@ Friend Class FormRegistrationSCXI
         If isUsePens Then TuneAnnotation()
 
         Cursor = Cursors.Default
-        'ReDim_PackOfParameters(UBound(IndexParameters) * 3)
         Re.Dim(PackOfParameters, UBound(IndexParameters) * 3)
 
         If IsFrmDigitalOutputPortStart Then DigitalPortForm.PopulateListParametersFromServer()
@@ -374,10 +368,9 @@ Friend Class FormRegistrationSCXI
         Dim vKey As Integer
         Dim indexDiscret As Integer ' индекс Цифровые
         Dim isHeightLevel As Boolean
-        Dim index As Integer
         Dim strData As String
         Dim lengthArrayIndexParamMinus1 As Integer = UBound(IndexParameters) - 1 ' uBound Список Параметров Минус 1
-        Dim startAddedChannels As Integer = CountMeasurand - AdditionalParameterCount 'Начало добавленных каналов
+        Dim startAddedChannels As Integer = CountMeasurand - AdditionalParameterCount ' Начало добавленных каналов
         Dim isVisible As Boolean ' для аварийных индикаторов
 
         countUpdateScreen1 += 1S
@@ -504,20 +497,17 @@ Friend Class FormRegistrationSCXI
                     Case Else
                         ' здесь проверка дискретных по номеру формулы
                         If ParametersType(N).NumberFormula = 3 Then
-                            If name = NameVarStartWrite Then
-                                If IsQuestioningRevolution AndAlso average = 5 Then ' ->  включить запись
-                                    If (Not IsRecordEnable) AndAlso (Not isRecordingSnapshot) AndAlso ButtonRecord.Enabled Then
-                                        WorkTaskRecordStartStop(False, True, IsFormRunning)
-                                        TimerButtonRun.Interval = WaitStartWrite ' 60000
-                                        TimerButtonRun.Enabled = True ' задержка на мертвую зону пока не раскрутился N1
-                                    End If
+                            If name = NameVarStartWrite AndAlso IsQuestioningRevolution AndAlso average = 5 Then ' ->  включить запись
+                                If (Not IsRecordEnable) AndAlso (Not isRecordingSnapshot) AndAlso ButtonRecord.Enabled Then
+                                    WorkTaskRecordStartStop(False, True, IsFormRunning)
+                                    TimerButtonRun.Interval = WaitStartWrite ' 60000
+                                    TimerButtonRun.Enabled = True ' задержка на мертвую зону пока не раскрутился N1
                                 End If
                             End If
 
                             If countDiscreteLed <> 0 Then
                                 indexDiscret += 1
                                 isHeightLevel = average = 5
-
                                 If listDiscreteLed(indexDiscret - 1).Value <> isHeightLevel Then listDiscreteLed(indexDiscret - 1).Value = isHeightLevel
                             End If
                         End If
@@ -582,14 +572,14 @@ Friend Class FormRegistrationSCXI
 
         ' передать непрерывно Клиенту
         If IsServerOn Then
-            index = 1
+            Dim index As Integer = 1
             For J = 0 To CountMeasurand
                 vKey = J + 1
                 N = IndexParameters(vKey)
-                PackOfParameters(index) = ParametersType(N).NameParameter
-                PackOfParameters(index + 1) = CStr(Math.Round(MeasuredValues(J, indexTimeVsRow), Precision))
-                PackOfParameters(index + 2) = CStr(ParametersType(N).NumberParameter)
-                index += 3
+                PackOfParameters(Index) = ParametersType(N).NameParameter
+                PackOfParameters(Index + 1) = CStr(Math.Round(MeasuredValues(J, indexTimeVsRow), Precision))
+                PackOfParameters(Index + 2) = CStr(ParametersType(N).NumberParameter)
+                Index += 3
             Next
         End If
 
@@ -636,13 +626,13 @@ Friend Class FormRegistrationSCXI
                     If isDetailedSheet Then
                         For J = 0 To lengthArrayIndexParamMinus1
                             .Items(J).SubItems(1).Text = CStr(Math.Round(MeasuredValues(J, indexTimeVsRow), Precision))
-                        Next J
+                        Next
                     Else
                         For J = 1 To UBound(SnapshotSmallParameters)
                             If SnapshotSmallParameters(J).IsVisible Then
                                 .Items(SnapshotSmallParameters(J).NumberInList - 1).SubItems(1).Text = CStr(Math.Round(MeasuredValues(J - 1, indexTimeVsRow), Precision))
                             End If
-                        Next J
+                        Next
                     End If
                 End With
                 ListViewAcquisition.EndUpdate() ' включить обновление элемента
@@ -692,7 +682,6 @@ Friend Class FormRegistrationSCXI
             isFireUpdateScreen2 = False
         End If
     End Sub
-
 #End Region
 
     ''' <summary>

@@ -4,22 +4,21 @@ Imports System.IO
 Imports MathematicalLibrary
 Imports NationalInstruments.Analysis.Math
 Imports NationalInstruments.DAQmx
-Imports Registration.SettingConstantChannels
 
 Public Class FormSetting
     Private servers() As String
     Private clients() As String = {cClient}
-    Private numberServerStend As String
-    Private numberClientStend As String
+    Private numberServerStand As String
+    Private numberClientStand As String
     Private modeApplicationRun As String
-    Private pathServerStend As String
-    Private pathClientStend As String
+    Private pathServerStand As String
+    Private pathClientStand As String
     Private pathOptionServer As String
     Private pathWorkDataBase As String
     Private isCompensationReferenceJunction As Boolean ' запись компенсации ХС произведена
     Private recordingFrameTime As String ' длтельность кадра
 
-    Private ReadOnly numberStend As String
+    Private ReadOnly mStandNumber As String
     Private ReadOnly modification As String
     Private ReadOnly numberProduct As Integer
     Private ReadOnly mFrequencyBackground As Short ' Частота Фонового
@@ -30,7 +29,8 @@ Public Class FormSetting
     Private Const cServer As String = "Сервер"
     Private Const cClient As String = "Клиент"
     Private Const cSnapshot As String = "Снимок"
-    Private Const cClientТСР As String = "КлиентТСР"
+    'Private Const cClientТСР As String = "КлиентТСР"
+    Private Const cCompactRio As String = "МобильныйИВК"
 
     ''' <summary>
     ''' менеджер настроек списков константных каналов
@@ -46,7 +46,7 @@ Public Class FormSetting
         ' Добавить все инициализирующие действия после вызова InitializeComponent().
 
         If IsRunAutoBooting Then
-            numberStend = StandNumber
+            mStandNumber = StandNumber
             modification = ModificationEngine
             numberProduct = NumberEngine
             mFrequencyBackground = FrequencyBackground
@@ -59,9 +59,8 @@ Public Class FormSetting
     Public Sub InitializeForm()
         ' сделать проверку был ли ввод формы чтобы записать прежде введенные данные, а не выводить пустые поля
         ComboFrequencyCollection.Items.AddRange({"1", "2", "5", "10", "20", "50", "100"})
-        ComboNumberStend.Items.AddRange(GetIni(PathOptions, "Stend", "Stends", "11,13,15,16,17,19,21,25,34,37,39,41,Клиент").Split(CType(",", Char())))
-        'ReDim_servers(ComboNumberStend.Items.Count - 2) ' без Клиент
-        Re.Dim(servers, ComboNumberStend.Items.Count - 2) ' без Клиент
+        ComboNumberStand.Items.AddRange(GetIni(PathOptions, "Stend", "Stends", "11,13,15,16,17,19,21,25,34,37,39,41,Клиент").Split(CType(",", Char())))
+        Re.Dim(servers, ComboNumberStand.Items.Count - 2) ' без Клиент
         PopulateComboBoxPath(ComboPathServer)
         PopulateComboBoxPath(ComboPathClient)
 
@@ -76,10 +75,10 @@ Public Class FormSetting
         ComboTypeKrd.SelectedIndex = 1 ' по умолчанию активный
 
         ' по умолчанию
-        modeApplicationRun = cSnapshot
+        modeApplicationRun = "" ' cSnapshot
         StandNumber = "25"
-        numberServerStend = StandNumber
-        numberClientStend = StandNumber
+        numberServerStand = StandNumber
+        numberClientStand = StandNumber
         NumberEngine = 0
         ModificationEngine = cEngine39
         TypeKRD = cKRD_B
@@ -91,13 +90,23 @@ Public Class FormSetting
 
         Try
             ' считывание записанных опций
-            '0)Запуск
+            ' 1)номер стенда
+            StandNumber = GetIni(PathOptions, "Stend", "Stend", "25")
             modeApplicationRun = GetIni(PathOptions, "Stend", "Start", cSnapshot)
+
+            For I As Integer = 0 To ComboNumberStand.Items.Count - 1
+                If ComboNumberStand.Items(I).ToString = StandNumber Then
+                    ComboNumberStand.SelectedIndex = I
+                    Exit For
+                End If
+            Next
+
+            '0)Запуск
             Select Case modeApplicationRun
                 Case cServer
                     ButtonWithController.Checked = True
-                Case cClientТСР
-                    ButtonWithClientТСР.Checked = True
+                Case cCompactRio 'cClientТСР
+                    ButtonCompactRio.Checked = True
                 Case cSnapshot
                     ButtonWithSnapshop.Checked = True
                 Case cClient
@@ -105,16 +114,6 @@ Public Class FormSetting
                 Case Else
                     ButtonWithSnapshop.Checked = True
             End Select
-
-            ' 1)номер стенда
-            StandNumber = GetIni(PathOptions, "Stend", "Stend", "25")
-
-            For I As Integer = 0 To ComboNumberStend.Items.Count - 1
-                If ComboNumberStend.Items(I).ToString = StandNumber Then
-                    ComboNumberStend.SelectedIndex = I
-                    Exit For
-                End If
-            Next
 
             ' 2)номер изделия
             NumberEngine = CInt(GetIni(PathOptions, "Product", "Nizdelia", "555"))
@@ -175,18 +174,18 @@ Public Class FormSetting
             IsUseTdms = Not (GetIni(PathOptions, "Options", "UseTdms", "True") = "TXT")
 
             '20)номер стенда сервера
-            numberServerStend = GetIni(PathOptions, "Stend", "StendServer", "25")
+            numberServerStand = GetIni(PathOptions, "Stend", "StendServer", "25")
             For I As Integer = 0 To ComboPathServer.Items.Count - 1
-                If CStr(ComboPathServer.Items(I)) = numberServerStend Then
+                If CStr(ComboPathServer.Items(I)) = numberServerStand Then
                     ComboPathServer.SelectedIndex = I
                     Exit For
                 End If
             Next
 
             '21)номер стенда клиента
-            numberClientStend = GetIni(PathOptions, "Stend", "StendClient", "25")
+            numberClientStand = GetIni(PathOptions, "Stend", "StendClient", "25")
             For I As Integer = 0 To ComboPathClient.Items.Count - 1
-                If CStr(ComboPathClient.Items(I)) = numberClientStend Then
+                If CStr(ComboPathClient.Items(I)) = numberClientStand Then
                     ComboPathClient.SelectedIndex = I
                     Exit For
                 End If
@@ -209,7 +208,7 @@ Public Class FormSetting
             ' параметры для приведения и компенсации холодного спая
             NameTBox = GetIni(PathOptions, "Const", "contбокса", contбокса)
             NameTx = GetIni(PathOptions, "Const", "conТхс", conТхс)
-            PopulateComboBoxChannelsName()
+
             ' число клиентов или номер самого клиента
             CountClientOrNumberClient = CInt(GetIni(PathOptions, "Stend", "CountClientOrNumberClient", "1"))
             ComboBoxCountClientOrNumberClient.SelectedIndex = CountClientOrNumberClient - 1
@@ -234,11 +233,11 @@ Public Class FormSetting
     Private Sub FormSetting_Load(sender As Object, e As EventArgs) Handles Me.Load
         If IsRunAutoBooting Then
             ButtonWithClient.Checked = False
-            ButtonWithClientТСР.Checked = False
+            ButtonCompactRio.Checked = False
             ButtonWithController.Checked = False
 
-            StandNumber = numberStend
-            ComboNumberStend.Text = numberStend
+            StandNumber = mStandNumber
+            ComboNumberStand.Text = mStandNumber
             ModificationEngine = modification
 
             If mEngineManager.AllEnginesKeysToArray.Contains(modification) Then
@@ -267,9 +266,9 @@ Public Class FormSetting
     ''' <param name="cmbBox"></param>
     Private Sub PopulateComboBoxPath(ByVal cmbBox As ComboBox)
         If cmbBox Is ComboPathServer Then
-            For I As Integer = 0 To ComboNumberStend.Items.Count - 2
-                cmbBox.Items.Add(ComboNumberStend.Items(I))
-                servers(I) = GetIni(PathOptions, "Server", "Stend" & CStr(ComboNumberStend.Items(I)), "\\Stend_25\D\Registration\Store\Channels.mdb")
+            For I As Integer = 0 To ComboNumberStand.Items.Count - 2
+                cmbBox.Items.Add(ComboNumberStand.Items(I))
+                servers(I) = GetIni(PathOptions, "Server", "Stend" & CStr(ComboNumberStand.Items(I)), "\\Stend_25\D\Registration\Store\Channels.mdb")
             Next
         End If
 
@@ -309,7 +308,7 @@ Public Class FormSetting
             '    Return False
             'End If
         Else
-            If ComboNumberStend.Text = cClient Then 'ComboNumberStend.Items(ComboNumberStend.Items.Count - 1) Then
+            If ComboNumberStand.Text = cClient Then 'ComboNumberStend.Items(ComboNumberStend.Items.Count - 1) Then
                 ' не должен быть равен Клиент
                 message = "Номер стенда не может быть равен Клиент!" & vbCrLf &
                     "Необходимо выбрать номер." & vbCrLf &
@@ -329,12 +328,13 @@ Public Class FormSetting
     Private Sub DataEntry()
         If Not CheckCorrectSetting() Then Exit Sub
 
-        StandNumber = ComboNumberStend.Text
+        StandNumber = ComboNumberStand.Text
         NumberEngine = CInt(TextNumberProduct.Text)
 
-        IsTcpClient = ButtonWithClientТСР.Checked
-        IsWorkWithController = ButtonWithController.Checked
+        IsCompactRio = ButtonCompactRio.Checked
+        IsWorkWithDaqController = ButtonWithController.Checked
         IsClient = ButtonWithClient.Checked
+        IsSnapshot = ButtonWithSnapshop.Checked
 
         If IsClient Then
             ServerWorkingFolder = servers(ComboPathServer.SelectedIndex)
@@ -350,7 +350,7 @@ Public Class FormSetting
             StandNumber = GetIni(pathOptionServer, "Stend", "Stend", "25")
             ' считать путь к рабочей базе которая может быть сменена с сервера (только для клиента)
             pathWorkDataBase = GetIni(pathOptionServer, "TheCurrentBase", "Base", "ОшибкаПутиТекущейБазеСевера")
-            TakeDBaseFromServer()
+            TakeDBasesFromServer()
         Else ' сервер
             ClientWorkingFolder = clients(ComboPathClient.SelectedIndex)
             ' обрезать строку channels
@@ -365,10 +365,10 @@ Public Class FormSetting
         If Not isCompensationReferenceJunction Then SaveCoefficientBringingTBoxing()
 
         SaveINI()
-        If IsWorkWithController Then mSettingSelectedParameters.SaveAndRestoreAfterSaving()
+        If IsWorkWithDaqController OrElse IsCompactRio Then mSettingSelectedParameters.SaveAndRestoreAfterSaving()
         Hide()
         DialogResult = DialogResult.OK
-        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<Применение настроек Опции> Клиент={IsClient} , ТСРКлиент={IsTcpClient} , Работа с контроллером={IsWorkWithController} , Номер стенда={StandNumber} , Номер изделия={NumberEngine}")
+        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<Применение настроек Опции> Клиент={IsClient} , ТСРКлиент={IsTcpClient} , Работа с контроллером Daq={IsWorkWithDaqController} , Работа с контроллером compactRio={IsCompactRio} , Номер стенда={StandNumber} , Номер изделия={NumberEngine}")
     End Sub
 
     ''' <summary>
@@ -435,7 +435,7 @@ Public Class FormSetting
         '0)Запуск
         WriteINI(PathOptions, "Stend", "Start", modeApplicationRun)
         '1)номер стенда
-        WriteINI(PathOptions, "Stend", "Stend", ComboNumberStend.Text)
+        WriteINI(PathOptions, "Stend", "Stend", ComboNumberStand.Text)
         '2)номер изделия
         WriteINI(PathOptions, "Product", "Nizdelia", CStr(NumberEngine))
         ''7)вид испытаний
@@ -464,11 +464,11 @@ Public Class FormSetting
         Precision = CInt(NumPrecision.Value)
         WriteINI(PathOptions, "Options", "Discredit", CStr(Precision))
         '20)номер стенда сервера
-        numberServerStend = ComboPathServer.Text
-        WriteINI(PathOptions, "Stend", "StendServer", numberServerStend)
+        numberServerStand = ComboPathServer.Text
+        WriteINI(PathOptions, "Stend", "StendServer", numberServerStand)
         '21)номер стенда клиента
-        numberClientStend = ComboPathClient.Text
-        WriteINI(PathOptions, "Stend", "StendClient", numberClientStend)
+        numberClientStand = ComboPathClient.Text
+        WriteINI(PathOptions, "Stend", "StendClient", numberClientStand)
 
         If ComboBoxNameVarStopWrite.Text <> NameVarStopWrite AndAlso ComboBoxNameVarStopWrite.Text <> "" Then
             NameVarStopWrite = ComboBoxNameVarStopWrite.Text
@@ -515,60 +515,58 @@ Public Class FormSetting
     ''' <summary>
     ''' Взять с сервера базу
     ''' </summary>
-    Private Sub TakeDBaseFromServer()
-        ' копироаит таблицу каналов сервера по номеру стенда, если копмпьютер сервера не локальный
-        Dim conn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
-        Dim cmd As OleDbCommand = conn.CreateCommand
-        cmd.CommandType = CommandType.Text
-
-        conn.Open()
-        Dim schemaTable As DataTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing) 'New Object() {Nothing, Nothing, Nothing, "TABLE"})
-        'Dim dc As DataColumn
-        'For Each dc In schemaTable.Columns
-        '    Console.WriteLine(dc.ColumnName)
-        'Next dc
-        'будет выведено
-        'TABLE_CATALOG()
-        'TABLE_SCHEMA()
-        'TABLE_NAME()
-        'TABLE_TYPE()
-        'TABLE_GUID()
-        'DESCRIPTION()
-        'TABLE_PROPID()
-        'DATE_CREATED()
-        'DATE_MODIFIED()
-
-        'For Each row In schemaTable.Rows
-        '    Console.WriteLine(vbTab & row("TABLE_NAME").ToString)
-        'Next row
-
-        Dim tableName As String = "Channel" & StandNumber
-
+    Private Sub TakeDBasesFromServer()
         If CBool(InStr(1, ServerWorkingFolder, "\\")) Then 'другой компьютер
             pathWorkDataBase = Mid(ServerWorkingFolder, 1, InStr(3, ServerWorkingFolder, "\")) & Replace(pathWorkDataBase, ":\", "\")
         End If
 
-        For Each row As DataRow In schemaTable.Rows
-            If row("TABLE_NAME").ToString = tableName Then  'база есть
-                cmd.CommandText = "DELETE * FROM " & tableName
-                cmd.ExecuteNonQuery()
-                cmd.CommandText = "INSERT INTO " & tableName & " SELECT * FROM " & tableName & " IN " & """" & pathWorkDataBase & """" & ";"
-                cmd.ExecuteNonQuery()
-                Exit For
-            End If
-        Next
+        ' копировать таблицу каналов сервера по номеру стенда, если копмпьютер сервера не локальный
+        Using conn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
+            conn.Open()
+            Using cmd As OleDbCommand = conn.CreateCommand
+                cmd.CommandType = CommandType.Text
+                Using schemaTable As DataTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing) 'New Object() {Nothing, Nothing, Nothing, "TABLE"})                'Dim dc As DataColumn
+                    'For Each dc In schemaTable.Columns
+                    '    Console.WriteLine(dc.ColumnName)
+                    'Next dc
+                    'будет выведено
+                    'TABLE_CATALOG()
+                    'TABLE_SCHEMA()
+                    'TABLE_NAME()
+                    'TABLE_TYPE()
+                    'TABLE_GUID()
+                    'DESCRIPTION()
+                    'TABLE_PROPID()
+                    'DATE_CREATED()
+                    'DATE_MODIFIED()
 
-        tableName = "Режимы" & StandNumber
+                    'For Each row In schemaTable.Rows
+                    '    Console.WriteLine(vbTab & row("TABLE_NAME").ToString)
+                    'Next row
+
+                    InsertIntoTabeFromServer(cmd, schemaTable, "Channel" & StandNumber)
+                    InsertIntoTabeFromServer(cmd, schemaTable, "Режимы" & StandNumber)
+                End Using
+            End Using
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' Взять с базы сервера конкретную таблицу
+    ''' </summary>
+    ''' <param name="cmd"></param>
+    ''' <param name="schemaTable"></param>
+    ''' <param name="tableName"></param>
+    Private Sub InsertIntoTabeFromServer(ByRef cmd As OleDbCommand, schemaTable As DataTable, tableName As String)
         For Each row As DataRow In schemaTable.Rows
-            If row("TABLE_NAME").ToString = tableName Then  'база есть
-                cmd.CommandText = "DELETE * FROM " & tableName
+            If row("TABLE_NAME").ToString = tableName Then  ' база есть
+                cmd.CommandText = $"DELETE * FROM {tableName}"
                 cmd.ExecuteNonQuery()
-                cmd.CommandText = "INSERT INTO " & tableName & " SELECT * FROM " & tableName & " IN " & """" & pathWorkDataBase & """" & ";"
+                cmd.CommandText = $"INSERT INTO {tableName} SELECT * FROM {tableName} IN ""{pathWorkDataBase}"";"
                 cmd.ExecuteNonQuery()
                 Exit For
             End If
         Next
-        conn.Close()
     End Sub
 
     ''' <summary>
@@ -605,7 +603,7 @@ Public Class FormSetting
 
 #Region "Настойка Формы от типа приложения"
     Private Sub ButtonWork_CheckedChanged(ByVal eventSender As Object, ByVal eventArgs As EventArgs) Handles ButtonWithController.CheckedChanged,
-                                                                                                            ButtonWithClientТСР.CheckedChanged,
+                                                                                                            ButtonCompactRio.CheckedChanged,
                                                                                                             ButtonWithSnapshop.CheckedChanged,
                                                                                                             ButtonWithClient.CheckedChanged
         CheckTypeWork()
@@ -643,18 +641,18 @@ Public Class FormSetting
     ''' </summary>
     Private Sub CheckTypeWork()
         Dim checkedRadioButton As RadioButton = GetSelectedRadioButton()
-        ComboNumberStend.Enabled = True
+        ComboNumberStand.Enabled = True
 
         If checkedRadioButton Is ButtonWithController Then
             modeApplicationRun = cServer
-        ElseIf checkedRadioButton Is ButtonWithClientТСР Then
-            modeApplicationRun = cClientТСР
+        ElseIf checkedRadioButton Is ButtonCompactRio Then
+            modeApplicationRun = cCompactRio 'cClientТСР
         ElseIf checkedRadioButton Is ButtonWithSnapshop Then
             modeApplicationRun = cSnapshot
         ElseIf checkedRadioButton Is ButtonWithClient Then
             modeApplicationRun = cClient
-            ComboNumberStend.SelectedIndex = ComboNumberStend.Items.Count - 1
-            ComboNumberStend.Enabled = False
+            ComboNumberStand.SelectedIndex = ComboNumberStand.Items.Count - 1
+            ComboNumberStand.Enabled = False
         End If
 
         UpdateForm()
@@ -665,9 +663,10 @@ Public Class FormSetting
     ''' </summary>
     Private Sub UpdateForm()
         'If Me.IsHandleCreated Then
-        IsUseTCPClient = False
+        IsCompactRio = False
         TuneFrameProduct(True)
         TuneCountClientOrNumberClient(False)
+        PanelSettingCompactRio.Visible = False
 
         Select Case modeApplicationRun
             Case cServer
@@ -678,19 +677,28 @@ Public Class FormSetting
                 SetFramesEnabledServerOrClient(False)
                 TuneCountClientOrNumberClient(True)
                 Exit Select
-            Case cClientТСР
-                IsUseTCPClient = True
+            Case cCompactRio
                 FraProduct.Visible = True
                 ComboIntervalSnapshot.Visible = IsUseTdms
                 LabelIntervalSnapshotFact.Visible = Not IsUseTdms
                 SetControlsEnabled(True)
                 SetFramesEnabledServerOrClient(False)
-
-                LabelDiscredit.Visible = False
-                LabelDiscreditFact.Visible = False
-                LabelFrequencySamplingChannel.Visible = False
-                TextFrequencySamplingChannel.Visible = False
+                TuneCountClientOrNumberClient(True)
+                PanelSettingCompactRio.Visible = True
+                IsCompactRio = True
                 Exit Select
+            'Case cClientТСР
+            '    FraProduct.Visible = True
+            '    ComboIntervalSnapshot.Visible = IsUseTdms
+            '    LabelIntervalSnapshotFact.Visible = Not IsUseTdms
+            '    SetControlsEnabled(True)
+            '    SetFramesEnabledServerOrClient(False)
+
+            '    LabelDiscredit.Visible = False
+            '    LabelDiscreditFact.Visible = False
+            '    LabelFrequencySamplingChannel.Visible = False
+            '    TextFrequencySamplingChannel.Visible = False
+            '    Exit Select
             Case cSnapshot
                 FraProduct.Visible = True
                 TuneFrameProduct(False)
@@ -699,7 +707,7 @@ Public Class FormSetting
                 SetControlsEnabled(False)
                 SetFramesEnabledServerOrClient(False)
                 Exit Select
-            Case cClient ', "Контрольная точка"
+            Case cClient ' - "Контрольная точка"
                 FraProduct.Visible = False
                 ComboIntervalSnapshot.Visible = False
                 LabelIntervalSnapshotFact.Visible = False
@@ -707,6 +715,8 @@ Public Class FormSetting
                 SetFramesEnabledServerOrClient(True)
                 Exit Select
         End Select
+        SetFrequency(CStr(FrequencyBackground))
+        PopulateComboBoxChannelsName()
     End Sub
 
     Private Sub SetControlsEnabled(isVisible As Boolean)
@@ -724,8 +734,8 @@ Public Class FormSetting
     End Sub
 
     Private Sub SetFramesEnabledServerOrClient(isVisible As Boolean)
-        FrameStendServer.Enabled = isVisible
-        FrameStendClient.Enabled = Not isVisible
+        FrameStandServer.Enabled = isVisible
+        FrameStandClient.Enabled = Not isVisible
     End Sub
 
     Private Sub TuneFrameProduct(visible As Boolean)
@@ -752,9 +762,9 @@ Public Class FormSetting
     ''' Выделение ранее настроенных имен.
     ''' </summary>
     Private Sub PopulateComboBoxChannelsName()
-        If ComboNumberStend.Text = cClient Then Exit Sub
+        If ComboNumberStand.Text = cClient Then Exit Sub
 
-        StandNumber = ComboNumberStend.Text
+        StandNumber = ComboNumberStand.Text
         imagesCross = ImageListChannel.Images.Count - 1 ' крест и признак проведения инициализации
         SetLastChannelDBase()
         LoadChannels() ' в шапке выбирается номер стенда
@@ -833,20 +843,22 @@ Public Class FormSetting
     End Sub
 
 #Region "Обработчики событий контролов"
-    Private Sub ComboNumberStend_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboNumberStend.SelectedIndexChanged
-        If ButtonWithClient.Checked Then
-            pathClientStend = PathChannels
-            TextPathClient.Text = pathClientStend
-            clients(0) = pathClientStend
-            WriteINI(PathOptions, "Client", "Stend" & ComboPathClient.Text, pathClientStend)
+    Private Sub ComboNumberStand_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboNumberStand.SelectedIndexChanged
+        If modeApplicationRun = cClient Then
+            'If ButtonWithClient.Checked Then
+            pathClientStand = PathChannels
+            TextPathClient.Text = pathClientStand
+            clients(0) = pathClientStand
+            WriteINI(PathOptions, "Client", "Stend" & ComboPathClient.Text, pathClientStand)
         Else
-            pathServerStend = PathChannels
-            TextPathServer.Text = pathServerStend
-            servers(ComboNumberStend.SelectedIndex) = pathServerStend
-            ComboPathServer.SelectedIndex = ComboNumberStend.SelectedIndex
-            WriteINI(PathOptions, "Server", "Stend" & ComboPathServer.Text, pathServerStend)
+            pathServerStand = PathChannels
+            TextPathServer.Text = pathServerStand
+            servers(ComboNumberStand.SelectedIndex) = pathServerStand
+            ComboPathServer.SelectedIndex = ComboNumberStand.SelectedIndex
+            WriteINI(PathOptions, "Server", "Stend" & ComboPathServer.Text, pathServerStand)
 
-            If imagesCross <> 0 Then PopulateComboBoxChannelsName()
+            'If imagesCross <> 0 Then PopulateComboBoxChannelsName()
+            PopulateComboBoxChannelsName()
         End If
     End Sub
 
@@ -950,8 +962,14 @@ Public Class FormSetting
 
         ' 10 секунд будет шлейф для углов
         Dynamics = CShort(10 / DeltaX / RefreshScreen)
-        LabelDiscreditFact.Text = CStr(LevelOversampling)
-        TextFrequencySamplingChannel.Text = CStr(FrequencyBackground * LevelOversampling)
+
+        If modeApplicationRun = cCompactRio Then
+            LabelDiscreditFact.Text = CStr(100 / FrequencyBackground)
+            TextFrequencySamplingChannel.Text = "100"
+        Else
+            LabelDiscreditFact.Text = CStr(LevelOversampling)
+            TextFrequencySamplingChannel.Text = CStr(FrequencyBackground * LevelOversampling)
+        End If
 
         For I = 0 To limit Step stepDivide
             If I = 0 Then Continue For
@@ -963,9 +981,6 @@ Public Class FormSetting
         Else
             ComboIntervalSnapshot.SelectedIndex = 0 ' cmbДлительностьКадра.Items.Count - 1
         End If
-
-        Application.DoEvents()
-        Beep()
     End Sub
 
     Private Sub ComboIntervalSnapshot_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboIntervalSnapshot.SelectedIndexChanged
@@ -1016,6 +1031,11 @@ Public Class FormSetting
         End If
 
         ComboRegime.SelectedIndex = 0
+    End Sub
+
+    Private Sub LinkLabelSettingCompactRio_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabelSettingCompactRio.LinkClicked
+        LinkLabelSettingCompactRio.Enabled = False
+        ' TODO: заново сделать доступным после закрытия настроечной формы конфигурации
     End Sub
 #End Region
 
@@ -1117,10 +1137,10 @@ Public Class FormSetting
             If .ShowDialog = DialogResult.OK Then
                 If Len(.FileName) = 0 Then Exit Sub
 
-                pathServerStend = .FileName
-                TextPathServer.Text = pathServerStend
-                servers(ComboPathServer.SelectedIndex) = pathServerStend
-                WriteINI(PathOptions, "Server", "Stend" & ComboPathServer.Text, pathServerStend)
+                pathServerStand = .FileName
+                TextPathServer.Text = pathServerStand
+                servers(ComboPathServer.SelectedIndex) = pathServerStand
+                WriteINI(PathOptions, "Server", "Stend" & ComboPathServer.Text, pathServerStand)
             End If
         End With
     End Sub
@@ -1139,22 +1159,22 @@ Public Class FormSetting
             If .ShowDialog = DialogResult.OK Then
                 If Len(.FileName) = 0 Then Exit Sub
 
-                pathClientStend = .FileName
-                TextPathClient.Text = pathClientStend
-                clients(ComboPathClient.SelectedIndex) = pathClientStend
-                WriteINI(PathOptions, "Client", "Stend" & ComboPathClient.Text, pathClientStend)
+                pathClientStand = .FileName
+                TextPathClient.Text = pathClientStand
+                clients(ComboPathClient.SelectedIndex) = pathClientStand
+                WriteINI(PathOptions, "Client", "Stend" & ComboPathClient.Text, pathClientStand)
             End If
         End With
     End Sub
 
     Private Sub ComboPathServer_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboPathServer.SelectedIndexChanged
         TextPathServer.Text = servers(ComboPathServer.SelectedIndex)
-        pathServerStend = TextPathServer.Text
+        pathServerStand = TextPathServer.Text
     End Sub
 
     Private Sub ComboPathClient_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboPathClient.SelectedIndexChanged
         TextPathClient.Text = clients(ComboPathClient.SelectedIndex)
-        pathClientStend = TextPathClient.Text
+        pathClientStand = TextPathClient.Text
     End Sub
 #End Region
 
@@ -1168,7 +1188,7 @@ Public Class FormSetting
         Dim numberParameterTbox As Integer ' номер Параметра Тбокса
         Dim acquireTempeatureXC As Double ' температура ХС
 
-        If IsWorkWithController Then
+        If IsWorkWithDaqController Then
             numberParameterXC = -1
             numberParameterTbox = -1
             ' здесь надо считать из базы параметр "Т хс" измерения карандаша компенсации холодного спая

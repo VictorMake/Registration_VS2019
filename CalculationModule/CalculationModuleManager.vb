@@ -177,8 +177,7 @@ Friend Class CalculationModuleManager
                 Next
             Next
             ' там уже могут быть добавлены каналы цифровых входов и АИ222 поэтому добавлять только в конец
-            НастройкаКаналов()
-            'ReDim_ValueCalculationParameters(CalculationParameters.Count - 1)
+            ConfigurationCalculatedChannels()
             Re.Dim(ValueCalculationParameters, CalculationParameters.Count - 1)
         Catch ex As Exception
             Dim caption As String = $"Ошибка при запуске процедуры {NameOf(LoadInheritanceForms)}"
@@ -288,7 +287,6 @@ Friend Class CalculationModuleManager
     ''' вызывается из CharacteristicForRegime
     ''' </summary>
     Public Sub PopulateListParametersFromServer()
-        'ReDim_nameParametersForGrid(UBound(IndexParametersForControl))
         Re.Dim(nameParametersForGrid, UBound(IndexParametersForControl))
         nameParametersForGrid(0) = MissingParameter
 
@@ -296,7 +294,6 @@ Friend Class CalculationModuleManager
             nameParametersForGrid(I) = ParametersType(IndexParametersForControl(I)).NameParameter
         Next
 
-        'ReDim_ParameterAccumulate(UBound(ParametersType)) ' обнулить массив
         Re.Dim(ParameterAccumulate, UBound(ParametersType)) ' обнулить массив
 
         ' запустить проверку соответствия параметров каналам сбора
@@ -454,7 +451,6 @@ Friend Class CalculationModuleManager
 
         If CalculationModuleDictionary IsNot Nothing Then
             Dim keyColl As Dictionary(Of String, FrmBase).KeyCollection = mCalculationModuleDictionary.Keys
-            'ReDim_nameKeys(keyColl.Count - 1)
             Re.Dim(nameKeys, keyColl.Count - 1)
             keyColl.CopyTo(nameKeys, 0)
 
@@ -474,21 +470,28 @@ Friend Class CalculationModuleManager
 
 #Region "Сохранение и очистка параметров в базе"
     Private Structure MyTypeChannel
-        Dim strНаименованиеПараметра As String
-        Dim ДопускМинимум As Single
-        Dim ДопускМаксимум As Single
-        Dim РазносУмин As Short
-        Dim РазносУмакс As Short
-        Dim АварийноеЗначениеМин As Single
-        Dim АварийноеЗначениеМакс As Single
-        Dim Видимость As Boolean
-        Dim ВидимостьРегистратор As Boolean
+        Dim NameParameter As String         ' НаименованиеПараметра
+        Dim LowerLimit As Single            ' ДопускМинимум 
+        Dim UpperLimit As Single            ' ДопускМаксимум
+        Dim RangeYmin As Short              ' РазносУмин
+        Dim RangeYmax As Short              ' РазносУмакс
+        Dim AlarmValueMin As Single         ' АварийноеЗначениеМин
+        Dim AlarmValueMax As Single         ' АварийноеЗначениеМакс
+        Dim IsVisible As Boolean            ' Видимость
+        Dim IsVisibleRegistration As Boolean ' ВидимостьРегистратор
     End Structure
     Private aParametersChannel() As MyTypeChannel
 
-    Public Property ДобавкаКонфигурацииТсрКлиента As String
+    ''' <summary>
+    ''' Добавка Конфигурации Тср Клиента
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property AdditionConfigurationTcpClient As String
 
-    Public Sub НастройкаКаналов()
+    ''' <summary>
+    ''' Настройка Каналов
+    ''' </summary>
+    Public Sub ConfigurationCalculatedChannels()
         Dim strSQL As String
         Dim nameParameter As String
         Dim I, сount, J As Integer
@@ -500,7 +503,7 @@ Friend Class CalculationModuleManager
         Dim newDataRow As DataRow
         Dim cb As OleDbCommandBuilder
 
-        ДобавкаКонфигурацииТсрКлиента = Nothing ' для добавления к строке конфигурации ТСР клиенту
+        AdditionConfigurationTcpClient = Nothing ' для добавления к строке конфигурации ТСР клиенту
 
         Try
             cn = New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
@@ -513,7 +516,6 @@ Friend Class CalculationModuleManager
 
             ' считать из базы Channels параметры Расчет и если есть копировать в массив признаки
             If сount > 0 Then
-                'ReDim_aParametersChannel(сount - 1)
                 Re.Dim(aParametersChannel, сount - 1)
                 I = 0
                 strSQL = $"SELECT НаименованиеПараметра, ДопускМинимум, ДопускМаксимум, РазносУмин, РазносУмакс, АварийноеЗначениеМин, АварийноеЗначениеМакс, Видимость, ВидимостьРегистратор FROM {ChannelLast} WHERE Погрешность={indexCalculated}"
@@ -522,15 +524,15 @@ Friend Class CalculationModuleManager
                 rdr = cmd.ExecuteReader
 
                 Do While (rdr.Read)
-                    aParametersChannel(I).strНаименованиеПараметра = CStr(rdr("НаименованиеПараметра"))
-                    aParametersChannel(I).ДопускМинимум = CSng(rdr("ДопускМинимум"))
-                    aParametersChannel(I).ДопускМаксимум = CSng(rdr("ДопускМаксимум"))
-                    aParametersChannel(I).РазносУмин = CShort(rdr("РазносУмин"))
-                    aParametersChannel(I).РазносУмакс = CShort(rdr("РазносУмакс"))
-                    aParametersChannel(I).АварийноеЗначениеМин = CSng(rdr("АварийноеЗначениеМин"))
-                    aParametersChannel(I).АварийноеЗначениеМакс = CSng(rdr("АварийноеЗначениеМакс"))
-                    aParametersChannel(I).Видимость = CBool(rdr("Видимость"))
-                    aParametersChannel(I).ВидимостьРегистратор = CBool(rdr("ВидимостьРегистратор"))
+                    aParametersChannel(I).NameParameter = CStr(rdr("НаименованиеПараметра"))
+                    aParametersChannel(I).LowerLimit = CSng(rdr("ДопускМинимум"))
+                    aParametersChannel(I).UpperLimit = CSng(rdr("ДопускМаксимум"))
+                    aParametersChannel(I).RangeYmin = CShort(rdr("РазносУмин"))
+                    aParametersChannel(I).RangeYmax = CShort(rdr("РазносУмакс"))
+                    aParametersChannel(I).AlarmValueMin = CSng(rdr("АварийноеЗначениеМин"))
+                    aParametersChannel(I).AlarmValueMax = CSng(rdr("АварийноеЗначениеМакс"))
+                    aParametersChannel(I).IsVisible = CBool(rdr("Видимость"))
+                    aParametersChannel(I).IsVisibleRegistration = CBool(rdr("ВидимостьРегистратор"))
                     I += 1
                 Loop
                 rdr.Close()
@@ -549,15 +551,15 @@ Friend Class CalculationModuleManager
                         ' должны быть только по 1 на данном запуске
                         nameParameter = itemRow.ИмяПараметра
                         For I = 0 To сount - 1
-                            If aParametersChannel(I).strНаименованиеПараметра = nameParameter Then
-                                itemRow.ДопускМинимум = aParametersChannel(I).ДопускМинимум
-                                itemRow.ДопускМаксимум = aParametersChannel(I).ДопускМаксимум
-                                itemRow.РазносУмин = aParametersChannel(I).РазносУмин
-                                itemRow.РазносУмакс = aParametersChannel(I).РазносУмакс
-                                itemRow.АварийноеЗначениеМин = aParametersChannel(I).АварийноеЗначениеМин
-                                itemRow.АварийноеЗначениеМакс = aParametersChannel(I).АварийноеЗначениеМакс
-                                itemRow.Видимость = aParametersChannel(I).Видимость
-                                itemRow.ВидимостьРегистратор = aParametersChannel(I).ВидимостьРегистратор
+                            If aParametersChannel(I).NameParameter = nameParameter Then
+                                itemRow.ДопускМинимум = aParametersChannel(I).LowerLimit
+                                itemRow.ДопускМаксимум = aParametersChannel(I).UpperLimit
+                                itemRow.РазносУмин = aParametersChannel(I).RangeYmin
+                                itemRow.РазносУмакс = aParametersChannel(I).RangeYmax
+                                itemRow.АварийноеЗначениеМин = aParametersChannel(I).AlarmValueMin
+                                itemRow.АварийноеЗначениеМакс = aParametersChannel(I).AlarmValueMax
+                                itemRow.Видимость = aParametersChannel(I).IsVisible
+                                itemRow.ВидимостьРегистратор = aParametersChannel(I).IsVisibleRegistration
                                 Exit For
                             End If
                         Next I
@@ -614,18 +616,20 @@ Friend Class CalculationModuleManager
                     newDataRow("ВидимостьРегистратор") = rowРасчетныйПараметр.ВидимостьРегистратор
                     newDataRow("Погрешность") = indexCalculated
                     newDataRow("Примечания") = Left(rowРасчетныйПараметр.ОписаниеПараметра, 99) '100)
+                    newDataRow(UseCompactRio) = True
+
                     newDataRow.EndEdit()
                     dtDataTable.Rows.Add(newDataRow)
                     J += 1
 
-                    If ДобавкаКонфигурацииТсрКлиента = vbNullString Then
-                        ДобавкаКонфигурацииТсрКлиента = rowРасчетныйПараметр.ИмяПараметра
+                    If AdditionConfigurationTcpClient = vbNullString Then
+                        AdditionConfigurationTcpClient = rowРасчетныйПараметр.ИмяПараметра
                     Else
-                        ДобавкаКонфигурацииТсрКлиента &= "\" & rowРасчетныйПараметр.ИмяПараметра
+                        AdditionConfigurationTcpClient &= "\" & rowРасчетныйПараметр.ИмяПараметра
                     End If
                 Next
             Next
-            ДобавкаКонфигурацииТсрКлиента &= "\"
+            AdditionConfigurationTcpClient &= "\"
             cb = New OleDbCommandBuilder(odaDataAdapter)
             odaDataAdapter.Update(dtDataTable)
             cn.Close()
@@ -633,7 +637,7 @@ Friend Class CalculationModuleManager
             Thread.Sleep(500)
             Application.DoEvents()
         Catch exp As Exception
-            Dim caption As String = $"Процедура <{NameOf(НастройкаКаналов)}> - " & exp.Source
+            Dim caption As String = $"Процедура <{NameOf(ConfigurationCalculatedChannels)}> - " & exp.Source
             Dim text As String = exp.Message
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
             RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{caption}> {text}")

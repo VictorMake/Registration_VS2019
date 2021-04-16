@@ -91,6 +91,7 @@ Friend Class FactoryFormExaminationManager
     Private Shared ReadOnly ChildWindows As Dictionary(Of FormExamination, Creator) = New Dictionary(Of FormExamination, Creator) From {
         {FormExamination.RegistrationSCXI, New CreatorRegistrationSCXI},
         {FormExamination.RegistrationClient, New CreatorRegistrationClient},
+        {FormExamination.RegistrationCompactRio, New CreatorRegistrationCompactRio},
         {FormExamination.RegistrationTCP, New CreatorRegistrationTCP},
         {FormExamination.SnapshotViewingDiagram, New CreatorSnapshotViewingDiagram},
         {FormExamination.SnapshotPhotograph, New CreatorSnapshotPhotograph}

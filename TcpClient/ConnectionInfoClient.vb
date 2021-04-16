@@ -228,14 +228,12 @@ Public Class ConnectionInfoClient
         IsEnableStartTimer = False
         LoadChannelsTCPclient() ' т.к. массив структуры arrПараметры при работе с контроллером в процессе испытаний не менняется, а с ТСРКлиент меняется, необходимо загрузить
         DecodingString() ' (strСтрокаКонфигурации)
-        'ReDim_ParametersIndex(0)
         Re.Dim(ParametersIndex, 0)
 
         ' Массив arrСписокПараметров() состоит только из параметров подлежащих измерению
         For I = 1 To UBound(ParametersName)
             For J = 1 To UBound(ParametersTCP)
                 If ParametersTCP(J).NameParameter = ParametersName(I) Then
-                    'ReDimPreserve ParametersIndex(UBound(ParametersIndex) + 1)
                     Re.DimPreserve(ParametersIndex, UBound(ParametersIndex) + 1)
                     ParametersIndex(UBound(ParametersIndex)) = J
                     Exit For
@@ -244,7 +242,6 @@ Public Class ConnectionInfoClient
         Next
 
         If Not IsNothing(ParametersIndex) Then
-            'ReDim_ParametersIndexCopy(ParametersIndex.Length - 1)
             Re.Dim(ParametersIndexCopy, ParametersIndex.Length - 1)
             Array.Copy(ParametersIndex, ParametersIndexCopy, ParametersIndex.Length)
         End If
@@ -255,7 +252,7 @@ Public Class ConnectionInfoClient
         ' 3.arrПараметры - arrНаименование2 - arrСписокПараметров(номера)
 
         If LoadOptionsTcpClient() Then
-            If TuneByStendConfiguration() Then
+            If TuneByStandConfiguration() Then
                 FrequencyAcquisition = FrequencyBackground
                 ' подготовка
                 ' эагрузка ArrSelectNameChannels
@@ -269,7 +266,6 @@ Public Class ConnectionInfoClient
 
                 If arrSelectNameChannels IsNot Nothing Then
                     CountSelectedNameChannels = arrSelectNameChannels.Length
-                    'ReDim_AcquisitionValueOfDouble(CountSelectedNameChannels - 1)
                     Re.Dim(AcquisitionValueOfDouble, CountSelectedNameChannels - 1)
                 End If
 
@@ -398,7 +394,7 @@ Public Class ConnectionInfoClient
 
         ' для отслеживания события в форме назначить объект синхронизации (должен быть компонент)
         ' если таймер работает самостоятельно, то форму назначать не надо
-        mmTimer.SynchronizingObject = MainMdiForm 'gMainForm ' необходимо для отслеживания вызова событий
+        mmTimer.SynchronizingObject = MainMdiForm ' необходимо для отслеживания вызова событий
 
         'Timer1 = New System.Windows.Forms.Timer ' (components)
         'Timer1.Interval = TimerInterval
@@ -407,10 +403,10 @@ Public Class ConnectionInfoClient
             RunSendRecive(True)
             mmTimer.Start()
         Catch ex As Exception
-            Const CAPTION As String = "Error StartAcquisition"
+            Dim CAPTION As String = $"Error {NameOf(StartAcquisitionTimer)}"
             Dim text As String = ex.ToString
             MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Stop)
-            RegistrationEventLog.EventLog_CONNECT_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_CONNECT_FAILED($"<{CAPTION}> {text}")
         End Try
 
         IsStartAcquisition = True
@@ -1058,7 +1054,6 @@ Public Class ConnectionInfoClient
 
         ' заново сформировать строку - она передана ссылке
         If configurations.Count = 1 Then ' значит есть только String.Empty
-            'ReDim_ParametersName(1)
             Re.Dim(ParametersName, 1)
             ParametersName(0) = String.Empty
             ParametersName(1) = ParametersTCP(1).NameParameter
@@ -1072,8 +1067,8 @@ Public Class ConnectionInfoClient
     ''' Вызывается при смене номера стенда из списка
     ''' </summary>
     ''' <remarks></remarks>
-    Private Function TuneByStendConfiguration() As Boolean
-        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(TuneByStendConfiguration)}> Считывание последней конфигурации")
+    Private Function TuneByStandConfiguration() As Boolean
+        RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(TuneByStandConfiguration)}> Считывание последней конфигурации")
         Dim success As Boolean = False
         Dim channelConfigTableAdapter As Channels_cfg_lmzDataSetTableAdapters.ChannelConfigTableAdapter = Nothing
         Dim channelsDataSet As Channels_cfg_lmzDataSet
@@ -1102,7 +1097,7 @@ Public Class ConnectionInfoClient
                 Dim text As String = $"Нарушено соответствие списка каналов в базе данных выбранного стенда и списка выбранных для опроса каналов в последней рабочей конфигурации!{Environment.NewLine}Повторно произведите составление списка каналов по пункту меню:{Environment.NewLine}Настроить -> Конфигурация режимов."
 
                 MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE(String.Format("<{0}> {1}", CAPTION, text))
+                RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{CAPTION}> {text}")
                 MainMdiForm.LabelНепр.Text = "Приём каналов от Сервера отсутствует"
                 MainMdiForm.LabelНепр.Image = My.Resources.Disconnect
 
@@ -1159,15 +1154,15 @@ Public Class ConnectionInfoClient
                 Next
 
                 Const CAPTION As String = "Загрузка выбранной конфигурации"
-                Dim text As String = String.Format("Следующие каналы:{0}{1}не существуют в данной конфигурации или были переименованы!{0}1) Обновите список каналов в конфигурации, или{0}2) измените экранное имя канала, чтобы его длина не превышала 50 символов.", Environment.NewLine, result.ToString)
+                Dim text As String = $"Следующие каналы:{Environment.NewLine}{result.ToString}не существуют в данной конфигурации или были переименованы!{Environment.NewLine}1) Обновите список каналов в конфигурации, или{Environment.NewLine}2) измените экранное имя канала, чтобы его длина не превышала 50 символов."
                 MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE(String.Format("<{0}> {1}", CAPTION, text))
+                RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{CAPTION}> {text}")
             End If
         Catch ex As Exception
             Const CAPTION As String = "Настройка каналов сокета в зависимости от стенда и конфигурации"
             Dim text As String = ex.ToString
             MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            RegistrationEventLog.EventLog_MSG_EXCEPTION(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{CAPTION}> {text}")
         Finally
             If channelConfigTableAdapter.Connection.State = ConnectionState.Open Then
                 channelConfigTableAdapter.Connection.Close()
@@ -1225,7 +1220,7 @@ Public Class ConnectionInfoClient
                 Const CAPTION As String = "Некорректный индекс конфигурации"
                 Dim text As String = $"Конфигурация каналов Сервера не создана.{Environment.NewLine}Необходимо произвести настройку каналов в окне <Конфигуратор каналов Сервера>."
                 MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE(String.Format("<{0}> {1}", CAPTION, text))
+                RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{CAPTION}> {text}")
                 success = False
             Else
                 'If numberStend <> myOptionData.StendServer Then
@@ -1235,7 +1230,7 @@ Public Class ConnectionInfoClient
                 '                    "В конфигураторе каналов был выбран стенд " & numberStend & Environment.NewLine &
                 '                    "Необходимо перезапустить программу!"
                 '    MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                '    RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE(String.Format("<{0}> {1}", caption, text))
+                '    RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{CAPTION}> {text}")
                 '    System.Environment.Exit(0)
                 '    success = False
                 'Else
@@ -1247,7 +1242,7 @@ Public Class ConnectionInfoClient
             Const CAPTION As String = "Ошибка при считывании настроек из файла <Options.xml>"
             Dim text As String = ex.ToString
             MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            RegistrationEventLog.EventLog_MSG_EXCEPTION(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{CAPTION}> {text}")
         End Try
 
         Return success
@@ -1274,7 +1269,7 @@ Public Class ConnectionInfoClient
             Const CAPTION As String = "Запуск приложения"
             Const text As String = "Отсутствует в базе данных таблица: <" & CHANNEL_N & ">. Работа невозможна!"
             MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{CAPTION}> {text}")
             Environment.Exit(0) 'End
         End If
 
@@ -1287,7 +1282,7 @@ Public Class ConnectionInfoClient
             Const CAPTION As String = "Запуск приложения"
             Const text As String = "В базе каналов " & CHANNEL_N & " нет записей!"
             MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{CAPTION}> {text}")
             Environment.Exit(0) 'End
         End If
 
@@ -1311,7 +1306,6 @@ Public Class ConnectionInfoClient
 
         dcDataColumn(0) = dtDataTable.Columns("НомерПараметра")
         dtDataTable.PrimaryKey = dcDataColumn
-        'ReDim_ParametersTCP(count)
         Re.Dim(ParametersTCP, count)
 
         For number = 1 To count

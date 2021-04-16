@@ -11,6 +11,7 @@ Module DigitalModule
     Public Const c_RegistrationBase As String = "Базовая Регистратор"
     Public Const c_RegistrationSCXI As String = "Регистратор"
     Public Const c_RegistrationClient As String = "Клиент"
+    Public Const c_RegistrationCompactRio As String = "Регистратор CompactRio"
     Public Const c_RegistrationTCP As String = "Клиент TCP"
     ' SnapshotBase - панелью работы с графиками
     Public Const c_SnapshotBase As String = "Базовая Снимок"
@@ -27,15 +28,17 @@ Module DigitalModule
         RegistrationSCXI = 1
         <Description(c_RegistrationClient)>
         RegistrationClient = 2
+        <Description(c_RegistrationCompactRio)>
+        RegistrationCompactRio = 4
         <Description(c_RegistrationTCP)>
-        RegistrationTCP = 4
+        RegistrationTCP = 8
         <Description(c_SnapshotViewingDiagram)>
-        SnapshotViewingDiagram = 8
+        SnapshotViewingDiagram = 16
         <Description(c_SnapshotPhotograph)>
-        SnapshotPhotograph = 16
+        SnapshotPhotograph = 32
 
         <Description(c_RegistrationBase)>
-        RegistrationBase = RegistrationSCXI Or RegistrationClient Or RegistrationTCP
+        RegistrationBase = RegistrationSCXI Or RegistrationClient Or RegistrationCompactRio Or RegistrationTCP
         <Description(c_SnapshotBase)>
         SnapshotBase = SnapshotViewingDiagram Or SnapshotPhotograph
     End Enum
@@ -216,7 +219,7 @@ Module DigitalModule
     ''' ОстановитьСбор
     ''' </summary>
     Public Sub StopAcquisition()
-        If IsWorkWithController Then
+        If IsWorkWithDaqController Then
             If activeForm = WhoIsExamine.Examination AndAlso TestChannelForm.Running Then
                 Try
                     If IsTaskRunning = True Then
@@ -266,6 +269,17 @@ Module DigitalModule
 
                         tmpFormRegistrationSCXI.StopRecord()
                         tmpFormRegistrationSCXI.IsFormRunning = False
+                    End If
+
+                    Continue For
+                End If
+
+                Dim tmpFormRegistrationCompactRio As FormRegistrationCompactRio = TryCast(tempForm, FormRegistrationCompactRio)
+                If tmpFormRegistrationCompactRio IsNot Nothing Then
+                    If tmpFormRegistrationCompactRio.IsFormRunning Then
+                        MainMdiForm.TimerAwait.Enabled = False
+                        tmpFormRegistrationCompactRio.StopRecord()
+                        tmpFormRegistrationCompactRio.IsFormRunning = False
                     End If
 
                     Continue For
@@ -339,7 +353,6 @@ Module DigitalModule
                                 Dim rowBuffer As Double() = Nothing
                                 Dim I, J, K As Integer
 
-                                'ReDim_DataAnalogChannelReader(parametersCount, countAcquisition)
                                 Re.Dim(DataAnalogChannelReader, parametersCount, countAcquisition)
                                 'For Each Key In БуферСнимка.Keys нельзя использовать, т.к. идет с конца
                                 For key = 1 To CurrentCountBuffers

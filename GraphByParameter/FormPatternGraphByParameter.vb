@@ -173,12 +173,8 @@ Friend Class FormPatternGraphByParameter
     ''' <param name="yDataSourse"></param>
     ''' <param name="inFrequencySampleRateSnapshot"></param>
     Friend Sub UpdateSnapshotGraphByParameter(ByVal xDataSourse() As Double, ByVal yDataSourse() As Double, ByVal inFrequencySampleRateSnapshot As Integer)
-        'ReDim_xData(xDataSourse.Length - 1)
-        'ReDim_yData(yDataSourse.Length - 1)
         Re.Dim(xData, xDataSourse.Length - 1)
         Re.Dim(yData, yDataSourse.Length - 1)
-
-
         Array.Copy(xDataSourse, xData, xDataSourse.Length)
         Array.Copy(yDataSourse, yData, yDataSourse.Length)
 

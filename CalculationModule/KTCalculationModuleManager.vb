@@ -253,7 +253,6 @@ Friend Class KTCalculationModuleManager
     Public Sub PopulateListParametersFromServer()
         If IndexParametersForControl Is Nothing Then Exit Sub
 
-        'ReDim_nameParametersForGrid(UBound(IndexParametersForControl))
         Re.Dim(nameParametersForGrid, UBound(IndexParametersForControl))
         nameParametersForGrid(0) = MissingParameter
 
@@ -261,7 +260,6 @@ Friend Class KTCalculationModuleManager
             nameParametersForGrid(I) = ParametersType(IndexParametersForControl(I)).NameParameter
         Next
 
-        'ReDim_ParameterAccumulate(UBound(ParametersType)) ' обнулить массив
         Re.Dim(ParameterAccumulate, UBound(ParametersType)) ' обнулить массив
 
         ' запустить проверку соответствия параметров каналам сбора
@@ -363,7 +361,6 @@ Friend Class KTCalculationModuleManager
 
         If CalculationModuleDictionary IsNot Nothing Then
             Dim keyColl As Dictionary(Of String, frmBaseKT).KeyCollection = mCalculationModuleDictionary.Keys
-            'ReDim_nameKeys(keyColl.Count - 1)
             Re.Dim(nameKeys, keyColl.Count - 1)
             keyColl.CopyTo(nameKeys, 0)
 

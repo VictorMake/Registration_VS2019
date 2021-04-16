@@ -317,7 +317,6 @@ Friend Class FormsPanelManager
     ''' вызывается из CharacteristicForRegime
     ''' </summary>
     Public Sub PopulateListParametersFromServer()
-        'ReDim_NamesParametersForControl(UBound(IndexParametersForControl))
         Re.Dim(NamesParametersForControl, UBound(IndexParametersForControl))
         NamesParametersForControl(0) = MissingParameter
 
@@ -325,7 +324,6 @@ Friend Class FormsPanelManager
             NamesParametersForControl(I) = ParametersType(IndexParametersForControl(I)).NameParameter
         Next
 
-        'ReDim_ParameterAccumulate(UBound(ParametersType)) ' обнулить массив
         Re.Dim(ParameterAccumulate, UBound(ParametersType)) ' обнулить массив
     End Sub
 
@@ -469,7 +467,6 @@ Friend Class FormsPanelManager
             Me.LineCount = inLineCount
             AllPortLineDic = New Dictionary(Of String, String)
 
-            'ReDim_IsLineOutput(inLineCount)
             Re.Dim(IsLineOutput, inLineCount)
 
             For I As Integer = 0 To inLineCount

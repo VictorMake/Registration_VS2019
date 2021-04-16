@@ -48,7 +48,6 @@ Module ModuleTarir
         K(25) = 250 : P(25) = 0.089
         K(26) = 300 : P(26) = 0.081
         N = 26
-        'ReDim_CoefficientOut(N)
         Re.Dim(CoefficientOut, N)
         InputApproximation(N, K, P, CoefficientOut)
         ' по ЧислоСтепениСиободы вычисляtтся коэффициент Q для вероятности Р=0,95

@@ -314,7 +314,7 @@ Friend Class FormServiceBases
     ''' Отключить доступность контролов в случае работы как клиента TCP
     ''' </summary>
     Private Sub CheckUseTCPClient()
-        If IsUseTCPClient Then
+        If IsTcpClient Then
             TextBoxName.ReadOnly = True
             TextBoxNDaq.ReadOnly = True
             TextBoxNDevice.ReadOnly = True
@@ -388,32 +388,15 @@ Friend Class FormServiceBases
     ''' <param name="standNumber"></param>
     ''' <remarks></remarks>
     Private Sub PopulateChannelsNBaseDataSet(standNumber As String)
-        Dim tadleFrom As String = "Channel" & standNumber
+        Dim tableFrom As String = "Channel" & standNumber
 
         Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
             cn.Open()
-            If CheckExistTable(cn, tadleFrom) AndAlso CheckExistTable(cn, CHANNEL_N) Then
-                Try
-                    Using cmd As OleDbCommand = cn.CreateCommand
-                        cmd.CommandType = CommandType.Text
-                        'strSQL = "DROP TABLE ChannelN;"
-                        cmd.CommandText = $"DELETE * FROM {CHANNEL_N};"
-                        cmd.ExecuteNonQuery()
-                        'strSQL = "SELECT " & tadleFrom & ".* INTO ChannelN FROM " & tadleFrom
-                        cmd.CommandText = $"INSERT INTO {CHANNEL_N} SELECT * FROM {tadleFrom}" '& " IN " & """" & strПутьChannels & """" & ";"
-                        cmd.ExecuteNonQuery()
-                    End Using
-                    Thread.Sleep(500)
-                    Application.DoEvents()
-                Catch ex As Exception
-                    Dim caption As String = $"Ошибка копирования данных в процедуре <{NameOf(PopulateChannelsNBaseDataSet)}>."
-                    Dim text As String = ex.ToString
-                    MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED($"<{caption}> {text}")
-                End Try
+            If CheckExistTable(cn, tableFrom) AndAlso CheckExistTable(cn, CHANNEL_N) Then
+                InsertIntoToFromTable(cn, CHANNEL_N, tableFrom)
             Else
                 Dim caption As String = $"Проверка наличия таблицы в процедуре <{NameOf(PopulateChannelsNBaseDataSet)}>."
-                Dim text As String = $"Таблицы {tadleFrom} или {CHANNEL_N} не существует!"
+                Dim text As String = $"Таблицы {tableFrom} или {CHANNEL_N} не существует!"
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
             End If
@@ -427,27 +410,39 @@ Friend Class FormServiceBases
     ''' <param name="standNumber"></param>
     ''' <remarks></remarks>
     Private Sub CopyToWorkChannelFromChannelN(standNumber As String)
-        Dim tadleInto As String = "Channel" & standNumber
+        Dim tableInto As String = "Channel" & standNumber
 
         Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
             cn.Open()
-            Try
-                Using cmd As OleDbCommand = cn.CreateCommand
-                    cmd.CommandType = CommandType.Text
-                    cmd.CommandText = $"DELETE * FROM {tadleInto};"
-                    cmd.ExecuteNonQuery()
-                    cmd.CommandText = $"INSERT INTO {tadleInto} SELECT * FROM {CHANNEL_N}"
-                    cmd.ExecuteNonQuery()
-                End Using
-                Thread.Sleep(500)
-                Application.DoEvents()
-            Catch ex As Exception
-                Dim caption As String = $"Ошибка копирования данных в процедуре <{NameOf(CopyToWorkChannelFromChannelN)}>."
-                Dim text As String = ex.ToString
-                MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED($"<{caption}> {text}")
-            End Try
+            InsertIntoToFromTable(cn, tableInto, CHANNEL_N)
         End Using
+    End Sub
+
+    ''' <summary>
+    ''' Копирование таблиц из одной базы в другую
+    ''' </summary>
+    ''' <param name="cn"></param>
+    ''' <param name="tableInto"></param>
+    ''' <param name="tableFrom"></param>
+    Private Sub InsertIntoToFromTable(cn As OleDbConnection, tableInto As String, tableFrom As String)
+        Try
+            Using cmd As OleDbCommand = cn.CreateCommand
+                cmd.CommandType = CommandType.Text
+                'strSQL = "DROP TABLE ChannelN;"
+                cmd.CommandText = $"DELETE * FROM {tableInto};"
+                cmd.ExecuteNonQuery()
+                'strSQL = "SELECT " & tableFrom & ".* INTO ChannelN FROM " & tableFrom
+                cmd.CommandText = $"INSERT INTO {tableInto} SELECT * FROM {tableFrom}" '& " IN " & """" & strПутьChannels & """" & ";"
+                cmd.ExecuteNonQuery()
+            End Using
+            Thread.Sleep(500)
+            Application.DoEvents()
+        Catch ex As Exception
+            Dim caption As String = $"Ошибка копирования данных в процедуре <{NameOf(InsertIntoToFromTable)}>."
+            Dim text As String = ex.ToString
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED($"<{caption}> {text}")
+        End Try
     End Sub
 #End Region
 

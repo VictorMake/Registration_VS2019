@@ -3,8 +3,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 
 Public Class FormSplash
-
-    Private Sub frmSplash_Load(ByVal eventSender As Object, ByVal eventArgs As EventArgs) Handles Me.Load
+    Private Sub FormSplash_Load(ByVal eventSender As Object, ByVal eventArgs As EventArgs) Handles Me.Load
         Me.Opacity = 0
         lblVersion.Text = $"Версия: {My.Application.Info.Version.Major}.{My.Application.Info.Version.Minor}.{My.Application.Info.Version.Build}"
         'lblVersion.Text = $"Версия {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly.Location).FileMajorPart}.{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly.Location).FileMinorPart} {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly.Location).ProductVersion()}"
@@ -13,6 +12,7 @@ Public Class FormSplash
         lblLicenseTo.Text = My.Application.Info.Copyright
         lblCompanyProduct.Text = My.Application.Info.CompanyName
 
+        'Public CryptoSample As CheckCrypto
         'Dim phkРезультат As Integer
         'Dim slValue As String = "Keys"
         'Dim slAllow As String = CStr(1)

@@ -359,8 +359,6 @@ Friend Class FormAxesAdvanced
         End If
 
         Dim size As Integer = CInt(maxRange / divider)
-        'ReDim_arrX(size)
-        'ReDim_arrY(size)
         Re.Dim(arrX, size)
         Re.Dim(arrY, size)
 
@@ -506,20 +504,17 @@ Friend Class FormAxesAdvanced
     Private Sub SetFrequencyGraph(ByVal inFrequencyBackground As Integer)
         Select Case inFrequencyBackground
             Case 1
-                'ReDim_FrequencyGraph(1)
                 Re.Dim(FrequencyGraph, 1)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1
                 Exit Select
             Case 2
-                'ReDim_FrequencyGraph(2)
                 Re.Dim(FrequencyGraph, 2)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1
                 FrequencyGraph(2) = 2
                 Exit Select
             Case 5
-                'ReDim_FrequencyGraph(3)
                 Re.Dim(FrequencyGraph, 3)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1
@@ -527,7 +522,6 @@ Friend Class FormAxesAdvanced
                 FrequencyGraph(3) = 5
                 Exit Select
             Case 10
-                'ReDim_FrequencyGraph(4)
                 Re.Dim(FrequencyGraph, 4)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1
@@ -536,7 +530,6 @@ Friend Class FormAxesAdvanced
                 FrequencyGraph(4) = 10
                 Exit Select
             Case 20
-                'ReDim_FrequencyGraph(5)
                 Re.Dim(FrequencyGraph, 5)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1
@@ -546,7 +539,6 @@ Friend Class FormAxesAdvanced
                 FrequencyGraph(5) = 20
                 Exit Select
             Case 50
-                'ReDim_FrequencyGraph(5)
                 Re.Dim(FrequencyGraph, 5)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1
@@ -556,7 +548,6 @@ Friend Class FormAxesAdvanced
                 FrequencyGraph(5) = 20
                 Exit Select
             Case 100
-                'ReDim_FrequencyGraph(5)
                 Re.Dim(FrequencyGraph, 5)
                 FrequencyGraph(0) = 0.5
                 FrequencyGraph(1) = 1

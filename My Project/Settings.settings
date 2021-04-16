@@ -55,5 +55,22 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|\bin\x86\Debug\Store\Channels.mdb</Value>
     </Setting>
+    <Setting Name="TargetGridCollectFormState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="TargetGridCollectFormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">293, 226</Value>
+    </Setting>
+    <Setting Name="TargetGridCollectFormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">517, 584</Value>
+    </Setting>
+    <Setting Name="NamberSSDList" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;11&lt;/string&gt;
+  &lt;string&gt;13&lt;/string&gt;
+  &lt;string&gt;15&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -181,7 +181,6 @@ Friend Class FormDigitalPort
         DtvwDirectory.Select()
         IsFrmDigitalOutputPortStart = True
         MainStatusStrip.Items(1).Text = "Установка " & StandNumber
-        'ReDim_ParameterAccumulate(UBound(ParametersType))
         Re.Dim(ParameterAccumulate, UBound(ParametersType))
         TimerResize.Enabled = True ' включить таймер для определения размеров панели индикаторов
     End Sub
@@ -2998,7 +2997,6 @@ Friend Class FormDigitalPort
             TSMenuItemStart.Checked = isCheckLoadSuccess
 
             If isCheckLoadSuccess Then
-                'ReDim_ParameterAccumulate(UBound(ParametersType)) ' обнулить массив
                 Re.Dim(ParameterAccumulate, UBound(ParametersType)) ' обнулить массив
 
                 TSButtonHandCheck.Checked = False
@@ -3221,7 +3219,6 @@ Friend Class FormDigitalPort
         Dim memoBoolean As Boolean = IsMonitorDigitalOutputPort
 
         IsMonitorDigitalOutputPort = False
-        'ReDim_NameParametersForControl(UBound(IndexParametersForControl))
         Re.Dim(NameParametersForControl, UBound(IndexParametersForControl))
         NameParametersForControl(0) = MissingParameter
 
@@ -3229,7 +3226,6 @@ Friend Class FormDigitalPort
             NameParametersForControl(I) = ParametersType(IndexParametersForControl(I)).NameParameter
         Next
 
-        'ReDim_ParameterAccumulate(UBound(ParametersType)) ' обнулить массив
         Re.Dim(ParameterAccumulate, UBound(ParametersType)) ' обнулить массив
         IsMonitorDigitalOutputPort = memoBoolean
     End Sub

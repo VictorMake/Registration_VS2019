@@ -15,7 +15,7 @@ Friend Class FormRegistrationTCP
 
     Protected Sub New()
         'Public Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormRegistrationTCP")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormRegistrationTCP))
         'InitializeComponent()
     End Sub
 
@@ -142,7 +142,7 @@ Friend Class FormRegistrationTCP
         RegistrationEventLog.EventLog_MSG_USER_ACTION($"<{NameOf(CharacteristicForRegime)}> Настройка параметров сбора для сконфигурированного режима")
 
         Dim I, J As Integer
-        Dim sngLeft, sngHeight, sngWidth As Integer
+        Dim left, height, width As Integer
         Dim memoIsFormRunning As Boolean = IsFormRunning ' запуск Был
 
         If IsFormRunning Then StopAcquisition()
@@ -170,13 +170,12 @@ Friend Class FormRegistrationTCP
         ' т.к. массив структуры arrПараметры при работе с контроллером в процессе испытаний не менняется, а с ТСРКлиент меняется, необходимо загрузить
         LoadChannels()
         UnpackStringConfigurationWithEmpty(ConfigurationString)
-        'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
         ' выгрузить индикаторы аварийных значений
         UnloadAlarmButton()
-        sngLeft = AlarmPulseButton(keyFirstButtonAlarm).Left
-        sngWidth = AlarmPulseButton(keyFirstButtonAlarm).Width
-        sngHeight = AlarmPulseButton(keyFirstButtonAlarm).Height
+        left = AlarmPulseButton(keyFirstButtonAlarm).Left
+        width = AlarmPulseButton(keyFirstButtonAlarm).Width
+        height = AlarmPulseButton(keyFirstButtonAlarm).Height
         ' для снимка уже установленные другой формой глобальные переменные не менять
         AdditionalParameterCount = 0 : DigitalParametersCount = 0 : CountSolveParameters = 0
 
@@ -184,7 +183,6 @@ Friend Class FormRegistrationTCP
         For I = 1 To UBound(NamesParameterRegime)
             For J = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = NamesParameterRegime(I) Then
-                    'ReDimPreserve IndexParameters(UBound(IndexParameters) + 1)
                     Re.DimPreserve(IndexParameters, UBound(IndexParameters) + 1)
                     IndexParameters(UBound(IndexParameters)) = J
 
@@ -203,10 +201,10 @@ Friend Class FormRegistrationTCP
                     ' проверка на аварийное значение
                     If ParametersType(J).AlarmValueMin <> 0 OrElse ParametersType(J).AlarmValueMax <> 0 Then
                         PopulateAlarmButton(J)
-                        AlarmPulseButton(J).SetBounds(sngLeft,
+                        AlarmPulseButton(J).SetBounds(left,
                                                              AlarmPulseButton(keyLastButtonAlarm).Top + AlarmPulseButton(keyLastButtonAlarm).Height + 1,
-                                                             sngWidth,
-                                                             sngHeight)
+                                                             width,
+                                                             height)
                         AlarmPulseButton(J).BringToFront()
                     End If
 
@@ -219,7 +217,6 @@ Friend Class FormRegistrationTCP
         If IsShowTextControl Then frmTextControl.Close()
         If IsShowGraphControl Then frmGraphControl.Close()
 
-        'ReDim_IndexParametersForControl(UBound(IndexParameters))
         Re.Dim(IndexParametersForControl, UBound(IndexParameters))
 
         For I = 1 To UBound(IndexParameters)
@@ -239,7 +236,6 @@ Friend Class FormRegistrationTCP
         InitializeDiscreteLed()
 
         If Not IsNothing(IndexParameters) Then
-            'ReDim_CopyListOfParameter(IndexParameters.Length - 1)
             Re.Dim(CopyListOfParameter, IndexParameters.Length - 1)
             Array.Copy(IndexParameters, CopyListOfParameter, IndexParameters.Length)
         End If
@@ -252,7 +248,6 @@ Friend Class FormRegistrationTCP
         If isUsePens Then TuneAnnotation()
 
         Cursor = Cursors.Default
-        'ReDim_PackOfParameters(UBound(IndexParameters) * 3)
         Re.Dim(PackOfParameters, UBound(IndexParameters) * 3)
 
         If IsFrmDigitalOutputPortStart Then DigitalPortForm.PopulateListParametersFromServer()
@@ -482,7 +477,7 @@ Friend Class FormRegistrationTCP
             ' запись в массив среднего, код такой-же как SweepChart
             MeasuredValues(J, indexTimeVsRow) = average
 
-            If Not IsUseTdms Then PackOfParametersToRecord(J) = CStr(Math.Round(average, Precision))
+            If Not IsUseTdms Then PackOfParametersToRecord(J) = Math.Round(average, Precision).ToString
 
             If isDetailedSheet Then
                 If ParametersType(IndexParameters(vKey)).IsVisible Then

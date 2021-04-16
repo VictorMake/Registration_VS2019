@@ -31,19 +31,23 @@ Public Class FormMainMDI
         Width = CInt(GetSetting(Reflection.Assembly.GetExecutingAssembly.GetName.Name, "Settings", "MainWidth", CStr(640)))
         Height = CInt(GetSetting(Reflection.Assembly.GetExecutingAssembly.GetName.Name, "Settings", "MainHeight", CStr(480)))
 
-        If IsWorkWithController Then TestChannelForm = New FormTestChannel
+        If IsWorkWithDaqController Then TestChannelForm = New FormTestChannel
         If Directory.Exists(PathPanelMotorist) Then MenuShowPanel.Enabled = True
-        If (IsWorkWithController OrElse IsTcpClient) AndAlso (PathSolveModule IsNot Nothing) Then AnalysisCalculationModule()
+        If (IsWorkWithDaqController OrElse IsCompactRio OrElse IsTcpClient) AndAlso (PathSolveModule IsNot Nothing) Then AnalysisCalculationModule()
         ' если и клиент и работа со снимками
-        If (Not (IsWorkWithController OrElse IsTcpClient)) AndAlso (PathModuleSolveKT IsNot Nothing) Then AnalysisAcquisitionModuleKT()
+        If (Not (IsWorkWithDaqController OrElse IsCompactRio OrElse IsTcpClient)) AndAlso (PathModuleSolveKT IsNot Nothing) Then AnalysisAcquisitionModuleKT()
         If IsRunAutoBooting Then LoadNewInheritsForm(TypeExamination.Registration) ' регистратор
 
         If IsTcpClient Then
-            DelegateAddListItem = New AddListItem(AddressOf AddListItemMethod) ' делегат обновления текста лога из дгугого потока
+            DelegateAddListItem = New AddListItem(AddressOf AddListItemMethod) ' делегат обновления текста лога из другого потока
             LoadMainFormAgain()
         Else
             TableLayoutPanelConnection.Visible = False
             SplitterConnectionPanel.Visible = False
+        End If
+
+        If IsCompactRio Then
+            LoadFormTestCompactRio()
         End If
 
         ShowConnectPanel()
@@ -68,7 +72,7 @@ Public Class FormMainMDI
             ModuleSolveManager = Nothing
         End If
 
-        If IsUseTCPClient Then
+        If IsTcpClient Then
             DelegateClientSendData(False) ' остановить передачи пакетов Серверу
             Application.DoEvents()
             If TokenSource IsNot Nothing Then MainMdiForm.TokenSource.Cancel() ' прервать задачу проверки сетевого подключения с сервером
@@ -76,6 +80,8 @@ Public Class FormMainMDI
             StartStopConnectionWithServer(False) ' остановить связь с сервером
             ShowReceiveData(False)
         End If
+
+        If IsCompactRio Then CloseFormTestCompactRio()
     End Sub
 
     Private Sub FormMainMDI_FormClosed(ByVal sender As Object, ByVal e As FormClosedEventArgs) Handles Me.FormClosed
@@ -106,7 +112,7 @@ Public Class FormMainMDI
             SaveSetting(Reflection.Assembly.GetExecutingAssembly.GetName.Name, "Settings", "MainHeight", CStr(Height))
         End If
 
-        If IsWorkWithController Then ' наверно повтор
+        If IsWorkWithDaqController Then ' наверно повтор
             Try
                 If IsTaskRunning = True Then
                     IsTaskRunning = False
@@ -174,8 +180,10 @@ Public Class FormMainMDI
                 CaptionForm = "Регистратор " & lDocumentCount
                 RegistrationFormName = CaptionForm
 
-                If IsWorkWithController Then
+                If IsWorkWithDaqController Then
                     RegistrationMain = CType(FormManager.CreateFormMain(FormExamination.RegistrationSCXI, CaptionForm), FormRegistrationBase)
+                ElseIf IsCompactRio Then
+                    RegistrationMain = CType(FormManager.CreateFormMain(FormExamination.RegistrationCompactRio, CaptionForm), FormRegistrationBase)
                 ElseIf IsTcpClient Then
                     RegistrationMain = CType(FormManager.CreateFormMain(FormExamination.RegistrationTCP, CaptionForm), FormRegistrationBase)
                 End If
@@ -186,7 +194,7 @@ Public Class FormMainMDI
                 MenuNewWindowSnapshot.Enabled = False
                 CaptionForm = "Снимок " & lDocumentCount
 
-                If IsWorkWithController Then
+                If IsWorkWithDaqController Then
                     SnaphotMain = CType(FormManager.CreateFormMain(FormExamination.SnapshotPhotograph, CaptionForm), FormSnapshotBase)
                 Else
                     SnaphotMain = CType(FormManager.CreateFormMain(FormExamination.SnapshotViewingDiagram, CaptionForm), FormSnapshotBase)
@@ -290,7 +298,7 @@ Public Class FormMainMDI
 
         If IsFrmServiceBasesLoaded Then ServiceBasesForm.Close()
 
-        TarirForm = New FormTarir
+        TarirForm = New FormTarir(Me)
         TarirForm.Show()
         TarirForm.Activate()
         TarirForm.FormTarirResize()
@@ -603,6 +611,22 @@ Public Class FormMainMDI
         TestBarometer.Manager.IsEnabledTuningForms = False ' видимость сеток
         TestBarometer.EnableNewDeleteButton()
     End Sub
+
+    Friend WithEvents GFormTestCompactRio As FormTestCompactRio
+
+    Private Sub LoadFormTestCompactRio()
+        'отладка в последствии закоментировать а в наследующих классах в методе LOAD разкоментировать
+        GFormTestCompactRio = New FormTestCompactRio(Me) With {.PathSettingMdb = PathChannels}
+        GFormTestCompactRio.Show()
+    End Sub
+
+    Private Sub CloseFormTestCompactRio()
+        If GFormTestCompactRio IsNot Nothing Then
+            GFormTestCompactRio.IsWindowClosed = True
+            GFormTestCompactRio.Close()
+            GFormTestCompactRio = Nothing
+        End If
+    End Sub
 #End Region
 
 #Region "Работа с модулями сбора КТ"
@@ -801,7 +825,7 @@ Public Class FormMainMDI
     ''' <param name="isConnectStart"></param>
     ''' <remarks></remarks>
     Private Sub StartStopConnectionWithServer(isConnectStart As Boolean)
-        Const CAPTION As String = "StartStopConnectionWithServer"
+        Const CAPTION As String = NameOf(StartStopConnectionWithServer)
         Dim text As String
 
         ConnectButtonChecked = isConnectStart
@@ -831,12 +855,11 @@ Public Class FormMainMDI
                         Sleep(100)
                         ConnectionClient.StartAcquisitionTCP()
                         mTaskDoMonitorCheckDataFromServer = Task.Factory.StartNew(AddressOf DoMonitorCheckDataFromServer, ConnectionClient, TaskCreationOptions.LongRunning)
-                        ConnectionClient.AwaitData() '_ConnectionClient)
+                        ConnectionClient.AwaitData()
 
                         text = "Соединение с Сервером установлено..."
                         ShowMsgText(text, MessageBoxIcon.Information)
-                        RegistrationEventLog.EventLog_MSG_CONNECT(String.Format("<{0}> {1}", CAPTION, text))
-                        'tbНепр.Checked = True
+                        RegistrationEventLog.EventLog_MSG_CONNECT($"<{CAPTION}> {text}")
                         LabelНепр.Text = "Приём каналов от Сервера включён" ' Приём каналов от Сервера отсутствует
                         LabelНепр.Image = My.Resources.Connect
 
@@ -847,7 +870,7 @@ Public Class FormMainMDI
                         text = "Ошибка подключения к Серверу:" & Environment.NewLine & ex.ToString
                         DelegateAppendOutput(text, MessageBoxIcon.Error)
                         'MessageBox.Show(ex.ToString, "Ошибка подключения к Серверу", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                        RegistrationEventLog.EventLog_CONNECT_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+                        RegistrationEventLog.EventLog_CONNECT_FAILED($"<{CAPTION}> {text}")
                         ConnectButtonChecked = False
                     End Try
                 End If
@@ -855,13 +878,13 @@ Public Class FormMainMDI
                 text = "Неправильное имя Сервера или адрес."
                 DelegateAppendOutput(text, MessageBoxIcon.Error)
                 'MessageBox.Show("Неправильное имя Сервера или адрес.", "Невозможно подключиться к Серверу", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                RegistrationEventLog.EventLog_CONNECT_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+                RegistrationEventLog.EventLog_CONNECT_FAILED($"<{CAPTION}> {text}")
                 ConnectButtonChecked = False
             End If
         Else
             text = "Разрыв соединения с Сервером."
             ShowMsgText(text, MessageBoxIcon.Exclamation)
-            RegistrationEventLog.EventLog_CONNECT_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_CONNECT_FAILED($"<{CAPTION}> {text}")
 
             LabelStatusClient_adapter.Image = My.Resources.ledCornerGray
             LabelStatusClient_receive.Image = My.Resources.ledCornerGray
@@ -963,7 +986,7 @@ Public Class FormMainMDI
         Dim countItterationДанные As Integer ' countItterationУправления,
         Dim msgFromClientLength As Integer ' = MsgFromClientBytes.Length
         Dim hash As UInt32
-        Dim командаУправления As Boolean ' пришёл ответ от Сервера на запрос управляющей команды выставляемой панелью управления
+        Dim isCommandResponseServer As Boolean ' пришёл ответ от Сервера на запрос управляющей команды выставляемой панелью управления
 
         If arrMsgFromClientBytes Is Nothing Then Exit Sub
         msgFromClientLength = arrMsgFromClientBytes.Length
@@ -982,11 +1005,9 @@ Public Class FormMainMDI
             Do
                 'проверить возможность считать 10 байт
                 'BytesToRead = 10
-                'ReDim_Bytes(BytesToRead - 1)
                 'Array.Copy(MsgFromClientBytes, Offset, Bytes, 0, BytesToRead)
                 'Offset += BytesToRead
                 bytesToRead = 1
-                'ReDim_arrBytes(bytesToRead - 1)
                 Re.Dim(arrBytes, bytesToRead - 1)
                 Array.Copy(arrMsgFromClientBytes, offset, arrBytes, 0, bytesToRead)
                 offset += bytesToRead
@@ -1002,7 +1023,6 @@ Public Class FormMainMDI
 
                     'считать hash
                     bytesToRead = 4
-                    'ReDim_arrBytes(bytesToRead - 1)
                     Re.Dim(arrBytes, bytesToRead - 1)
                     Array.Copy(arrMsgFromClientBytes, offset, arrBytes, 0, bytesToRead)
                     hash = CUInt(BitConverter.ToInt32(arrBytes, 0))
@@ -1018,7 +1038,7 @@ Public Class FormMainMDI
 
                             If hash = gHashСommandCh Then
                                 command = arrBytes(0)
-                                командаУправления = True
+                                isCommandResponseServer = True
                             End If
                             Exit Select
                         Case CommandSetServer.Integer_2 ' Пакет integer  4 byte 
@@ -1029,7 +1049,7 @@ Public Class FormMainMDI
 
                             If hash = gHashСommandCh Then
                                 command = BitConverter.ToInt32(arrBytes, 0)
-                                командаУправления = True
+                                isCommandResponseServer = True
                             End If
                             Exit Select
                         Case CommandSetServer.Double_3 ' Пакет double 8 byte
@@ -1040,7 +1060,7 @@ Public Class FormMainMDI
 
                             If hash = gHashСommandCh Then
                                 command = Convert.ToInt32(BitConverter.ToDouble(arrBytes, 0))
-                                командаУправления = True
+                                isCommandResponseServer = True
                             End If
                             Exit Select
                         Case CommandSetServer.Anything_4
@@ -1052,7 +1072,6 @@ Public Class FormMainMDI
                         Case CommandSetServer.SmallString_51 ' Пакет Small string 
                             ' считать поле Length 
                             bytesToRead = 1
-                            'ReDim_arrBytes(bytesToRead - 1)
                             Re.Dim(arrBytes, bytesToRead - 1)
                             Array.Copy(arrMsgFromClientBytes, offset, arrBytes, 0, bytesToRead)
                             offset += bytesToRead
@@ -1069,15 +1088,13 @@ Public Class FormMainMDI
                                     command = 0
                                 End If
                                 'command = Integer.Parse(gASCII_Encoding.GetString(arrBytes))' приходит Off и будет ошибка
-                                командаУправления = True
+                                isCommandResponseServer = True
                             End If
                             ' вернуть назад размерность 
-                            'ReDim_info._Buffer(receiveBufferSize)
                             Exit Select
                         Case CommandSetServer.LongString_52 ' Пакет Description 
                             ' считать поле Length 
                             bytesToRead = 2
-                            'ReDim_arrBytes(bytesToRead - 1)
                             Re.Dim(arrBytes, bytesToRead - 1)
                             Array.Copy(arrMsgFromClientBytes, offset, arrBytes, 0, bytesToRead)
                             offset += bytesToRead
@@ -1088,7 +1105,6 @@ Public Class FormMainMDI
                             offset += bytesToRead
 
                             ' вернуть назад размерность 
-                            'ReDim_info._Buffer(receiveBufferSize)
                             Exit Select
                         Case CommandSetServer.ChannelProperty_53
                             ' сместиться на 4 байта
@@ -1096,7 +1112,6 @@ Public Class FormMainMDI
 
                             ' считать поле Length 
                             bytesToRead = 2
-                            'ReDim_arrBytes(bytesToRead - 1)
                             Re.Dim(arrBytes, bytesToRead - 1)
                             Array.Copy(arrMsgFromClientBytes, offset, arrBytes, 0, bytesToRead)
                             offset += bytesToRead
@@ -1107,13 +1122,12 @@ Public Class FormMainMDI
                             offset += bytesToRead
 
                             ' вернуть назад размерность 
-                            'ReDim_info._Buffer(receiveBufferSize)
                             Exit Select
                         Case Else
                             Exit Select
                     End Select
 
-                    If командаУправления Then
+                    If isCommandResponseServer Then
                         '' не обрабатывается для АРМ
                         '' для обновления счётчиков
                         'info.PacketsThresholdSendCount += 1
@@ -1199,7 +1213,6 @@ Public Class FormMainMDI
             'Dim StatrComm As Integer = Offset
             ' запомнить остаток
             Dim Lenght As Integer = msgFromClientLength - offsetSuccess
-            'ReDim_info.LostBytes(Lenght - 1)
             Re.Dim(info.LostBytes, Lenght - 1)
             Array.Copy(arrMsgFromClientBytes, offsetSuccess, info.LostBytes, 0, Lenght)
             'info.LostBytes = MsgFromClientBytes
@@ -1214,7 +1227,7 @@ Public Class FormMainMDI
     ''' <param name="PacketsReceive"></param>
     ''' <remarks></remarks>
     Private Sub UpdatePacketsReceiveLabel(PacketsReceive As Long)
-        LabelStatusClient_receive.Text = String.Format("Получено {0}", PacketsReceive.ToString)
+        LabelStatusClient_receive.Text = $"Получено {PacketsReceive.ToString}"
     End Sub
 
     '''' <summary>
@@ -1223,7 +1236,7 @@ Public Class FormMainMDI
     '''' <param name="PacketsSend"></param>
     '''' <remarks></remarks>
     'Private Sub UpdateStatusLabelClient_send(PacketsSend As Long)
-    '    StatusLabelClient_send.Text = String.Format("Отправлено {0}", PacketsSend.ToString)
+    '    StatusLabelClient_send.Text = $"Отправлено {PacketsSend.ToString}"
     'End Sub
 
     ''' <summary>
@@ -1260,6 +1273,19 @@ Public Class FormMainMDI
             'RegistrationMain.TCP_AcquiredData(e.arrDataTCP) так вызывать напрямую нельзя
         End If
     End Sub
+
+    '''' <summary>
+    '''' Обработчик события получения данных от CompactRio и дальнейшая передача данных посредством перевызова в базовой форме.
+    '''' Вызов события из события таймера OnTimed_mmTimer формы CjmpactRio.
+    '''' Заменил напрямой вызов метода  RegistrationMain.AcquiredData() в события таймера OnTimed_mmTimer.
+    '''' </summary>
+    '''' <param name="sender"></param>
+    '''' <param name="e"></param>
+    'Private Sub GFormTestCompactRio_CompactRioAcquiredData(sender As Object, e As FormTestCompactRio.AcquiredDataEventArgs) Handles GFormTestCompactRio.CompactRioAcquiredData
+    '    If RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun Then
+    '        RaiseEvent EventMainAcquiredDataForChannelsForm(Me, New AcquiredDataEventArgs(e.CompactRioChannelsData))
+    '    End If
+    'End Sub
 
 #Region "Запуск Сбора на шасси"
     'Private Sub ActivateTargetButton_Click(sender As Object, e As EventArgs) Handles ActivateTargetButton.Click
@@ -1338,30 +1364,29 @@ Public Class FormMainMDI
     Private Function IsSuccessLoadSettingsClientTCP() As Boolean
         Dim success As Boolean = False
         Dim I As Integer
-        Dim numbersStend As New List(Of String) ' номера стендов
+        Dim numbersStand As New List(Of String) ' номера стендов
         Dim pathsServerCfg_xml As String() ' массив путей к конфигурационным файлам серверов
 
-        numbersStend.AddRange(GetIni(PathOptions, "Stend", "Stends", "1,2,3,4,5").Split(CType(",", Char())))
-        For I = numbersStend.Count - 1 To 0 Step -1
-            If numbersStend(I) = "Клиент" Then
-                numbersStend.RemoveAt(I)
+        numbersStand.AddRange(GetIni(PathOptions, "Stend", "Stends", "1,2,3,4,5").Split(CType(",", Char())))
+        For I = numbersStand.Count - 1 To 0 Step -1
+            If numbersStand(I) = "Клиент" Then
+                numbersStand.RemoveAt(I)
                 Exit For
             End If
         Next
 
-        'ReDim_pathsServerCfg_xml(numbersStend.Count - 1)
-        Re.Dim(pathsServerCfg_xml, numbersStend.Count - 1)
+        Re.Dim(pathsServerCfg_xml, numbersStand.Count - 1)
         ' считать пути ServerCfg_xml
-        For I = 0 To numbersStend.Count - 1
-            pathsServerCfg_xml(I) = GetIni(PathOptions, "ServerCfg_xml", "Stend" & numbersStend(I), "\\Stend_1\c\Нужно ввести путь.xml") 'по умолчанию
+        For I = 0 To numbersStand.Count - 1
+            pathsServerCfg_xml(I) = GetIni(PathOptions, "ServerCfg_xml", "Stend" & numbersStand(I), "\\Stend_1\c\Нужно ввести путь.xml") 'по умолчанию
         Next
 
         Try
             ' узнать путь конфигурации XML Сервера для выбранного стенда
-            Dim mstrНомерСтенда As String = GetIni(PathOptions, "Stend", "Stend", "1")
+            Dim iniStandNumber As String = GetIni(PathOptions, "Stend", "Stend", "1")
 
-            For I = 0 To numbersStend.Count - 1
-                If numbersStend(I) = mstrНомерСтенда Then
+            For I = 0 To numbersStand.Count - 1
+                If numbersStand(I) = iniStandNumber Then
                     PathServerCfglmzXml = pathsServerCfg_xml(I)
                     Exit For
                 End If
@@ -1372,7 +1397,7 @@ Public Class FormMainMDI
                 Do While ReloadCfgPath() = False
                     MessageBox.Show("Необходимо переопределить путь к конфигурационному xml файлу", "Определить путь к Cfg файлу", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Loop
-                WriteINI(PathOptions, "ServerCfg_xml", "Stend" & numbersStend(I), PathServerCfglmzXml)
+                WriteINI(PathOptions, "ServerCfg_xml", "Stend" & numbersStand(I), PathServerCfglmzXml)
             End If
 
             ' 2)номер изделия
@@ -1381,9 +1406,9 @@ Public Class FormMainMDI
             'Dim mkeyConfig As Integer = CInt(sGetIni(strПутьОпции, "Options", "LastTCPkeyConfig", "0"))
             keyConfig = CInt(GetIni(PathOptions, "Options", "LastTCPkeyConfig", "0"))
 
-            If mstrНомерСтенда <> StandNumber Then
+            If iniStandNumber <> StandNumber Then
                 Const caption As String = "Изменён номер стенда"
-                Dim text As String = $"Программа первоначально была загружена под номером стенда {StandNumber}{vbCrLf}В конфигураторе каналов был выбран стенд {mstrНомерСтенда}{vbCrLf}Необходимо перезапустить программу!"
+                Dim text As String = $"Программа первоначально была загружена под номером стенда {StandNumber}{vbCrLf}В конфигураторе каналов был выбран стенд {iniStandNumber}{vbCrLf}Необходимо перезапустить программу!"
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
                 Environment.Exit(0)
@@ -1423,7 +1448,7 @@ Public Class FormMainMDI
             'Dim v As DateTime = DateTime.Parse(ValueTime.Replace(".", "/").Replace(",", ".")) брыкается на тест для теста2
             'Dim v As DateTime = DateTime.Parse(ValueTime.Substring(0, 10).Replace(".", "/") & ValueTime.Substring(10, 12).Replace(",", "."))
 
-            dateTimeString = String.Format("{0}{1}.{2}", strValueTime.Substring(0, 10).Replace(".", "/"), strValueTime.Substring(10, 9), strValueTime.Substring(20, 2))
+            dateTimeString = $"{strValueTime.Substring(0, 10).Replace(".", "/")}{strValueTime.Substring(10, 9)}.{strValueTime.Substring(20, 2)}"
             'Dim v As DateTime = DateTime.Parse(DateTimeString)
             Dim varDateTime As DateTime
             If DateTime.TryParse(dateTimeString, varDateTime) Then
@@ -1461,7 +1486,7 @@ Public Class FormMainMDI
             Return timeToDouble
         ElseIf strValueTime.Length = con21 Then
             'ValueTime = "01.01.2012 00:00:0.00" 'для теста4
-            dateTimeString = String.Format("{0}{1}.{2}", strValueTime.Substring(0, 10).Replace(".", "/"), strValueTime.Substring(10, 8), strValueTime.Substring(19, 2))
+            dateTimeString = $"{strValueTime.Substring(0, 10).Replace(".", "/")}{strValueTime.Substring(10, 8)}.{strValueTime.Substring(19, 2)}"
             Dim varDateTime As DateTime
 
             If DateTime.TryParse(dateTimeString, varDateTime) Then
@@ -1611,7 +1636,7 @@ Public Class FormMainMDI
             '    Exit Sub
             'End If
 
-            message = String.Format("Сокет соединился с {0}", ConnectionClient.Tcp_Client.Client.RemoteEndPoint.ToString())
+            message = $"Сокет соединился с {ConnectionClient.Tcp_Client.Client.RemoteEndPoint.ToString()}"
             myThread = New Thread(AddressOf ThreadFunction)
             myThread.Start(message)
             RegistrationEventLog.EventLog_MSG_CONNECT($"<{CAPTION}> {message}")
@@ -1667,13 +1692,13 @@ Public Class FormMainMDI
     End Sub
 
     Private Sub AppendOutput(message As String, RichTextBoxKey As Integer, selectionModeIcon As MessageBoxIcon)
-        Dim tempRichTextBox As RichTextBox = RichTextBoxClient 'richTextBoxDictionary(RichTextBoxKey)
+        Dim tempRichTextBox As RichTextBox = RichTextBoxClient
 
         If tempRichTextBox.TextLength > 0 Then
             tempRichTextBox.AppendText(ControlChars.NewLine)
         End If
 
-        tempRichTextBox.AppendText(String.Format("{0} {1}", DateTime.Now.ToLongTimeString, message))
+        tempRichTextBox.AppendText($"{DateTime.Now.ToLongTimeString} {message}")
         WriteTextToRichTextBox(tempRichTextBox, message, selectionModeIcon)
         tempRichTextBox.ScrollToCaret()
     End Sub
@@ -1683,7 +1708,7 @@ Public Class FormMainMDI
             RichTextBoxClient.AppendText(ControlChars.NewLine)
         End If
 
-        RichTextBoxClient.AppendText(String.Format("{0} {1}", DateTime.Now.ToLongTimeString, message))
+        RichTextBoxClient.AppendText($"{DateTime.Now.ToLongTimeString} {message}")
         WriteTextToRichTextBox(RichTextBoxClient, message, selectionModeIcon)
         RichTextBoxClient.ScrollToCaret()
         ShowReceiveData(True)
@@ -1732,7 +1757,7 @@ Public Class FormMainMDI
             For Each deltaAddress As IPAddress In remoteHost.AddressList
                 If deltaAddress.AddressFamily = AddressFamily.InterNetwork Then
                     ServerAddress = deltaAddress
-                    DelegateAppendOutput(String.Format("host {0}{1}", TextBoxServerIP.Text, String.Format(" IP: {0}", deltaAddress.ToString)), MessageBoxIcon.Error)
+                    DelegateAppendOutput($"host: {TextBoxServerIP.Text} IP: {deltaAddress.ToString}", MessageBoxIcon.Error)
                     Exit For
                 End If
             Next
@@ -1741,7 +1766,7 @@ Public Class FormMainMDI
         If ServerAddress Is Nothing Then
             Const CAPTION As String = "ServerTextBox_Validating"
             Const text As String = "Невозможно разрешить адрес Сервера."
-            RegistrationEventLog.EventLog_CONNECT_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+            RegistrationEventLog.EventLog_CONNECT_FAILED($"<{CAPTION}> {text}")
             MessageBox.Show(text, "Проверка адреса Сервера", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             TextBoxServerPort.SelectAll()
             e.Cancel = True
@@ -1777,7 +1802,7 @@ Public Class FormMainMDI
     Private Sub ShowReceiveData(ByVal receiveStatus As Boolean)
         If receiveStatus Then
             If ConnectionClient IsNot Nothing Then
-                LabelStatusClient_adapter.Text = String.Format("local {0} remote{1}", ConnectionClient.Local, ConnectionClient.Remote)
+                LabelStatusClient_adapter.Text = $"local:{ConnectionClient.Local} remote:{ConnectionClient.Remote}"
                 LabelStatusClient_receive.Image = My.Resources.ledCornerGreen
                 PictureBoxConnectionServer.BackgroundImage = My.Resources.ledCornerGreen
             Else

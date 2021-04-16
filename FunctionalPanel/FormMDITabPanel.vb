@@ -704,7 +704,6 @@ Friend Class FormMDITabPanel
 
         If gFormsPanelManager.CollectionFormPanelMotorist IsNot Nothing Then
             Dim keyColl As Dictionary(Of String, FormBasePanelMotorist).KeyCollection = gFormsPanelManager.CollectionFormPanelMotorist.Keys
-            'ReDim_arrName(keyColl.Count - 1)
             Re.Dim(arrName, keyColl.Count - 1)
             keyColl.CopyTo(arrName, 0)
 

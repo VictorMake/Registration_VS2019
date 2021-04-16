@@ -108,7 +108,7 @@ Friend MustInherit Class FormSnapshotBase
 
     Protected Sub New()
         'Public Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormSnapshotBase")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormSnapshotBase))
         'InitializeComponent()
     End Sub
 
@@ -432,9 +432,6 @@ Friend MustInherit Class FormSnapshotBase
         Dim rangeMin As Integer = CInt(Int(XAxisTime.Range.Minimum))
         Dim rangeMax As Integer = CInt(Int(XAxisTime.Range.Maximum))
 
-        'ReDim_xData(rangeMax - rangeMin)
-        'ReDim_yData(rangeMax - rangeMin)
-        'ReDim_result(rangeMax - rangeMin + 1)
         Re.Dim(xData, rangeMax - rangeMin)
         Re.Dim(yData, rangeMax - rangeMin)
         Re.Dim(result, rangeMax - rangeMin + 1)
@@ -616,10 +613,14 @@ Friend MustInherit Class FormSnapshotBase
     Friend Overrides Sub GetSqlForDbase(ByRef outSQL As String, ByRef IsChannelShaphot As Boolean)
         If IsBeforeThatHappenLoadDbase Then
             IsChannelShaphot = True
-            outSQL = "SELECT * FROM " & ChannelShaphot
+            outSQL = $"SELECT * FROM {ChannelShaphot}"
         Else
             IsChannelShaphot = False
-            outSQL = "SELECT * FROM " & ChannelLast
+            If IsCompactRio Then
+                outSQL = $"Select * FROM {ChannelLast} WHERE UseCompactRio <> 0 Order By НомерПараметра"
+            Else
+                outSQL = $"Select * FROM {ChannelLast} Order By НомерПараметра"
+            End If
         End If
     End Sub
 #End Region
@@ -735,7 +736,6 @@ Friend MustInherit Class FormSnapshotBase
             End If
 
             ' чтобы очистить память:
-            'ReDim_MeasuredValuesToRange(0, 0)
             Re.Dim(MeasuredValuesToRange, 0, 0)
             WaveformGraphTime.Annotations.Clear()
             WaveformGraphTime.Plots.Clear()
@@ -770,7 +770,6 @@ Friend MustInherit Class FormSnapshotBase
                 End Using
 
                 N = UBound(arrLine) - 1
-                'ReDim_arrTransposition(N, I)
                 Re.Dim(arrTransposition, N, I)
 
                 For I = 0 To N
@@ -782,13 +781,11 @@ Friend MustInherit Class FormSnapshotBase
 
                 ' транспонируем массив физики назад
                 MeasuredValues = NationalInstruments.Analysis.Math.LinearAlgebra.Transpose(arrTransposition)
-                'ReDim_arrTransposition(0, 0)
                 Re.Dim(arrTransposition, 0, 0)
             End If
 
             'скопированная из процедуры CharacteristicForRegime
             UnpackStringConfiguration(ConfigurationString)
-            'ReDim_IndexParameters(0)
             Re.Dim(IndexParameters, 0)
             N = UBound(NamesParameterRegime)
 
@@ -801,7 +798,6 @@ Friend MustInherit Class FormSnapshotBase
             For I = 1 To N
                 For J = 1 To UBound(ParametersShaphotType)
                     If ParametersShaphotType(J).NameParameter = NamesParameterRegime(I) Then
-                        'ReDimPreserve IndexParameters(UBound(IndexParameters) + 1)
                         Re.DimPreserve(IndexParameters, UBound(IndexParameters) + 1)
                         IndexParameters(UBound(IndexParameters)) = J
                         Exit For
@@ -810,12 +806,10 @@ Friend MustInherit Class FormSnapshotBase
             Next
 
             If Not IsNothing(IndexParameters) Then
-                'ReDim_CopyListOfParameter(IndexParameters.Length - 1)
                 Re.Dim(CopyListOfParameter, IndexParameters.Length - 1)
                 Array.Copy(IndexParameters, CopyListOfParameter, IndexParameters.Length)
             End If
 
-            'ReDim_PackOfParameters(UBound(IndexParameters) * 3)
             Re.Dim(PackOfParameters, UBound(IndexParameters) * 3)
             ' массив arrIndexParameters содержит перечень параметров по номерам
             ApplyScaleRangeAxisY(ParametersShaphotType)
@@ -831,7 +825,6 @@ Friend MustInherit Class FormSnapshotBase
                 ComboBoxSelectAxis.Items.Add(ParametersShaphotType(IndexParameters(I)).NameParameter)
             Next
 
-            'ReDim_MeasuredValuesToRange(UBound(MeasuredValues), UBound(MeasuredValues, 2))
             Re.Dim(MeasuredValuesToRange, UBound(MeasuredValues), UBound(MeasuredValues, 2))
 
             If isRegimeChangeForDecoding Then
@@ -902,7 +895,6 @@ Friend MustInherit Class FormSnapshotBase
             If managerAnalysis IsNot Nothing Then
                 If recordCount = 0 Then
                     With managerAnalysis(RegimeType)
-                        'ReDim_.Protocol(2, 3)
                         Re.Dim(.Protocol, 2, 3)
                         .Protocol(1, 1) = "Контрольный лист №"
                         .Protocol(2, 1) = "Кадр предъявляется"
@@ -915,7 +907,6 @@ Friend MustInherit Class FormSnapshotBase
                     End With
                 Else
                     With managerAnalysis(RegimeType)
-                        'ReDim_.Protocol(recordCount, 3)
                         Re.Dim(.Protocol, recordCount, 3)
                         strSQL = "SELECT * FROM [Протокол] WHERE [KeyID]=" & Str(GKeyID)
                         cmd.CommandText = strSQL
@@ -1023,7 +1014,6 @@ Friend MustInherit Class FormSnapshotBase
         dcDataColumn(0) = dtDataTable.Columns("НомерПараметра")
         dtDataTable.PrimaryKey = dcDataColumn
 
-        'ReDim_ParametersShaphotType(rowsCount)
         Re.Dim(ParametersShaphotType, rowsCount)
         ' загрузка коэффициентов по параметрам с базы с помощью запроса
         ' при добавлении полей надо модифицировать запрос в базе
@@ -1285,7 +1275,7 @@ Friend MustInherit Class FormSnapshotBase
         drDataRow("КонецОсиХ") = XAxisTime.Range.Maximum
         drDataRow("Примечание") = descriptionSnapshot
 
-        Dim timeString As String = Replace(Trim(Now.ToLongTimeString), ":", "-")
+        Dim timeString As String = $"({Now.Hour}ч{Now.Minute}м{Now.Second}с)"
 
         ' эти примечания корректируются для записи расшифрованных снимков
         If descriptionSnapshot = Nothing Then descriptionSnapshot = $"Снимок {FrequencyHandQuery} Гц"
@@ -1322,7 +1312,8 @@ Friend MustInherit Class FormSnapshotBase
             snapshotTdmsFileProcessor.CloseTDMSFile()
             snapshotTdmsFileProcessor = Nothing
         Else
-            pathTextDataStream = $"{pathFile}База снимков\{tempNumberEngine}_{Today.ToShortDateString}_{timeString}_{descriptionSnapshot}.txt"
+            'pathTextDataStream = $"{pathFile}База снимков\{tempNumberEngine}_{Today.ToShortDateString}_{timeString}_{descriptionSnapshot}.txt"
+            pathTextDataStream = $"{pathFile}База снимков\{tempNumberEngine} {Today.ToShortDateString} {timeString} {descriptionSnapshot}.txt"
         End If
 
         drDataRow("ПутьНаДиске") = pathTextDataStream
@@ -1537,8 +1528,6 @@ Friend MustInherit Class FormSnapshotBase
         Next
 
         Dim clearNames As String()
-        'ReDim_clearNames(0)
-        'ReDim_SnapshotSmallParameters(UBound(IndexParameters))
         Re.Dim(clearNames, 0)
         Re.Dim(SnapshotSmallParameters, UBound(IndexParameters))
 
@@ -1554,7 +1543,6 @@ Friend MustInherit Class FormSnapshotBase
         For I = 1 To UBound(NamesParameterRegime)
             For J = 1 To UBound(SnapshotSmallParameters)
                 If SnapshotSmallParameters(J).NameParameter = NamesParameterRegime(I) Then
-                    'ReDimPreserve clearNames(UBound(clearNames) + 1)
                     Re.DimPreserve(clearNames, UBound(clearNames) + 1)
                     clearNames(UBound(clearNames)) = NamesParameterRegime(I)
                     Exit For
@@ -1602,7 +1590,6 @@ Friend MustInherit Class FormSnapshotBase
             count += 1
         Loop While start < lenghtString
 
-        'ReDim_NamesParameterRegime(count - 1)
         Re.Dim(NamesParameterRegime, count - 1)
         start = 1
         count = 1
@@ -1931,7 +1918,6 @@ Friend MustInherit Class FormSnapshotBase
             ' копируем часть arrСреднееПересчитанный во временный
             ' для режима Регистратор только видимые шлейфы
             If IsRegimeIsRegistrator Then
-                'ReDim_tempData(UBound(MeasuredValuesToRange), L - 1)
                 Re.Dim(tempData, UBound(MeasuredValuesToRange), L - 1)
 
                 For I = 0 To UBound(MeasuredValuesToRange)
@@ -1946,13 +1932,11 @@ Friend MustInherit Class FormSnapshotBase
                 K = 0
                 z = NationalInstruments.Analysis.Math.LinearAlgebra.Transpose(tempData)
 
-                'ReDim_y(L - 1, 0)
                 Re.Dim(y, L - 1, 0)
 
                 For M = 1 To N
                     If IsBeforeThatHappenLoadDbase Then
                         If ParametersShaphotType(IndexParameters(M)).IsVisible Then
-                            'ReDimPreserve y(L - 1, K)
                             Re.DimPreserve(y, L - 1, K)
                             For I = 0 To L - 1
                                 y(I, K) = z(I, M - 1)
@@ -1961,7 +1945,6 @@ Friend MustInherit Class FormSnapshotBase
                         End If
                     Else
                         If ParametersType(IndexParameters(M)).IsVisible Then
-                            'ReDimPreserve y(L - 1, K)
                             Re.DimPreserve(y, L - 1, K)
                             For I = 0 To L - 1
                                 y(I, K) = z(I, M - 1)
@@ -1971,7 +1954,6 @@ Friend MustInherit Class FormSnapshotBase
                     End If
                 Next M
             Else ' нормальный снимок
-                'ReDim_tempData(UBound(MeasuredValuesToRange), L - 1)
                 Re.Dim(tempData, UBound(MeasuredValuesToRange), L - 1)
                 For I = 0 To UBound(MeasuredValuesToRange)
                     K = 0
@@ -3232,7 +3214,6 @@ Friend MustInherit Class FormSnapshotBase
                     L = endAxisX - startAxisX + 1
                     ' копируем часть arrСреднее во временный
                     ' для режима Регистратор только видимые шлейфы
-                    'ReDim_tempData(UBound(MeasuredValues), L - 1)
                     Re.Dim(tempData, UBound(MeasuredValues), L - 1)
 
                     For I = 0 To UBound(MeasuredValues)
@@ -3246,7 +3227,6 @@ Friend MustInherit Class FormSnapshotBase
                     N = UBound(IndexParameters)
                     K = 0
                     transposeData = NationalInstruments.Analysis.Math.LinearAlgebra.Transpose(tempData)
-                    'ReDim_y(L - 1, 0)
                     Re.Dim(y, L - 1, 0)
                     isSnapshotRegistration = (RegimeType = cРегистратор)
                     isParameterAdd = False
@@ -3264,7 +3244,6 @@ Friend MustInherit Class FormSnapshotBase
                             End If
 
                             If isParameterAdd = True Then
-                                'ReDimPreserve y(L - 1, K)
                                 Re.DimPreserve(y, L - 1, K)
                                 For I = 0 To L - 1
                                     y(I, K) = transposeData(I, M - 1)
@@ -3286,7 +3265,6 @@ Friend MustInherit Class FormSnapshotBase
                                         End If
 
                                         If isParameterAdd = True Then
-                                            'ReDimPreserve y(L - 1, K)
                                             Re.DimPreserve(y, L - 1, K)
                                             For I = 0 To L - 1
                                                 y(I, K) = transposeData(I, M - 1)
@@ -4880,6 +4858,7 @@ Friend MustInherit Class FormSnapshotBase
     End Sub
 End Class
 
+'Public mFormVerticalSection As FormVerticalSection
 'Friend Sub ПостроитьСечения()
 '    Dim числоСечений, I, J, N As Integer
 '    Dim времяСечения As Double

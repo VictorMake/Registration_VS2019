@@ -3,20 +3,20 @@ Imports System.Text
 Imports MathematicalLibrary
 
 Friend Class FormTuningRegime
-    Private Structure ParameterType
+    Private Structure ParameterRegimeType
         Dim NumberParameter As Short ' Номер Параметра
         Dim NameParameter As String ' Наименование Параметра
         Dim Unit As String ' Единица Измерения
         Dim Description As String ' Примечание
     End Structure
-    Private aParameterType() As FormTuningRegime.ParameterType
+    Private aParameterRegimeType() As ParameterRegimeType
 
     Private Structure RegimeType
         Dim NumbeRegime As Short ' Номер Режима
         Dim NameRegime As String ' Наименование
         Dim Configuration As String ' Перечень Параметров
     End Structure
-    Private aRegimeType() As FormTuningRegime.RegimeType
+    Private aRegimeType() As RegimeType
 
     Private isFormLoaded As Boolean = False
 
@@ -68,12 +68,12 @@ Friend Class FormTuningRegime
         Dim sb As New StringBuilder
 
         ' сначало делается запись, а затем считывание по новой
-        For I As Integer = 1 To UBound(aParameterType)
+        For I As Integer = 1 To UBound(aParameterRegimeType)
             If ListViewSelectedChannels.Items(I - 1).Checked Then
                 If sb.Length = 0 Then
-                    sb.Append(aParameterType(I).NameParameter)
+                    sb.Append(aParameterRegimeType(I).NameParameter)
                 Else
-                    sb.Append($"\{aParameterType(I).NameParameter}")
+                    sb.Append($"\{aParameterRegimeType(I).NameParameter}")
                 End If
             End If
         Next
@@ -90,60 +90,68 @@ Friend Class FormTuningRegime
     ''' Загрузка списка каналов и режимов рабочего стенда
     ''' </summary>
     Private Sub PopulateChannelsAndRegime()
-        Dim strSQL As String = "SELECT COUNT(*) FROM " & ChannelLast
         Dim index As Integer
-        Dim cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
-        Dim rdr As OleDbDataReader
-        Dim cmd As OleDbCommand = cn.CreateCommand
+        Dim strSQL As String
 
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = strSQL
-        cn.Open()
-        'ReDim_aParameterType(CInt(cmd.ExecuteScalar))
-        Re.Dim(aParameterType, CInt(cmd.ExecuteScalar))
+        If IsCompactRio Then
+            strSQL = $"SELECT COUNT(*) FROM {ChannelLast} WHERE UseCompactRio <> 0 "
+        Else
+            strSQL = $"SELECT COUNT(*) FROM {ChannelLast}"
+        End If
 
-        strSQL = "SELECT * FROM " & ChannelLast
-        cmd.CommandText = strSQL
-        rdr = cmd.ExecuteReader
+        Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
+            Using cmd As OleDbCommand = cn.CreateCommand
+                cmd.CommandType = CommandType.Text
+                cmd.CommandText = strSQL
+                cn.Open()
+                Re.Dim(aParameterRegimeType, CInt(cmd.ExecuteScalar))
 
-        ' загрузка коэффициентов по параметрам с базы с помощью запроса
-        ' при добавлении полей надо модифицировать запрос в базе
-        Do While rdr.Read
-            index = CInt(rdr("НомерПараметра"))
-            aParameterType(index).NumberParameter = CShort(rdr("НомерПараметра"))
-            aParameterType(index).NameParameter = CStr(rdr("НаименованиеПараметра"))
-            aParameterType(index).Unit = CStr(rdr("ЕдиницаИзмерения"))
+                If IsCompactRio Then
+                    strSQL = $"Select * FROM {ChannelLast} WHERE UseCompactRio <> 0 Order By НомерПараметра"
+                Else
+                    strSQL = $"Select * FROM {ChannelLast} Order By НомерПараметра"
+                End If
 
-            If Not IsDBNull(rdr("Примечания")) Then
-                aParameterType(index).Description = CStr(rdr("Примечания"))
-            Else
-                aParameterType(index).Description = CStr(0)
-            End If
-        Loop
+                cmd.CommandText = strSQL
 
-        rdr.Close()
+                Using rdr As OleDbDataReader = cmd.ExecuteReader
+                    ' загрузка коэффициентов по параметрам с базы с помощью запроса
+                    ' при добавлении полей надо модифицировать запрос в базе
+                    index = 1
+                    Do While rdr.Read
+                        'index = CInt(rdr("НомерПараметра"))
+                        aParameterRegimeType(index).NumberParameter = CShort(rdr("НомерПараметра"))
+                        aParameterRegimeType(index).NameParameter = CStr(rdr("НаименованиеПараметра"))
+                        aParameterRegimeType(index).Unit = CStr(rdr("ЕдиницаИзмерения"))
 
-        strSQL = $"SELECT COUNT(*) FROM [Режимы{StandNumber}]"
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = strSQL
-        'ReDim_aRegimeType(CInt(cmd.ExecuteScalar))
-        Re.Dim(aRegimeType, CInt(cmd.ExecuteScalar))
+                        If Not IsDBNull(rdr("Примечания")) Then
+                            aParameterRegimeType(index).Description = CStr(rdr("Примечания"))
+                        Else
+                            aParameterRegimeType(index).Description = CStr(0)
+                        End If
+                        index += 1
+                    Loop
+                End Using
 
-        strSQL = $"SELECT * FROM [Режимы{StandNumber}]"
-        cmd.CommandText = strSQL
-        rdr = cmd.ExecuteReader
+                strSQL = $"Select COUNT(*) FROM [Режимы{StandNumber}]"
+                cmd.CommandType = CommandType.Text
+                cmd.CommandText = strSQL
+                Re.Dim(aRegimeType, CInt(cmd.ExecuteScalar))
+                strSQL = $"Select * FROM [Режимы{StandNumber}]"
+                cmd.CommandText = strSQL
 
-        ' загрузка коэффициентов по параметрам с базы с помощью запроса
-        ' при добавлении полей надо модифицировать запрос в базе
-        Do While rdr.Read
-            index = CInt(rdr("НомерРежима"))
-            aRegimeType(index).NumbeRegime = CShort(rdr("НомерРежима"))
-            aRegimeType(index).NameRegime = CStr(rdr("Наименование"))
-            aRegimeType(index).Configuration = CStr(rdr("ПереченьПараметров"))
-        Loop
-
-        rdr.Close()
-        cn.Close()
+                Using rdr As OleDbDataReader = cmd.ExecuteReader
+                    ' загрузка коэффициентов по параметрам с базы с помощью запроса
+                    ' при добавлении полей надо модифицировать запрос в базе
+                    Do While rdr.Read
+                        index = CInt(rdr("НомерРежима"))
+                        aRegimeType(index).NumbeRegime = CShort(rdr("НомерРежима"))
+                        aRegimeType(index).NameRegime = CStr(rdr("Наименование"))
+                        aRegimeType(index).Configuration = CStr(rdr("ПереченьПараметров"))
+                    Loop
+                End Using
+            End Using
+        End Using
     End Sub
 
     Private Sub ComboBoxSelectRegimeSelectedIndexChanged()
@@ -162,13 +170,13 @@ Friend Class FormTuningRegime
             .BeginUpdate()
             .Items.Clear()
             ' Создать переменную, чтобы добавлять объекты ListItem.
-            For I As Integer = 1 To UBound(aParameterType)
-                Dim itemLView As New ListViewItem(aParameterType(I).NameParameter) With {.Name = aParameterType(I).NameParameter}
-                itemLView.SubItems.Add(aParameterType(I).NumberParameter.ToString)
-                itemLView.SubItems.Add(aParameterType(I).Description)
+            For I As Integer = 1 To UBound(aParameterRegimeType)
+                Dim itemLView As New ListViewItem(aParameterRegimeType(I).NameParameter) With {.Name = aParameterRegimeType(I).NameParameter}
+                itemLView.SubItems.Add(aParameterRegimeType(I).NumberParameter.ToString)
+                itemLView.SubItems.Add(aParameterRegimeType(I).Description)
 
-                If CBool(InStr(1, UnitOfMeasureString, aParameterType(I).Unit)) Then
-                    itemLView.ImageIndex = Array.IndexOf(UnitOfMeasureArray, aParameterType(I).Unit)
+                If CBool(InStr(1, UnitOfMeasureString, aParameterRegimeType(I).Unit)) Then
+                    itemLView.ImageIndex = Array.IndexOf(UnitOfMeasureArray, aParameterRegimeType(I).Unit)
                 Else
                     itemLView.ImageIndex = 6
                 End If
@@ -180,9 +188,9 @@ Friend Class FormTuningRegime
             ' список параметров в упаковке
             Dim names As String() = DecryptionString(aRegimeType(numberRegime).Configuration)
 
-            For I As Integer = 1 To UBound(aParameterType)
+            For I As Integer = 1 To UBound(aParameterRegimeType)
                 For J As Integer = 1 To UBound(names)
-                    If aParameterType(I).NameParameter = names(J) Then
+                    If aParameterRegimeType(I).NameParameter = names(J) Then
                         .Items(I - 1).Checked = True
                         .Items(I - 1).ForeColor = Color.Black ' черный - есть
                         Exit For
@@ -204,7 +212,7 @@ Friend Class FormTuningRegime
 
         cmd.CommandType = CommandType.Text
         Dim strSQL As String = "Update Режимы" & StandNumber &
-                        " SET ПереченьПараметров = '" & configuration &
+                        " Set ПереченьПараметров = '" & configuration &
                         "' WHERE ([НомерРежима]= " & (ComboBoxSelectRegime.SelectedIndex + 1).ToString & ")"
         cmd.CommandText = strSQL
         cn.Open()

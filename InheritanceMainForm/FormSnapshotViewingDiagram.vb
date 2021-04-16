@@ -36,7 +36,7 @@ Friend Class FormSnapshotViewingDiagram
 
     Protected Sub New()
         'Public Sub New()
-        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, "FormSnapshotViewingDiagram")
+        Me.New(New FormMainMDI, FormExamination.RegistrationSCXI, NameOf(FormSnapshotViewingDiagram))
         'InitializeComponent()
     End Sub
 
@@ -182,7 +182,6 @@ Friend Class FormSnapshotViewingDiagram
 
         ReadConfigurationRegime()
         UnpackStringConfigurationWithEmpty(ConfigurationString)
-        'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
 
         Dim I, J As Integer
@@ -190,7 +189,6 @@ Friend Class FormSnapshotViewingDiagram
         For I = 1 To UBound(NamesParameterRegime)
             For J = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = NamesParameterRegime(I) Then
-                    'ReDimPreserve IndexParameters(UBound(IndexParameters) + 1)
                     Re.DimPreserve(IndexParameters, UBound(IndexParameters) + 1)
                     IndexParameters(UBound(IndexParameters)) = J
                     Exit For
@@ -210,7 +208,6 @@ Friend Class FormSnapshotViewingDiagram
         Next
 
         If Not IsNothing(IndexParameters) Then
-            'ReDim_CopyListOfParameter(IndexParameters.Length - 1)
             Re.Dim(CopyListOfParameter, IndexParameters.Length - 1)
             Array.Copy(IndexParameters, CopyListOfParameter, IndexParameters.Length)
         End If

@@ -4,14 +4,15 @@ Imports System.Globalization
 Imports System.Threading
 Imports System.ComponentModel
 Imports MathematicalLibrary
+Imports System.Runtime.Serialization.Formatters.Soap
+Imports System.Collections.Generic
 
 Module MainModule
 
-#Region "Формы"
+#Region "Глобальные Формы и объекты"
     Public MainMdiForm As FormMainMDI
     Public EditorPanelMotoristForm As FormEditorPanelMotorist
     Public AboutForm As FormAbout
-    'Public mFormVerticalSection As FormVerticalSection
     Public TextEditorForm As FormTextEditor
     ''' <summary>
     ''' Опрос Канала
@@ -20,19 +21,13 @@ Module MainModule
     Public TestChannelForm As FormTestChannel
     Public SettingForm As FormSetting
     Public ServerForm As FormServer
-    Private messageBoxForm As FormMessageBox
-#End Region
-
-#Region "Object"
     Public CollectionForms As New FormsCollection
-    'Public CryptoSample As CheckCrypto
     Public gDigitalInput As DigitalInput
     Public gTdmsFileProcessor As TdmsFileProcessor
-    Public BitmapBackColor As Color = Color.Gainsboro
     Public gFormsPanelManager As FormsPanelManager
 #End Region
 
-#Region "Логические"
+#Region "Глобальные флаги"
     Public IsFrmServiceBasesLoaded As Boolean
     Public IsFrmDigitalOutputPortStart As Boolean
     Public IsMonitorDigitalOutputPort As Boolean
@@ -68,8 +63,8 @@ Module MainModule
     ''' </summary>
     ''' <remarks></remarks>
     Public IsFocusToClient As Boolean
-    Public IsWorkWithController, IsTcpClient, IsClient As Boolean
-    Public IsServer As Boolean
+    ' Режимы запуска программы, установленные при запуске в настроечной форме
+    Public IsServer, IsClient, IsWorkWithDaqController, IsTcpClient, IsCompactRio, IsSnapshot As Boolean
     ''' <summary>
     ''' Опрос Оборотов
     ''' </summary>
@@ -99,7 +94,10 @@ Module MainModule
     ''' Проверка Свободного Места Проведена
     ''' </summary>
     Public IsCheckFreePlace As Boolean
-    Public IsUseTCPClient, IsUseTdms As Boolean
+    ''' <summary>
+    ''' Использован формат записи Tdms
+    ''' </summary>
+    Public IsUseTdms As Boolean
 #End Region
 
 #Region "TcpClient"
@@ -143,7 +141,6 @@ Module MainModule
         Dim Description As String               ' Примечания
 
         Public Sub Initialize()
-            'ReDim_Coefficient(5)
             Re.Dim(Coefficient, 5)
         End Sub
     End Structure
@@ -320,6 +317,18 @@ Module MainModule
         TimeOut ' Время Сжатия Истекло
     End Enum
 
+    ''' <summary>
+    ''' Перечислитель режима работы шасси.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Enum EnumModeWork
+        <Description("Измерение")>
+        Measurement
+        <Description("Измерение и управление")>
+        Control
+        <Description("Неизв.")>
+        Unknown
+    End Enum
 #End Region
 
 #Region "Const"
@@ -370,9 +379,13 @@ Module MainModule
     Public Const TextControlFormTuning As String = "TextControl"
     Public Const GraphControlFormTuning As String = "GraphControl"
     Public Const SelectiveControlFormTuning As String = "SelectiveControl"
+    Public Const CRIOChassisList As String = "СписокШассиCRio"
+    Private Const Chassis As String = "Chassis"
+    Private Const BoardType As String = "BoardType"
+    Public Const UseCompactRio As String = "UseCompactRio"
 #End Region
 
-#Region "Пути"
+#Region "Path Application"
     Public PathResourses As String
     Public PathChannels As String
     Public PathExcel As String
@@ -468,7 +481,7 @@ Module MainModule
     ''' </summary>
     ''' <remarks></remarks>
     Public NameDigitalInputChannels As String()
-    Public ColorsNet(7) As Color
+    Public ColorsNet() As Color = {Color.White, Color.Lime, Color.Red, Color.Yellow, Color.DeepSkyBlue, Color.Cyan, Color.Magenta, Color.Silver}
 #End Region
 
 #Region "Text variable"
@@ -518,6 +531,11 @@ Module MainModule
     ''' </summary>
     ''' <remarks></remarks>
     Public Precision As Integer
+    ''' <summary>
+    ''' Для Сервера - число клиентов и соответствующее число вкладок
+    ''' Для Клиента - номер клиента и соответсвующая вкладка
+    ''' </summary>
+    Public CountClientOrNumberClient As Integer
 #End Region
 
 #Region "Engine"
@@ -591,7 +609,6 @@ Module MainModule
     ''' </summary>
     ''' <remarks></remarks>
     Public TimeFrame As Short
-
     ''' <summary>
     ''' КолОпросов
     ''' </summary>
@@ -634,13 +651,7 @@ Module MainModule
     ''' </summary>
     ''' <remarks></remarks>
     Public MaxLimitParameter As Double
-
 #End Region
-    ''' <summary>
-    ''' Для Сервера - число клиентов и соответствующее число вкладок
-    ''' Для Клиента - номер клиента и соответсвующая вкладка
-    ''' </summary>
-    Public CountClientOrNumberClient As Integer
 
     'Public TagValueHashCodeNew As Integer
     'Public TagValueHashCodeOld As Integer
@@ -684,10 +695,10 @@ Module MainModule
             'Thread.CurrentThread.CurrentCulture = newCInfo
         End If
 
-        'strПутьРесурсы = VB6.GetPath & "\Ресурсы" ' получить текущий путь к директории приложения (это работает).
+        'PathResourses = VB6.GetPath & "\Ресурсы" ' получить текущий путь к директории приложения (это работает).
         PathResourses = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), RootDirectory) ' заменил на это
-        'strПутьРесурсы = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase) & "\Ресурсы"
-        'strПутьРесурсы = Path.GetDirectoryName(Directory.GetCurrentDirectory) & "\Ресурсы"
+        'PathResourses = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase) & "\Ресурсы"
+        'PathResourses = Path.GetDirectoryName(Directory.GetCurrentDirectory) & "\Ресурсы"
 
         'Dim strPathToSettingsFile As String = GetLocationOfSettingsFile()
         'Public Function GetLocationOfSettingsFile() As String
@@ -746,15 +757,6 @@ Module MainModule
         'mfrmSplash.UpdateStatus()
         ConfigPath()
 
-        ColorsNet(0) = Color.White
-        ColorsNet(1) = Color.Lime
-        ColorsNet(2) = Color.Red
-        ColorsNet(3) = Color.Yellow
-        ColorsNet(4) = Color.DeepSkyBlue
-        ColorsNet(5) = Color.Cyan
-        ColorsNet(6) = Color.Magenta
-        ColorsNet(7) = Color.Silver
-
         MainMdiForm = New FormMainMDI
         ' загрузка шапки
         SettingForm = New FormSetting
@@ -762,40 +764,55 @@ Module MainModule
         'mfrmSplash.UpdateStatusRevers()
         mfrmSplash.Close()
 
-        If IsUseTCPClient AndAlso FileNotExists(PathChannels_cfg_lmz) Then
-            ' данная проверка после считывания конфигурационного файла
-            Dim text As String = "В каталоге нет файла Channels_cfg_lmz.mdb!"
-            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
-            Environment.Exit(0) 'End'        'Global.System.Windows.Forms.Application.Exit()
-        End If
+        ' настройка пользовательского интерфейса в зависимости от режима работы
+        With MainMdiForm
+            .MenuNewWindowRegistration.Enabled = False
+            .MenuNewWindowSnapshot.Enabled = False
+            .MenuNewWindowTarir.Enabled = False
+            .MenuNewWindowClient.Enabled = False
 
-        If IsWorkWithController Then
-            MainMdiForm.MenuNewWindowClient.Enabled = False
-        Else
-            MainMdiForm.MenuNewWindowRegistration.Enabled = False
-            MainMdiForm.MenuNewWindowTarir.Enabled = False
-            MainMdiForm.MenuNewWindowClient.Enabled = False
-        End If
+            If IsWorkWithDaqController Then
+                .MenuNewWindowRegistration.Enabled = True
+                .MenuNewWindowSnapshot.Enabled = True
+                .MenuNewWindowTarir.Enabled = True
+            End If
 
-        If IsTcpClient Then
-            MainMdiForm.MenuNewWindowRegistration.Enabled = True
-            MainMdiForm.MenuNewWindowSnapshot.Enabled = True
-            MainMdiForm.MenuNewWindowTarir.Enabled = False
-            MainMdiForm.MenuNewWindowClient.Enabled = False
-        End If
+            If IsCompactRio Then
+                .MenuNewWindowRegistration.Enabled = True
+                .MenuNewWindowTarir.Enabled = True
+                .MenuNewWindowEvents.Enabled = False
+            End If
 
-        If IsClient Then
-            MainMdiForm.MenuNewWindowRegistration.Enabled = False
-            MainMdiForm.MenuNewWindowSnapshot.Enabled = False
-            MainMdiForm.MenuNewWindowTarir.Enabled = False
-            MainMdiForm.MenuNewWindowClient.Enabled = True
-            MainMdiForm.MenuNewWindowDBaseChannels.Enabled = False
-        End If
+            If IsTcpClient Then
+                If FileNotExists(PathChannels_cfg_lmz) Then
+                    ' данная проверка после считывания конфигурационного файла
+                    Dim text As String = "В каталоге нет файла Channels_cfg_lmz.mdb!"
+                    MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
+                    Environment.Exit(0) 'End'        'Global.System.Windows.Forms.Application.Exit()
+                End If
+
+                .MenuNewWindowRegistration.Enabled = True
+                .MenuNewWindowSnapshot.Enabled = True
+            End If
+
+            If IsSnapshot Then
+                .MenuNewWindowSnapshot.Enabled = True
+            End If
+
+            If IsClient Then
+                .MenuNewWindowClient.Enabled = True
+                .MenuNewWindowDBaseChannels.Enabled = False
+            End If
+        End With
 
         Application.Run(MainMdiForm)
     End Sub
 
+    ''' <summary>
+    ''' Парсинг ключей аргументов консольного запуска программы
+    ''' </summary>
+    ''' <param name="cmdArgs"></param>
     Private Sub AnalysisArguments(ByVal cmdArgs() As String)
         ' Список имен shr-файлов, переданных программе в командной строке.
         'Dim arysConfigs As List(Of String) = Nothing
@@ -937,11 +954,10 @@ Module MainModule
                     Case Else
                         ' Встретился неизвестный науке ключ...
                         Throw New Exception($"Неправильный ключ '{sKey}'")
-                        ' Обратите внимание, если бы не было throw, пришлось бы вставить
+                        ' если бы не было throw, пришлось бы вставить
                         ' сюда оператор break или return. Иначе компилятор будет
                         ' сильно ругаться... И это верно! Вдруг мы решим перенести код 
-                        ' обработчика «default» выше?! Cut&Paste – лучший способ 
-                        ' размножить ошибку. :)
+                        ' обработчика «default» выше?!
                 End Select
             Next
 
@@ -1027,7 +1043,8 @@ Module MainModule
         Dim aFindValue(0) As Object
         Dim dcDataColumn(1) As DataColumn
 
-        DeleteAddedCalculatedChannels()
+        DeleteAddedDigitalInputChannels()
+        CheckExisAndAddedColunmsUseCompactRio()
 
         odaDataAdapter = New OleDbDataAdapter($"SELECT * FROM {ChannelLast} Order By НомерПараметра",
                                               BuildCnnStr(ProviderJet, PathChannels))
@@ -1055,137 +1072,103 @@ Module MainModule
             I += 1
         Next
 
+        If IsCompactRio Then RemarkDataTableUseCompactRio(dtDataTable)
+
+        ' внести изменения в базу данных
         Dim myDataRowsCommandBuilder As OleDbCommandBuilder = New OleDbCommandBuilder(odaDataAdapter)
         odaDataAdapter.UpdateCommand = myDataRowsCommandBuilder.GetUpdateCommand
         odaDataAdapter.Update(dtDataTable)
         dtDataTable.AcceptChanges()
 
+        If IsCompactRio Then
+            ' если CompactRio, то заново считать с учётом подключённых шасси, ранее помеченных в процедуре RemarkDataTableUseCompactRio
+            odaDataAdapter = New OleDbDataAdapter($"SELECT * FROM {ChannelLast} WHERE UseCompactRio <> 0 Order By НомерПараметра",
+                                                 BuildCnnStr(ProviderJet, PathChannels))
+            dtDataTable.Clear()
+            odaDataAdapter.Fill(dtDataTable)
+            rowsCount = dtDataTable.Rows.Count
+        End If
+
         dcDataColumn(0) = dtDataTable.Columns("НомерПараметра")
         dtDataTable.PrimaryKey = dcDataColumn
 
-        'ReDim_ParametersType(rowsCount)
-        'ReDim_CoefficientPolynomial2D(rowsCount, 5)
         Re.Dim(ParametersType, rowsCount)
         Re.Dim(CoefficientPolynomial2D, rowsCount, 5)
-
+        I = 1
 
         ' загрузка коэффициентов по параметрам с базы с помощью запроса
-        For I = 1 To rowsCount
+        'For I = 1 To rowsCount
+        For Each drDataRow In dtDataTable.Rows
             ParametersType(I).Initialize()
-            aFindValue(0) = I
-            drDataRow = dtDataTable.Rows.Find(aFindValue)
+            ''aFindValue(0) = I
+            ''drDataRow = dtDataTable.Rows.Find(aFindValue)
 
-            If drDataRow IsNot Nothing Then
-                With drDataRow
-                    ParametersType(I).NumberParameter = CShort(.Item("НомерПараметра"))
-                    ParametersType(I).NameParameter = CStr(.Item("НаименованиеПараметра"))
-                    ParametersType(I).NumberChannel = CShort(.Item("НомерКанала"))
-                    ParametersType(I).NumberDevice = CShort(.Item("НомерУстройства"))
+            'If drDataRow IsNot Nothing Then
+            With drDataRow
+                ParametersType(I).NumberParameter = CShort(.Item("НомерПараметра"))
+                ParametersType(I).NameParameter = CStr(.Item("НаименованиеПараметра"))
+                ParametersType(I).NumberChannel = CShort(.Item("НомерКанала"))
+                ParametersType(I).NumberDevice = CShort(.Item("НомерУстройства"))
 
-                    If Not IsDBNull(.Item("НомерМодуляКорзины")) Then
-                        ParametersType(I).NumberModuleChassis = CShort(.Item("НомерМодуляКорзины"))
-                    Else
-                        ParametersType(I).NumberModuleChassis = -1
-                    End If
-
-                    If Not IsDBNull(.Item("НомерКаналаМодуля")) Then
-                        ParametersType(I).NumberChannelModule = CShort(.Item("НомерКаналаМодуля"))
-                    Else
-                        ParametersType(I).NumberChannelModule = -1
-                    End If
-
-                    ParametersType(I).TypeConnection = CStr(.Item("ТипПодключения"))
-                    ParametersType(I).LowerMeasure = CSng(.Item("НижнийПредел"))
-                    ParametersType(I).UpperMeasure = CSng(.Item("ВерхнийПредел"))
-                    ParametersType(I).SignalType = CStr(.Item("ТипСигнала"))
-                    ParametersType(I).NumberFormula = CShort(.Item("НомерФормулы"))
-                    ParametersType(I).LevelOfApproximation = CShort(.Item("СтепеньАппроксимации"))
-                    ParametersType(I).Coefficient(0) = CDbl(.Item("A0"))
-                    ParametersType(I).Coefficient(1) = CDbl(.Item("A1"))
-                    ParametersType(I).Coefficient(2) = CDbl(.Item("A2"))
-                    ParametersType(I).Coefficient(3) = CDbl(.Item("A3"))
-                    ParametersType(I).Coefficient(4) = CDbl(.Item("A4"))
-                    ParametersType(I).Coefficient(5) = CDbl(.Item("A5"))
-                    CoefficientPolynomial2D(I, 0) = ParametersType(I).Coefficient(0)
-                    CoefficientPolynomial2D(I, 1) = ParametersType(I).Coefficient(1)
-                    CoefficientPolynomial2D(I, 2) = ParametersType(I).Coefficient(2)
-                    CoefficientPolynomial2D(I, 3) = ParametersType(I).Coefficient(3)
-                    CoefficientPolynomial2D(I, 4) = ParametersType(I).Coefficient(4)
-                    CoefficientPolynomial2D(I, 5) = ParametersType(I).Coefficient(5)
-
-                    ParametersType(I).Offset = CDbl(.Item("Смещение"))
-                    ParametersType(I).UnitOfMeasure = CStr(.Item("ЕдиницаИзмерения"))
-                    ParametersType(I).LowerLimit = CSng(.Item("ДопускМинимум"))
-                    ParametersType(I).UpperLimit = CSng(.Item("ДопускМаксимум"))
-                    ParametersType(I).RangeYmin = CShort(.Item("РазносУмин"))
-                    ParametersType(I).RangeYmax = CShort(.Item("РазносУмакс"))
-                    ParametersType(I).AlarmValueMin = CSng(.Item("АварийноеЗначениеМин"))
-                    ParametersType(I).AlarmValueMax = CSng(.Item("АварийноеЗначениеМакс"))
-                    ParametersType(I).Blocking = CBool(.Item("Блокировка"))
-                    ParametersType(I).IsVisible = CBool(.Item("ВидимостьРегистратор"))
-                    ParametersType(I).CompensationXC = CBool(.Item("КомпенсацияХС"))
-
-                    If Not IsDBNull(.Item("Погрешность")) Then
-                        ParametersType(I).Mistake = CSng(.Item("Погрешность"))
-                    Else
-                        ParametersType(I).Mistake = 0
-                    End If
-
-                    If Not IsDBNull(.Item("Примечания")) Then
-                        ParametersType(I).Description = CStr(.Item("Примечания"))
-                    Else
-                        ParametersType(I).Description = CStr(0)
-                    End If
-
-                    'If arrПараметры(intI).strНаименованиеПараметра = "Т4" Then
-                    '    arrПараметры(intI).sngАварийноеЗначениеМакс = Т4КРД + 30
-                    'End If
-                End With
-            End If
-        Next
-    End Sub
-
-    ''' <summary>
-    ''' Удалить каналы в которых погрешность является признаком
-    ''' каналов с подключенными модулями.
-    ''' </summary>
-    Public Sub DeleteAddedCalculatedChannels()
-        Dim cn As OleDbConnection
-        Dim cmd As OleDbCommand
-
-        If MainMdiForm.ModuleSolveManager Is Nothing OrElse IsFrmServiceBasesLoaded Then
-            ' если fMainForm.varМодульРасчетаManager Is Nothing значит вызвана из шапки и полная проверка
-            ' если blnfrmServiceBasesЗагружена значит вызвана оттуда в событии закрытия
-            If IsWorkWithController Then
-                ' проверить наличие таблицы с именем ChannelDigitalInput
-                cn = New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
-                cn.Open()
-
-                ' Здесь проверка существования базы
-                If CheckExistTable(cn, "ChannelDigitalInput") Then
-                    If gDigitalInput Is Nothing Then
-                        gDigitalInput = New DigitalInput
-                        gDigitalInput.LoadParameters()
-                    End If
+                If Not IsDBNull(.Item("НомерМодуляКорзины")) Then
+                    ParametersType(I).NumberModuleChassis = CShort(.Item("НомерМодуляКорзины"))
                 Else
-                    cmd = cn.CreateCommand
-                    cmd.CommandType = CommandType.Text
-                    cmd.CommandText = $"DELETE * FROM {ChannelLast} WHERE Погрешность={IndexDiscreteInput}"
-                    cmd.ExecuteNonQuery()
+                    ParametersType(I).NumberModuleChassis = -1
                 End If
 
-                cn.Close()
-                Thread.Sleep(500)
-                Application.DoEvents()
-            End If
-        End If
-    End Sub
+                If Not IsDBNull(.Item("НомерКаналаМодуля")) Then
+                    ParametersType(I).NumberChannelModule = CShort(.Item("НомерКаналаМодуля"))
+                Else
+                    ParametersType(I).NumberChannelModule = -1
+                End If
 
-    Public Function BuildCnnStr(ByVal provider As String, ByVal dataBase As String) As String
-        'Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Registry Path=;Jet OLEDB:Database Locking Mode=1;Data Source="D:\ПрограммыVBNET\RUD\RUD.NET\bin\Ресурсы\Channels.mdb";Jet OLEDB:Engine Type=5;Provider="Microsoft.Jet.OLEDB.4.0";Jet OLEDB:System database=;Jet OLEDB:SFP=False;persist security info=False;Extended Properties=;Mode=Share Deny None;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Create System Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;User ID=Admin;Jet OLEDB:Global Bulk Transactions=1
-        'sConnect = strProviderJet & "Persist Security Info=False;User ID=Admin;Data Source=" & strПутьChannels & ";Mode=Share Deny None;Extended Properties=';COUNTRY=0;CP=1252;LANGID=0x0409';Locale Identifier=1033;Jet OLEDB:System database='';Jet OLEDB:Registry Path='';Jet OLEDB:Database Password='';Jet OLEDB:Global Partial Bulk Ops=2"
-        Return $"{provider}Data Source={dataBase};"
-    End Function
+                ParametersType(I).TypeConnection = CStr(.Item("ТипПодключения"))
+                ParametersType(I).LowerMeasure = CSng(.Item("НижнийПредел"))
+                ParametersType(I).UpperMeasure = CSng(.Item("ВерхнийПредел"))
+                ParametersType(I).SignalType = CStr(.Item("ТипСигнала"))
+                ParametersType(I).NumberFormula = CShort(.Item("НомерФормулы"))
+                ParametersType(I).LevelOfApproximation = CShort(.Item("СтепеньАппроксимации"))
+                ParametersType(I).Coefficient(0) = CDbl(.Item("A0"))
+                ParametersType(I).Coefficient(1) = CDbl(.Item("A1"))
+                ParametersType(I).Coefficient(2) = CDbl(.Item("A2"))
+                ParametersType(I).Coefficient(3) = CDbl(.Item("A3"))
+                ParametersType(I).Coefficient(4) = CDbl(.Item("A4"))
+                ParametersType(I).Coefficient(5) = CDbl(.Item("A5"))
+                CoefficientPolynomial2D(I, 0) = ParametersType(I).Coefficient(0)
+                CoefficientPolynomial2D(I, 1) = ParametersType(I).Coefficient(1)
+                CoefficientPolynomial2D(I, 2) = ParametersType(I).Coefficient(2)
+                CoefficientPolynomial2D(I, 3) = ParametersType(I).Coefficient(3)
+                CoefficientPolynomial2D(I, 4) = ParametersType(I).Coefficient(4)
+                CoefficientPolynomial2D(I, 5) = ParametersType(I).Coefficient(5)
+
+                ParametersType(I).Offset = CDbl(.Item("Смещение"))
+                ParametersType(I).UnitOfMeasure = CStr(.Item("ЕдиницаИзмерения"))
+                ParametersType(I).LowerLimit = CSng(.Item("ДопускМинимум"))
+                ParametersType(I).UpperLimit = CSng(.Item("ДопускМаксимум"))
+                ParametersType(I).RangeYmin = CShort(.Item("РазносУмин"))
+                ParametersType(I).RangeYmax = CShort(.Item("РазносУмакс"))
+                ParametersType(I).AlarmValueMin = CSng(.Item("АварийноеЗначениеМин"))
+                ParametersType(I).AlarmValueMax = CSng(.Item("АварийноеЗначениеМакс"))
+                ParametersType(I).Blocking = CBool(.Item("Блокировка"))
+                ParametersType(I).IsVisible = CBool(.Item("ВидимостьРегистратор"))
+                ParametersType(I).CompensationXC = CBool(.Item("КомпенсацияХС"))
+
+                If Not IsDBNull(.Item("Погрешность")) Then
+                    ParametersType(I).Mistake = CSng(.Item("Погрешность"))
+                Else
+                    ParametersType(I).Mistake = 0
+                End If
+
+                If Not IsDBNull(.Item("Примечания")) Then
+                    ParametersType(I).Description = CStr(.Item("Примечания"))
+                Else
+                    ParametersType(I).Description = CStr(0)
+                End If
+            End With
+            'End If
+            I += 1
+        Next
+    End Sub
 
     ''' <summary>
     ''' Вычисление физич. значений
@@ -1508,7 +1491,7 @@ Module MainModule
         ' для режима регистратора при запуске
         ' для режима снимок только когда просмотр без записи (чтобы эта процедура не завелась во время испытаний)
         ' и только во время открытия проводника, потому что база может буть сменена
-        If whoIsCall = TypeWorkAutomaticBackup.Snapshot AndAlso (IsWorkWithController OrElse IsTcpClient) Then
+        If whoIsCall = TypeWorkAutomaticBackup.Snapshot AndAlso (IsWorkWithDaqController OrElse IsCompactRio OrElse IsTcpClient) Then
             Exit Sub ' просмотр архива
         End If
 
@@ -1527,7 +1510,7 @@ Module MainModule
                     ' все нормально
                     ' сообщение о проводимой процедуре
                     '****************************
-                    messageBoxForm = New FormMessageBox("Подождите, идет архивирование", "Автоматическое архивирование")
+                    Dim messageBoxForm As New FormMessageBox("Подождите, идет архивирование", "Автоматическое архивирование")
                     messageBoxForm.Show()
                     messageBoxForm.Activate()
                     messageBoxForm.Refresh()
@@ -1540,7 +1523,7 @@ Module MainModule
                     End If
 
                     'создание папки с датой и временем
-                    folderCopying = Path.Combine(pathArchive, $"АвтоматическоеАрхивирование_{Today.ToShortDateString}_{Replace(Trim(Now.ToLongTimeString), ":", "-")}")
+                    folderCopying = Path.Combine(pathArchive, $"Автоматическое архивирование {Today.ToShortDateString} ({Now.Hour}ч{Now.Minute}м{Now.Second}с)")
                     Directory.CreateDirectory(folderCopying) ' создать папку перед переносом
 
                     ' 1 перенос всей папки "База снимков" и копирование базы 
@@ -1561,7 +1544,7 @@ Module MainModule
                         ' присвоение нового пути к базе только если просмотр из другой программы
                         ' которая произвела архивирование
                         ' или из текущей загруженной как снимок
-                        If whoIsCall = TypeWorkAutomaticBackup.Snapshot AndAlso Not IsWorkWithController Then
+                        If whoIsCall = TypeWorkAutomaticBackup.Snapshot AndAlso Not (IsWorkWithDaqController OrElse IsCompactRio) Then
                             PathChannels = newPathChannels
                             IsDataBaseChanged = True
                         End If
@@ -1635,7 +1618,7 @@ Module MainModule
 
         Catch ex As Exception
             Const captionEx As String = "Ошибка запуска BackupJRO.exe"
-            Dim textEx As String = String.Format("Функция Process.Start привела к ошибке:{0}{1}", Environment.NewLine, ex.ToString)
+            Dim textEx As String = $"Функция Process.Start привела к ошибке:{Environment.NewLine}{ex}"
             'Console.WriteLine(String.Format("{0}{1}{2}", captionEx, Environment.NewLine, textEx))
             'Console.ReadKey()
             MessageBox.Show(textEx, captionEx, MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -1689,28 +1672,26 @@ Module MainModule
     ''' Удалить все записи после копирования
     ''' </summary>
     Private Sub DeleteAllRecordAfterCoping()
-        Dim cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
-        cn.Open()
-        Dim cmd As OleDbCommand = cn.CreateCommand
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = "DELETE [БазаСнимков].* FROM [БазаСнимков]"
-
-        Try
-            cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            Const caption As String = "Ошибка удаления записей в базе после копирования"
-            Dim text As String = ex.ToString
-            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED($"<{caption}> {text}")
-            IsCheckFreePlace = True
-        Finally
-            If (cn.State = ConnectionState.Open) Then
-                cn.Close()
-            End If
-            Thread.Sleep(200)
-        End Try
+        Using cn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
+            cn.Open()
+            Using cmd As OleDbCommand = cn.CreateCommand
+                cmd.CommandType = CommandType.Text
+                cmd.CommandText = "DELETE [БазаСнимков].* FROM [БазаСнимков]"
+                Try
+                    cmd.ExecuteNonQuery()
+                Catch ex As Exception
+                    Const caption As String = "Ошибка удаления записей в базе после копирования"
+                    Dim text As String = ex.ToString
+                    MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED($"<{caption}> {text}")
+                    IsCheckFreePlace = True
+                End Try
+            End Using
+        End Using
+        Thread.Sleep(200)
     End Sub
 
+#Region "Свободное Место На Диске"
     ''' <summary>
     ''' Накопление размера папки
     ''' </summary>
@@ -1747,6 +1728,7 @@ Module MainModule
         Dim infFile As New FileInfo(pathFile)
         Return infFile.Length / 1048576
     End Function
+
     ''' <summary>
     ''' Свободное Место На Диске
     ''' </summary>
@@ -1783,6 +1765,7 @@ Module MainModule
 
         Return freeSpace
     End Function
+#End Region
 
     ''' <summary>
     ''' График
@@ -1829,8 +1812,153 @@ Module MainModule
         End If
     End Function
 
+#Region "Dbase & Table"
+    Public Function BuildCnnStr(ByVal provider As String, ByVal dataBase As String) As String
+        'Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Registry Path=;Jet OLEDB:Database Locking Mode=1;Data Source="D:\ПрограммыVBNET\RUD\RUD.NET\bin\Ресурсы\Channels.mdb";Jet OLEDB:Engine Type=5;Provider="Microsoft.Jet.OLEDB.4.0";Jet OLEDB:System database=;Jet OLEDB:SFP=False;persist security info=False;Extended Properties=;Mode=Share Deny None;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Create System Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;User ID=Admin;Jet OLEDB:Global Bulk Transactions=1
+        'sConnect = strProviderJet & "Persist Security Info=False;User ID=Admin;Data Source=" & strПутьChannels & ";Mode=Share Deny None;Extended Properties=';COUNTRY=0;CP=1252;LANGID=0x0409';Locale Identifier=1033;Jet OLEDB:System database='';Jet OLEDB:Registry Path='';Jet OLEDB:Database Password='';Jet OLEDB:Global Partial Bulk Ops=2"
+        Return $"{provider}Data Source={dataBase};"
+    End Function
+
     ''' <summary>
-    ''' Проверка Наличия Таблицы
+    ''' Удалить каналы в которых погрешность является признаком
+    ''' дискретных каналов с подключенными модулями.
+    ''' </summary>
+    Private Sub DeleteAddedDigitalInputChannels()
+        If (MainMdiForm.ModuleSolveManager Is Nothing OrElse IsFrmServiceBasesLoaded) AndAlso IsWorkWithDaqController Then
+            ' если MainMdiForm.ModuleSolveManager Is Nothing значит вызвана из шапки и полная проверка
+            ' если IsFrmServiceBasesLoaded значит вызвана оттуда в событии закрытия
+            Using cn As OleDbConnection = New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
+                cn.Open()
+                ' проверить наличие таблицы с именем ChannelDigitalInput
+                If CheckExistTable(cn, "ChannelDigitalInput") Then
+                    If gDigitalInput Is Nothing Then
+                        gDigitalInput = New DigitalInput
+                        gDigitalInput.LoadParameters()
+                    End If
+                Else
+                    Dim cmd As OleDbCommand = cn.CreateCommand
+                    cmd.CommandType = CommandType.Text
+                    cmd.CommandText = $"DELETE * FROM {ChannelLast} WHERE Погрешность={IndexDiscreteInput}"
+                    cmd.ExecuteNonQuery()
+                End If
+            End Using
+            Thread.Sleep(500)
+            Application.DoEvents()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Пометить в dtDataTable записи, чьи Chassis входят в коллекцию шасси подключённых к сбору.
+    ''' </summary>
+    ''' <param name="refDataTable"></param>
+    Private Sub RemarkDataTableUseCompactRio(ByRef refDataTable As DataTable)
+        ' если используется режим сбора с шасси CompactRio, то пройти по шасси подключённым для сбора и удалить из dtDataTable
+        ' записи, чьи Chassis не входят в коллекцию шасси подключённых к сбору. Потребуется расшифровка конфигурации <СписокШассиCRio.xml>
+        Dim xmlFile As String = Path.Combine(PathResourses, CRIOChassisList & ".xml")
+        If Not File.Exists(xmlFile) Then
+            ' Файла нет, значит нет и файла сериализации, надо создать,
+            ' для примера коллекция из одного элемента экземпляра TargetCRIO.
+            Dim ArrayListObject As New ArrayList From {New TargetCRIO("New Target", New IPAddressCls("192.168.1.1"), EnumModeWork.Measurement, "Папка не указана")}
+            SerializeHashtableToXML(xmlFile, ArrayListObject)
+        End If
+
+        Dim namesTargetCRIO As New List(Of String)
+        ' извлекаем из Hashtable элементы (они экземпляры классов свойств TargetCRIO уже известного типа - приводит тип не надо)
+        For Each de As DictionaryEntry In DeserializeHashtableFromXML(xmlFile)
+            namesTargetCRIO.Add(CType(de.Value, TargetCRIO).HostName)
+        Next
+
+        'Dim dataRowsToDelete = From itemDataRow As DataRow In refDataTable
+        '                       Where Not namesTargetCRIO.Contains(CStr(IIf(IsDBNull(itemDataRow(Chassis)), " ", itemDataRow(Chassis))))
+        '                       Select itemDataRow
+
+        'If dataRowsToDelete.Count > 0 Then
+        '    'For Each itemDataRow As DataRow In dataRowsToDelete
+        '    '    refDataTable.Rows.Remove(itemDataRow)
+        '    'Next
+
+        '    Debug.Print("Всего: " & dataRowsToDelete.Count.ToString)
+
+        '    For I As Integer = refDataTable.Rows.Count - 1 To 0 Step -1
+        '        If dataRowsToDelete.Contains(refDataTable.Rows(I)) Then
+        '            refDataTable.Rows.RemoveAt(I)
+        '            Debug.Print(I.ToString)
+        '        End If
+        '    Next
+        'End If
+        'refDataTable.AcceptChanges()
+
+        Dim dataRowsToSelect = From itemDataRow As DataRow In refDataTable
+                               Where namesTargetCRIO.Contains(CStr(IIf(IsDBNull(itemDataRow(Chassis)), " ", itemDataRow(Chassis)))) OrElse CSng(IIf(IsDBNull(itemDataRow("Погрешность")), 0, itemDataRow("Погрешность"))) = indexCalculated
+                               Select itemDataRow
+        If dataRowsToSelect.Count > 0 Then
+            'Debug.Print("Всего: " & dataRowsToSelect.Count.ToString)
+            For I As Integer = 0 To refDataTable.Rows.Count - 1
+                refDataTable.Rows(I).Item(UseCompactRio) = False
+
+                If dataRowsToSelect.Contains(refDataTable.Rows(I)) Then
+                    refDataTable.Rows(I).Item(UseCompactRio) = True
+                    'Debug.Print(I.ToString)
+                End If
+            Next
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Проверка существования полей необходимых для работы с шасси CompactRio 
+    ''' в таблице каналов выбранного стенда и добавление их в случае необходимости.
+    ''' </summary>
+    Private Sub CheckExisAndAddedColunmsUseCompactRio()
+        ' проверить наличие таблицы с именем ChannelDigitalInput
+        Using cn As OleDbConnection = New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
+            cn.Open()
+            CheckExisColunms(cn, ChannelLast)
+            CheckExisColunms(cn, CHANNEL_N)
+        End Using
+        Thread.Sleep(500)
+        Application.DoEvents()
+    End Sub
+
+    ''' <summary>
+    ''' Проверка наличия Колонок в Таблице.
+    ''' </summary>
+    ''' <param name="cn"></param>
+    ''' <param name="tableName"></param>
+    Private Sub CheckExisColunms(ByRef cn As OleDbConnection, tableName As String)
+        If Not CheckExisColunm(cn, tableName, Chassis) Then CreateTextColunmToDbase(cn, tableName, Chassis)
+        If Not CheckExisColunm(cn, tableName, BoardType) Then CreateTextColunmToDbase(cn, tableName, BoardType)
+        If Not CheckExisColunm(cn, tableName, UseCompactRio) Then CreateBitColunmToDbase(cn, tableName, UseCompactRio)
+    End Sub
+
+    ''' <summary>
+    ''' Проверить есть, ли таблица режимов для данного стенда
+    ''' </summary>
+    Public Sub CheckTableNameRegime()
+        Dim conn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
+        Dim tableNameRegime As String = "Режимы" & StandNumber
+        Dim isTableNameRegime As Boolean
+
+        conn.Open()
+        Dim schemaTable As DataTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
+        conn.Close()
+
+        For Each row As DataRow In schemaTable.Rows
+            If CBool(InStr(1, row("TABLE_NAME").ToString, tableNameRegime)) Then isTableNameRegime = True
+        Next
+
+        If Not isTableNameRegime Then
+            Dim caption As String = $"Отсутствует таблица с именем <{tableNameRegime}>"
+            Dim text As String = $"В базе данных <{PathChannels}> отсутствует таблица с именем <{tableNameRegime}>.{vbCrLf}Продолжение работы невозможно!"
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
+            Environment.Exit(0) 'End
+            'Me.Close()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Возвращает сведения схемы из источника данных.
+    ''' Проверка наличия Таблицы.
     ''' </summary>
     ''' <param name="cn"></param>
     ''' <param name="tableName"></param>
@@ -1841,9 +1969,52 @@ Module MainModule
                 Return True
             End If
         Next
-
         Return False
     End Function
+
+    ''' <summary>
+    ''' Возвращает сведения схемы из источника данных.
+    ''' Проверка наличия Колонки в Таблице.
+    ''' </summary>
+    ''' <param name="cn"></param>
+    ''' <param name="tableName"></param>
+    ''' <param name="colunmName"></param>
+    ''' <returns></returns>
+    Public Function CheckExisColunm(ByRef cn As OleDbConnection, tableName As String, colunmName As String) As Boolean
+        For Each row As DataRow In cn.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, Nothing).Rows
+            If row("TABLE_NAME").ToString = tableName AndAlso row("COLUMN_NAME").ToString = colunmName Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
+
+    ''' <summary>
+    '''  Изменения макета таблицы после того, как она была создана.
+    ''' </summary>
+    ''' <param name="cn"></param>
+    ''' <param name="tableName"></param>
+    ''' <param name="colunmName"></param>
+    Private Sub CreateTextColunmToDbase(cn As OleDbConnection, tableName As String, colunmName As String)
+        Dim cmd As OleDbCommand = cn.CreateCommand
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {colunmName} TEXT(32)"
+        cmd.ExecuteNonQuery()
+    End Sub
+
+    ''' <summary>
+    '''  Изменения макета таблицы после того, как она была создана.
+    ''' </summary>
+    ''' <param name="cn"></param>
+    ''' <param name="tableName"></param>
+    ''' <param name="colunmName"></param>
+    Private Sub CreateBitColunmToDbase(cn As OleDbConnection, tableName As String, colunmName As String)
+        Dim cmd As OleDbCommand = cn.CreateCommand
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {colunmName} BIT"
+        cmd.ExecuteNonQuery()
+    End Sub
+#End Region
 
     ''' <summary>
     ''' Архивация При Открытии Окна
@@ -2040,31 +2211,56 @@ Module MainModule
         t.Wait()
     End Sub
 
+#Region "Серелизация и десериализация ArrayList в Hashtable"
     ''' <summary>
-    ''' Проверить есть, ли таблица режимов для данного стенда
+    ''' Получить Hashtable Из Файла
+    ''' По пути к XML файлу десериализовать его в Hashtable
     ''' </summary>
-    Public Sub CheckTableNameRegime()
-        Dim conn As New OleDbConnection(BuildCnnStr(ProviderJet, PathChannels))
-        Dim tableNameRegime As String = "Режимы" & StandNumber
-        Dim isTableNameRegime As Boolean
+    ''' <param name="strFileXML"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function DeserializeHashtableFromXML(ByVal strFileXML As String) As Hashtable
+        ' Создать soap сериализатор.
+        Dim sf As New SoapFormatter()
 
-        conn.Open()
-        Dim schemaTable As DataTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
-        conn.Close()
+        ' Загрузить содержимое файла, используя этот же SoapFormatter объект
+        Dim ht2 As Hashtable
+        Using fs As New FileStream(strFileXML, FileMode.Open)
+            ht2 = DirectCast(sf.Deserialize(fs), Hashtable)
+        End Using
+        ' Проверить, что объект был дессериализован корректно
+        'For Each de As DictionaryEntry In ht2
+        '    Console.WriteLine("Key={0}  Value={1}", de.Key, de.Value)
+        'Next
+        Return ht2
+    End Function
 
-        For Each row As DataRow In schemaTable.Rows
-            If CBool(InStr(1, row("TABLE_NAME").ToString, tableNameRegime)) Then isTableNameRegime = True
+    ''' <summary>
+    ''' Записать Hashtable В Файл
+    ''' Серелизация коллекции представленной ArrayList и запись в XML файл.
+    ''' </summary>
+    ''' <param name="strFileXML"></param>
+    ''' <param name="ArrayListObject"></param>
+    ''' <remarks></remarks>
+    Private Sub SerializeHashtableToXML(ByVal strFileXML As String, ByVal ArrayListObject As ArrayList)
+        ' на входе ArrayList переводим его в Hashtable со строковым ключом индекса
+        ' Создать Hashtable объект, и заполнить его данными из коллекции.
+        Dim I As Integer
+        Dim ht As New Hashtable()
+
+        For Each obj As Object In ArrayListObject
+            ht.Add(I.ToString, obj)
+            I += 1
         Next
 
-        If Not isTableNameRegime Then
-            Dim caption As String = $"Отсутствует таблица с именем <{tableNameRegime}>"
-            Dim text As String = $"В базе данных <{PathChannels}> отсутствует таблица с именем <{tableNameRegime}>.{vbCrLf}Продолжение работы невозможно!"
-            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
-            Environment.Exit(0) 'End
-            'Me.Close()
-        End If
+        ' Создать a soap сериализатор.
+        Dim sf As New SoapFormatter()
+        ' Записать Hashtable на диск в SOAP формате.
+        Using fs As New FileStream(strFileXML, FileMode.Create)
+            sf.Serialize(fs, ht)
+        End Using
     End Sub
+#End Region
 
     'Public Class MyConnect
     '    ''' <summary>

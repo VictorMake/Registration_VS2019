@@ -62,7 +62,7 @@ Friend Class FormServer
                         tempForm.Activate()
                         Application.DoEvents()
 
-                        If CBool(CType(tempForm, FormMain).KindFormExamination And (FormExamination.RegistrationSCXI Or FormExamination.RegistrationTCP)) Then
+                        If CBool(CType(tempForm, FormMain).KindFormExamination And (FormExamination.RegistrationSCXI Or FormExamination.RegistrationTCP Or FormExamination.RegistrationCompactRio)) Then
                             RunRegistrationForm()
                         End If
 

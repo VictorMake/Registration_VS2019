@@ -13,6 +13,23 @@ Imports Registration.FormEditiorGraphByParameter
 Imports TaskClientServerLibrary
 Imports TaskClientServerLibrary.Clobal
 
+'Порядок инициализации
+'Derived.Static.Fields
+
+'Derived.Static.Constructor
+
+'Derived.Instance.Fields
+
+'Base.Static.Fields
+
+'Base.Static.Constructor
+
+'Base.Instance.Fields
+
+'Base.Instance.Constructor
+
+'Derived.Instance.Constructor
+
 Friend MustInherit Class FormMain
     Implements IUpdateSelectiveControls, IMdiChildrenWindow
 
@@ -500,7 +517,6 @@ Friend MustInherit Class FormMain
 
     Private Sub FormMain_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         'CheckVersionOs()
-        'ReDim_IndexParameters(0)
         Re.Dim(IndexParameters, 0)
         coefficientBringingTBoxing = Sqrt(Const288 / (TemperatureOfBox + Kelvin))
         isSlantingLine = False
@@ -521,15 +537,7 @@ Friend MustInherit Class FormMain
         ' обязательно в конце этого метода
         BaseFormLoad()
 
-        Dim mIsServer As Boolean = False ' клиент по умолчанию
-
-        If Not IsWorkWithController Then ' просмотр снимка
-            mIsServer = False
-        ElseIf IsServer Then
-            mIsServer = True
-        End If
-
-        If Not IsTcpClient Then mReaderWriterCommander = New ReaderWriterCommand(Me, PathResourses, mIsServer, CountClientOrNumberClient, ServerWorkingFolder, ClientWorkingFolder, AddressOf AppendOutput)
+        If Not IsTcpClient Then mReaderWriterCommander = New ReaderWriterCommand(Me, PathResourses, IsServer, CountClientOrNumberClient, ServerWorkingFolder, ClientWorkingFolder, AddressOf AppendOutput)
     End Sub
 
     ''' <summary>
@@ -735,7 +743,6 @@ Friend MustInherit Class FormMain
             isShowDiagramFromParameter = False
             TuneDiagramFromParameter() ' загружается форма
         Else ' сбор
-            'ReDim_ParameterTwoGraph(UBound(ParametersType))
             Re.Dim(ParameterTwoGraph, UBound(ParametersType))
             RestoreDiagramFromParameter()
             If isShowDiagramFromParameter Then TuneRepresentationParameter()
@@ -871,7 +878,6 @@ Friend MustInherit Class FormMain
             Loop
 
             rdr.Close()
-            'ReDim_AllGraphParametersByParameter(UBound(IndexParameters))
             Re.Dim(AllGraphParametersByParameter, UBound(IndexParameters))
 
             For I = 1 To UBound(IndexParameters)
@@ -1012,8 +1018,6 @@ Friend MustInherit Class FormMain
 
         If isShowDiagramFromTime Then
             arraysizeDiagramFromParameter = CInt(arraysize / CounterParametersGraph)
-            'ReDim_dataDiagramFromParameter(countDiagramFromParameter - 1, arraysizeDiagramFromParameter)
-            'ReDim_axesXDiagramFromParameter(arraysizeDiagramFromParameter)
             Re.Dim(dataDiagramFromParameter, countDiagramFromParameter - 1, arraysizeDiagramFromParameter)
             Re.Dim(axesXDiagramFromParameter, arraysizeDiagramFromParameter)
 
@@ -1032,9 +1036,6 @@ Friend MustInherit Class FormMain
             YAxis1.MinorDivisions.TickColor = Color.White
             positionCursorDiagramFromParameter = 0
         Else
-            'ReDim_isClearDataDiagramFromParameter(countDiagramFromParameter - 1)
-            'ReDim_dataDiagramFromParameter(countDiagramFromParameter - 1, CounterLightParametersGraph - 1)
-            'ReDim_axesXDiagramFromParameter(CounterLightParametersGraph - 1)
             Re.Dim(isClearDataDiagramFromParameter, countDiagramFromParameter - 1)
             Re.Dim(dataDiagramFromParameter, countDiagramFromParameter - 1, CounterLightParametersGraph - 1)
             Re.Dim(axesXDiagramFromParameter, CounterLightParametersGraph - 1)
@@ -1621,8 +1622,6 @@ Friend MustInherit Class FormMain
         Dim J, I As Integer
         Dim clearNames As String()
 
-        'ReDim_clearNames(0)
-        'ReDim_SnapshotSmallParameters(UBound(IndexParameters))
         Re.Dim(clearNames, 0)
         Re.Dim(SnapshotSmallParameters, UBound(IndexParameters))
 
@@ -1678,7 +1677,6 @@ Friend MustInherit Class FormMain
         For I = 0 To UBound(selectivelyNames)
             For J = 1 To UBound(SnapshotSmallParameters)
                 If SnapshotSmallParameters(J).NameParameter = selectivelyNames(I) Then
-                    'ReDimPreserve clearNames(UBound(clearNames) + 1)
                     Re.DimPreserve(clearNames, UBound(clearNames) + 1)
                     clearNames(UBound(clearNames)) = selectivelyNames(I)
                     Exit For
@@ -1702,7 +1700,6 @@ Friend MustInherit Class FormMain
 
         If Not isVisibleTrends Then ' выделить хотя бы один шлейф
             SnapshotSmallParameters(1).IsVisible = True
-            'ReDimPreserve clearNames(UBound(clearNames) + 1)
             Re.DimPreserve(clearNames, UBound(clearNames) + 1)
             clearNames(UBound(clearNames)) = ParametersType(IndexParameters(1)).NameParameter
             ParametersType(IndexParameters(1)).IsVisibleRegistration = True
@@ -2071,7 +2068,6 @@ Friend MustInherit Class FormMain
         Dim разносМин, физМин, физМакс, разносМакс As Double
         Dim разносОсь, размахФиз, размах1пр As Double
 
-        'ReDim_RangesOfDeviation(UBound(IndexParameters), 2)
         Re.Dim(RangesOfDeviation, UBound(IndexParameters), 2)
 
         For I = 1 To UBound(IndexParameters)
@@ -2284,7 +2280,6 @@ Friend MustInherit Class FormMain
         configurationString = vbNullString ' String.Empty
 
         If names.Count = 1 Then ' значит есть только String.Empty
-            'ReDim_NamesParameterRegime(1)
             Re.Dim(NamesParameterRegime, 1)
             NamesParameterRegime(0) = String.Empty
             NamesParameterRegime(1) = ParametersType(1).NameParameter

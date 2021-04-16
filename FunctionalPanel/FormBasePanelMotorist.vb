@@ -2525,13 +2525,13 @@ Friend Class FormBasePanelMotorist
 #End Region
 
     ''' <summary>
-    ''' Выдать элемент массива MyType из arrПараметры
+    ''' Выдать элемент массива MyType из ParametersType
     ''' </summary>
     ''' <param name="nameChannel"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function GetMyTypeFromArrParameters(nameChannel As String) As TypeBaseParameterTCP
-        If IsUseTCPClient Then
+        If IsTcpClient Then
             Dim parametersSet = From parameter In ParametersTCP
                                 Where parameter.NameParameter = nameChannel
                                 Select parameter
