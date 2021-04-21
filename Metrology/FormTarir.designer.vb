@@ -25,6 +25,7 @@ Partial Class FormTarir
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.GroupBoxGradu = New System.Windows.Forms.GroupBox()
+        Me.LabelProgressBar = New System.Windows.Forms.Label()
         Me.NIEditWait = New NationalInstruments.UI.WindowsForms.NumericEdit()
         Me.NEditCountSamples = New NationalInstruments.UI.WindowsForms.NumericEdit()
         Me.NEditCountPoints = New NationalInstruments.UI.WindowsForms.NumericEdit()
@@ -102,6 +103,7 @@ Partial Class FormTarir
         Me.LabelPause = New System.Windows.Forms.Label()
         Me.LabelCoutMeasurement = New System.Windows.Forms.Label()
         Me.LabelCountPoints = New System.Windows.Forms.Label()
+        Me.ProgressBar = New System.Windows.Forms.ProgressBar()
         Me.GroupBoxMath = New System.Windows.Forms.GroupBox()
         Me.SplitContainer5 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer6 = New System.Windows.Forms.SplitContainer()
@@ -332,6 +334,7 @@ Partial Class FormTarir
         'GroupBoxGradu
         '
         Me.GroupBoxGradu.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.GroupBoxGradu.Controls.Add(Me.LabelProgressBar)
         Me.GroupBoxGradu.Controls.Add(Me.NIEditWait)
         Me.GroupBoxGradu.Controls.Add(Me.NEditCountSamples)
         Me.GroupBoxGradu.Controls.Add(Me.NEditCountPoints)
@@ -349,6 +352,7 @@ Partial Class FormTarir
         Me.GroupBoxGradu.Controls.Add(Me.LabelPause)
         Me.GroupBoxGradu.Controls.Add(Me.LabelCoutMeasurement)
         Me.GroupBoxGradu.Controls.Add(Me.LabelCountPoints)
+        Me.GroupBoxGradu.Controls.Add(Me.ProgressBar)
         Me.GroupBoxGradu.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBoxGradu.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
         Me.GroupBoxGradu.ForeColor = System.Drawing.Color.Maroon
@@ -359,6 +363,21 @@ Partial Class FormTarir
         Me.GroupBoxGradu.TabIndex = 3
         Me.GroupBoxGradu.TabStop = False
         Me.GroupBoxGradu.Text = "Градуировка"
+        '
+        'LabelProgressBar
+        '
+        Me.LabelProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LabelProgressBar.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.LabelProgressBar.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.LabelProgressBar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(204, Byte))
+        Me.LabelProgressBar.ForeColor = System.Drawing.Color.DarkRed
+        Me.LabelProgressBar.Location = New System.Drawing.Point(354, 240)
+        Me.LabelProgressBar.Name = "LabelProgressBar"
+        Me.LabelProgressBar.Size = New System.Drawing.Size(39, 19)
+        Me.LabelProgressBar.TabIndex = 75
+        Me.LabelProgressBar.Text = "0"
+        Me.LabelProgressBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.LabelProgressBar.Visible = False
         '
         'NIEditWait
         '
@@ -1586,6 +1605,17 @@ Partial Class FormTarir
         Me.LabelCountPoints.TabIndex = 6
         Me.LabelCountPoints.Text = "количество точек градуировки"
         '
+        'ProgressBar
+        '
+        Me.ProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar.Location = New System.Drawing.Point(6, 240)
+        Me.ProgressBar.Margin = New System.Windows.Forms.Padding(2)
+        Me.ProgressBar.Name = "ProgressBar"
+        Me.ProgressBar.Size = New System.Drawing.Size(343, 19)
+        Me.ProgressBar.TabIndex = 74
+        Me.ProgressBar.Visible = False
+        '
         'GroupBoxMath
         '
         Me.GroupBoxMath.BackColor = System.Drawing.Color.WhiteSmoke
@@ -2536,7 +2566,7 @@ Partial Class FormTarir
         Me.MenuFileSave.Image = CType(resources.GetObject("MenuFileSave.Image"), System.Drawing.Image)
         Me.MenuFileSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.MenuFileSave.Name = "MenuFileSave"
-        Me.MenuFileSave.Size = New System.Drawing.Size(243, 24)
+        Me.MenuFileSave.Size = New System.Drawing.Size(241, 22)
         Me.MenuFileSave.Text = "Запись &коэффициентов в базу"
         Me.MenuFileSave.ToolTipText = "Запись коэффициентов в базу"
         '
@@ -2544,7 +2574,7 @@ Partial Class FormTarir
         '
         Me.MenuFileSaveProtocol.Image = CType(resources.GetObject("MenuFileSaveProtocol.Image"), System.Drawing.Image)
         Me.MenuFileSaveProtocol.Name = "MenuFileSaveProtocol"
-        Me.MenuFileSaveProtocol.Size = New System.Drawing.Size(243, 24)
+        Me.MenuFileSaveProtocol.Size = New System.Drawing.Size(241, 22)
         Me.MenuFileSaveProtocol.Text = "Запи&сь протокола"
         Me.MenuFileSaveProtocol.ToolTipText = "Запись протокола"
         '
@@ -2554,20 +2584,20 @@ Partial Class FormTarir
         Me.MenuFilePrint.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.MenuFilePrint.Name = "MenuFilePrint"
         Me.MenuFilePrint.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
-        Me.MenuFilePrint.Size = New System.Drawing.Size(243, 24)
+        Me.MenuFilePrint.Size = New System.Drawing.Size(241, 22)
         Me.MenuFilePrint.Text = "&Печать протокола"
         Me.MenuFilePrint.ToolTipText = "Печать протокола"
         '
         'toolStripSeparator5
         '
         Me.toolStripSeparator5.Name = "toolStripSeparator5"
-        Me.toolStripSeparator5.Size = New System.Drawing.Size(240, 6)
+        Me.toolStripSeparator5.Size = New System.Drawing.Size(238, 6)
         '
         'MenuFileExit
         '
         Me.MenuFileExit.Image = CType(resources.GetObject("MenuFileExit.Image"), System.Drawing.Image)
         Me.MenuFileExit.Name = "MenuFileExit"
-        Me.MenuFileExit.Size = New System.Drawing.Size(243, 24)
+        Me.MenuFileExit.Size = New System.Drawing.Size(241, 22)
         Me.MenuFileExit.Text = "&Закрыть окно"
         Me.MenuFileExit.ToolTipText = "Закрыть окно"
         '
@@ -2582,21 +2612,21 @@ Partial Class FormTarir
         '
         Me.MenuDebugExamineParameter.Image = CType(resources.GetObject("MenuDebugExamineParameter.Image"), System.Drawing.Image)
         Me.MenuDebugExamineParameter.Name = "MenuDebugExamineParameter"
-        Me.MenuDebugExamineParameter.Size = New System.Drawing.Size(241, 24)
+        Me.MenuDebugExamineParameter.Size = New System.Drawing.Size(239, 22)
         Me.MenuDebugExamineParameter.Text = "Опросить &параметр"
         '
         'MenuStendView
         '
         Me.MenuStendView.Image = CType(resources.GetObject("MenuStendView.Image"), System.Drawing.Image)
         Me.MenuStendView.Name = "MenuStendView"
-        Me.MenuStendView.Size = New System.Drawing.Size(241, 24)
+        Me.MenuStendView.Size = New System.Drawing.Size(239, 22)
         Me.MenuStendView.Text = "Просмотреть &базу стенда"
         '
         'MenuCreatePronocol
         '
         Me.MenuCreatePronocol.Image = CType(resources.GetObject("MenuCreatePronocol.Image"), System.Drawing.Image)
         Me.MenuCreatePronocol.Name = "MenuCreatePronocol"
-        Me.MenuCreatePronocol.Size = New System.Drawing.Size(241, 24)
+        Me.MenuCreatePronocol.Size = New System.Drawing.Size(239, 22)
         Me.MenuCreatePronocol.Text = "&Создать протокол  аттестации"
         '
         'TSMenuNewWindow
@@ -2611,35 +2641,35 @@ Partial Class FormTarir
         '
         Me.MenuNewWindowRegistration.Image = CType(resources.GetObject("MenuNewWindowRegistration.Image"), System.Drawing.Image)
         Me.MenuNewWindowRegistration.Name = "MenuNewWindowRegistration"
-        Me.MenuNewWindowRegistration.Size = New System.Drawing.Size(182, 24)
+        Me.MenuNewWindowRegistration.Size = New System.Drawing.Size(146, 22)
         Me.MenuNewWindowRegistration.Text = "&Регистратор"
         '
         'MenuNewWindowSnapshot
         '
         Me.MenuNewWindowSnapshot.Image = CType(resources.GetObject("MenuNewWindowSnapshot.Image"), System.Drawing.Image)
         Me.MenuNewWindowSnapshot.Name = "MenuNewWindowSnapshot"
-        Me.MenuNewWindowSnapshot.Size = New System.Drawing.Size(182, 24)
+        Me.MenuNewWindowSnapshot.Size = New System.Drawing.Size(146, 22)
         Me.MenuNewWindowSnapshot.Text = "&Снимок"
         '
         'MenuNewWindowTarir
         '
         Me.MenuNewWindowTarir.Image = CType(resources.GetObject("MenuNewWindowTarir.Image"), System.Drawing.Image)
         Me.MenuNewWindowTarir.Name = "MenuNewWindowTarir"
-        Me.MenuNewWindowTarir.Size = New System.Drawing.Size(182, 24)
+        Me.MenuNewWindowTarir.Size = New System.Drawing.Size(146, 22)
         Me.MenuNewWindowTarir.Text = "&Тарировка"
         '
         'MenuNewWindowClient
         '
         Me.MenuNewWindowClient.Image = CType(resources.GetObject("MenuNewWindowClient.Image"), System.Drawing.Image)
         Me.MenuNewWindowClient.Name = "MenuNewWindowClient"
-        Me.MenuNewWindowClient.Size = New System.Drawing.Size(182, 24)
+        Me.MenuNewWindowClient.Size = New System.Drawing.Size(146, 22)
         Me.MenuNewWindowClient.Text = "&Клиент"
         '
         'MenuNewWindowDBaseChannels
         '
         Me.MenuNewWindowDBaseChannels.Image = CType(resources.GetObject("MenuNewWindowDBaseChannels.Image"), System.Drawing.Image)
         Me.MenuNewWindowDBaseChannels.Name = "MenuNewWindowDBaseChannels"
-        Me.MenuNewWindowDBaseChannels.Size = New System.Drawing.Size(182, 24)
+        Me.MenuNewWindowDBaseChannels.Size = New System.Drawing.Size(146, 22)
         Me.MenuNewWindowDBaseChannels.Text = "&База каналов"
         '
         'MenuWindow
@@ -2654,21 +2684,21 @@ Partial Class FormTarir
         '
         Me.MenuWindowCascade.Image = CType(resources.GetObject("MenuWindowCascade.Image"), System.Drawing.Image)
         Me.MenuWindowCascade.Name = "MenuWindowCascade"
-        Me.MenuWindowCascade.Size = New System.Drawing.Size(182, 24)
+        Me.MenuWindowCascade.Size = New System.Drawing.Size(158, 22)
         Me.MenuWindowCascade.Text = "&Каскад"
         '
         'MenuWindowTileHorizontal
         '
         Me.MenuWindowTileHorizontal.Image = CType(resources.GetObject("MenuWindowTileHorizontal.Image"), System.Drawing.Image)
         Me.MenuWindowTileHorizontal.Name = "MenuWindowTileHorizontal"
-        Me.MenuWindowTileHorizontal.Size = New System.Drawing.Size(182, 24)
+        Me.MenuWindowTileHorizontal.Size = New System.Drawing.Size(158, 22)
         Me.MenuWindowTileHorizontal.Text = "&Горизонтально"
         '
         'MenuWindowTileVertical
         '
         Me.MenuWindowTileVertical.Image = CType(resources.GetObject("MenuWindowTileVertical.Image"), System.Drawing.Image)
         Me.MenuWindowTileVertical.Name = "MenuWindowTileVertical"
-        Me.MenuWindowTileVertical.Size = New System.Drawing.Size(182, 24)
+        Me.MenuWindowTileVertical.Size = New System.Drawing.Size(158, 22)
         Me.MenuWindowTileVertical.Text = "&Вертикально"
         '
         'MenuHelp
@@ -2682,14 +2712,14 @@ Partial Class FormTarir
         '
         Me.MenuHelpProgramm.Image = CType(resources.GetObject("MenuHelpProgramm.Image"), System.Drawing.Image)
         Me.MenuHelpProgramm.Name = "MenuHelpProgramm"
-        Me.MenuHelpProgramm.Size = New System.Drawing.Size(182, 24)
+        Me.MenuHelpProgramm.Size = New System.Drawing.Size(151, 22)
         Me.MenuHelpProgramm.Text = "С&правочник..."
         '
         'MenuHelpAbout
         '
         Me.MenuHelpAbout.Image = CType(resources.GetObject("MenuHelpAbout.Image"), System.Drawing.Image)
         Me.MenuHelpAbout.Name = "MenuHelpAbout"
-        Me.MenuHelpAbout.Size = New System.Drawing.Size(182, 24)
+        Me.MenuHelpAbout.Size = New System.Drawing.Size(151, 22)
         Me.MenuHelpAbout.Text = "&Программа"
         '
         'ToolStripToolBar
@@ -3135,4 +3165,6 @@ Partial Class FormTarir
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents ToolStripToolBar As ToolStrip
     Friend WithEvents ButtonFindChannel As ToolStripButton
+    Friend WithEvents LabelProgressBar As Label
+    Friend WithEvents ProgressBar As ProgressBar
 End Class

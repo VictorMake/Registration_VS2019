@@ -8,6 +8,7 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports System.Threading
 Imports MathematicalLibrary
+'Imports System.Threading.Tasks
 
 Friend Class FormTarir
     ''' <summary>
@@ -49,7 +50,7 @@ Friend Class FormTarir
     End Class
 
     Private mListMeasurement As List(Of ArrayMeasurement) ' сохранение опросов точек
-    Private Const PointsCount As Integer = 100 ' кол. Точек Графика
+    Private Const PointsCount As Integer = 100      ' кол. Точек Графика
     Private Const maxCountTarir As Integer = 14     ' максимальное число точек тарировки
     Private indexChannel As Integer
     Private acquisitionCount As Integer             ' количество опросов одной точки
@@ -130,6 +131,7 @@ Friend Class FormTarir
             Next
         Next
 
+        RewriteListViewMathMeasurement()
         MathCoefficientPolynomial()
     End Sub
 
@@ -166,6 +168,7 @@ Friend Class FormTarir
         ' по умолчанию начальное присваивание
         indexChannel = 1
         PointTarirCount = 2 ' начальное
+        If IsCompactRio Then NEditCountSamples.Value = 100
         acquisitionCount = CInt(NEditCountSamples.Value)
         waitSleep = 0
         currentDirection = 1
@@ -341,6 +344,189 @@ Friend Class FormTarir
 #End Region
 
 #Region "Опрос канала"
+#Region "AcquisitionCompactRioTask"
+    Public TokenSource As CancellationTokenSource
+    Private taskLoopWhileEndAcquisitionCompactRio As Tasks.Task
+    Private isTaskAcquisitionCompactRioRunning As Boolean
+    Private acquisitionCompactRio As Double()
+    Private counterAcquiredDataCompactRio As Integer
+    'Private counterLoopTask As Integer
+    'Dim average As Double
+
+    ' Запуск сбора в событии таймера от формы работы с шасси с ожиданием флага окончания в отдельной Task.
+    ' По окончанию накопления останавливается таймер и отдаётся массив собранных данных.
+    ''' <summary>
+    ''' тест замера
+    ''' </summary>
+    ''' <returns></returns>
+    Private Function MeasurementCompactRio() As Double()
+        If RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun Then InstallQuestionForm(WhoIsExamine.Nobody)
+        If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
+
+        MainMDIFormParent.GFormTestCompactRio.Initialize()
+        counterAcquiredDataCompactRio = 0
+        'counterLoopTask = 0
+        'average = 0
+        Re.Dim(acquisitionCompactRio, acquisitionCount - 1)
+        ShowHideControlAcquired(True)
+        ProgressBar.Maximum = acquisitionCount
+        ' здесь надо awaite вызов
+        MainMDIFormParent.GFormTestCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormTestCompactRio.TarirTimerTick)
+        RunStopAcquisitionCompactRio(True)
+
+        Do
+            ' создаётся задача и запускается с длительным ожиданием
+            ' внутри сбора вывести слайдер процесса выполнения
+            ' в задаче запускается цикл проверки, что таймер остановлен (условие If CounterAcquiredData > 100 Then)
+            ' Wait  ждать окончания этой задачи
+            Thread.Sleep(100) 'MainMDIFormParent.GFormTestCompactRio.TimerIntervalWait)
+            Application.DoEvents()
+        Loop While isTaskAcquisitionCompactRioRunning
+
+        UpdateProgressStatus(0)
+        ShowHideControlAcquired(False)
+        'MessageBox.Show($"CounterAcquiredData = {counterAcquiredData}; CounterLoopTask = {counterLoopTask}")
+        Return acquisitionCompactRio
+    End Function
+
+    ''' <summary>
+    ''' Запуск задачи ожидания флага окончания сбора.
+    ''' </summary>
+    ''' <param name="isStart"></param>
+    Private Sub RunStopAcquisitionCompactRio(isStart As Boolean)
+        If isStart Then
+            TokenSource = New CancellationTokenSource
+            taskLoopWhileEndAcquisitionCompactRio = Tasks.Task.Factory.StartNew(Sub() LoopWhileEndAcquisitionCompactRio(TokenSource.Token), TokenSource.Token, Tasks.TaskCreationOptions.LongRunning)
+        Else
+            If TokenSource IsNot Nothing Then TokenSource.Cancel() ' прервать задачу 
+            taskLoopWhileEndAcquisitionCompactRio = Nothing
+        End If
+        isTaskAcquisitionCompactRioRunning = isStart
+    End Sub
+
+    ''' <summary>
+    ''' Задачи ожидания флага окончания сбора.
+    ''' Тупой цикл с задержкой.
+    ''' </summary>
+    ''' <param name="ct"></param>
+    Private Sub LoopWhileEndAcquisitionCompactRio(ByVal ct As CancellationToken)
+        ' Прерывание уже было запрошено?
+        If ct.IsCancellationRequested Then ct.ThrowIfCancellationRequested()
+
+        Dim timerIntervalWait As Integer = MainMDIFormParent.GFormTestCompactRio.TimerIntervalWait
+        Do
+            If ct.IsCancellationRequested Then
+                'ct.ThrowIfCancellationRequested() ' выйти по исключению
+                Exit Do ' завершить задачу
+            End If
+
+            If taskLoopWhileEndAcquisitionCompactRio Is Nothing Then
+                ' скорее всего остановлено
+                Exit Sub
+            Else
+                ' Завершить цикл избегая напрасную трату времени CPU
+                taskLoopWhileEndAcquisitionCompactRio.Wait(timerIntervalWait)
+            End If
+
+            'counterLoopTask += 1
+        Loop While isTaskAcquisitionCompactRioRunning ' True
+    End Sub
+
+    ''' <summary>
+    ''' В событии обновления значения канала производится вывод значения канала и процент исполнения.
+    ''' </summary>
+    ''' <param name="voltChannel"></param>
+    ''' <remarks></remarks>
+    Public Sub UpdateReadValue(voltChannel As Double)
+        If InvokeRequired Then
+            Invoke(New MethodInvoker(Sub() UpdateReadValue(voltChannel)))
+        Else
+            'tsChannelVolt.Text = voltChannel.ToString
+            UpdateProgressStatus(counterAcquiredDataCompactRio)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Обновление прогресса исполнения.
+    ''' </summary>
+    ''' <param name="percent"></param>
+    Public Sub UpdateProgressStatus(percent As Integer)
+        If InvokeRequired Then
+            ' Выполнить делегат в том потоке, которому принадлежит базовый дескриптор окна элемента управления. 
+            Invoke(New MethodInvoker(Sub() UpdateProgressStatus(percent)))
+        Else
+            ProgressBar.Value = percent
+            LabelProgressBar.Text = percent.ToString
+            ProgressBar.Invalidate() '.Refresh()
+            LabelProgressBar.Invalidate() '.Refresh()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Скрыть или показать контролы при опросе канала CompactRio
+    ''' </summary>
+    Private Sub ShowHideControlAcquired(isVisibleProgress As Boolean)
+        ProgressBar.Visible = isVisibleProgress
+        LabelProgressBar.Visible = isVisibleProgress
+        ButtonRunSample.Visible = Not isVisibleProgress
+
+        If isVisibleProgress Then
+            RadioButtonBack.Visible = False
+            RadioButtonForward.Visible = False
+        Else
+            If CheckHand.CheckState = CheckState.Checked Then
+                RadioButtonBack.Visible = False
+            Else
+                If CheckHysteresis.CheckState = CheckState.Checked Then RadioButtonBack.Visible = True
+            End If
+            RadioButtonForward.Visible = Not (CheckHand.CheckState = CheckState.Checked)
+        End If
+        Me.Refresh()
+    End Sub
+
+    ''' <summary>
+    ''' Обновление данных на экране из события сбора
+    ''' DataValuesFromServer As Double() - Данные значений каналов, полученные по сети от шасси CompactRio
+    ''' </summary>
+    Friend Sub AcquiredData(DataValuesFromServer As Double())
+        'average += DataValuesFromServer(indexChannel)
+        Dim voltChannel As Double = DataValuesFromServer(indexChannel) 'average 
+        acquisitionCompactRio(counterAcquiredDataCompactRio) = voltChannel
+        UpdateReadValue(voltChannel)
+        counterAcquiredDataCompactRio += 1
+
+        If counterAcquiredDataCompactRio >= acquisitionCount Then
+            If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then
+                MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
+                RunStopAcquisitionCompactRio(False)
+            End If
+        End If
+    End Sub
+
+    'Private Function TestUpdateReadValue() As Double()
+    '    Dim rnd As New Random()
+    '    Dim voltChannel As Double
+    '    'Dim acquisitionVolts(acquisitionCount - 1) As Double
+    '    Re.Dim(acquisitionVolts, acquisitionCount - 1)
+
+    '    ShowHideControlAcquired(True)
+    '    ProgressBar.Maximum = acquisitionCount
+    '    taskRunning = True
+    '    'currentSample = 0
+
+    '    For I As Integer = 1 To acquisitionCount - 1
+    '        voltChannel = rnd.[Next](10)
+    '        acquisitionVolts(I) = acquisitionVolts(I - 1) + voltChannel
+    '        UpdateReadValue(voltChannel)
+    '        Thread.Sleep(50)
+    '    Next
+
+    '    ShowHideControlAcquired(False)
+
+    '    Return acquisitionVolts
+    'End Function
+#End Region
+
     ''' <summary>
     ''' Замер Одного Параметра
     ''' </summary>
@@ -364,7 +550,7 @@ Friend Class FormTarir
                 If IsWorkWithDaqController Then
                     volts = AcquisitionDAQmxTask()
                 ElseIf IsCompactRio Then
-                    volts = TestMeasurementCompactRio()
+                    volts = MeasurementCompactRio()
                 End If
                 IsTaskRunning = False
 
@@ -406,65 +592,6 @@ Friend Class FormTarir
             End Try
         End If
     End Sub
-
-    ' Здесь надо запускать задачу сбора с ожиданием окончания
-    ' по окончанию которого останавливается таймер и отдаётся массив собранных данных
-    ''' <summary>
-    ''' тест замера
-    ''' </summary>
-    ''' <returns></returns>
-    Private Function TestMeasurementCompactRio() As Double()
-        If RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun Then InstallQuestionForm(WhoIsExamine.Nobody)
-        If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
-
-        MainMDIFormParent.GFormTestCompactRio.Initialize()
-        ' здесь надо awaite вызов
-        MainMDIFormParent.GFormTestCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormTestCompactRio.TarirTimerTick)
-        CounterAcquiredData = 0
-        average = 0
-
-        ' создаётся задача и запускается с длительным ожиданием
-        ' внутри сбора вывести слайдер процесса выполнения
-        ' в задаче запускается цикл проверки, что таймер остановлен (условие If CounterAcquiredData > 100 Then)
-        ' Wait  ждать окончания этой задачи
-
-
-        Dim rnd As New Random()
-        Dim volts(acquisitionCount - 1) As Double
-
-        For I As Integer = 1 To acquisitionCount - 1
-            volts(I) = volts(I - 1) + rnd.[Next](10)
-        Next
-
-        Return volts
-    End Function
-
-    Dim CounterAcquiredData As Integer
-    Dim average As Double
-    '''' <summary>
-    '''' Данные значений каналов, полученные по сети от шасси CompactRio
-    '''' </summary>
-    '''' <returns></returns>
-    'Friend Property DataValuesFromServer As Double()
-
-    ''' <summary>
-    ''' Обновление данных на экране из события сбора
-    ''' </summary>
-    Friend Sub AcquiredData(DataValuesFromServer As Double())
-        average += DataValuesFromServer(indexChannel)
-        CounterAcquiredData += 1
-        If CounterAcquiredData > 100 Then
-            If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
-        End If
-    End Sub
-
-    '''' <summary>
-    '''' Упрощение сложного условия
-    '''' </summary>
-    '''' <returns></returns>
-    'Private Function IsConditionCompactRio() As Boolean
-    '    Return RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun AndAlso MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition
-    'End Function
 
     ''' <summary>
     ''' Создать задачу и произвести опрос канала.
@@ -509,7 +636,7 @@ Friend Class FormTarir
     ''' <summary>
     ''' Переписать Лист
     ''' </summary>
-    Sub RewriteListViewMathMeasurement()
+    Private Sub RewriteListViewMathMeasurement()
         ListViewMathMeasurement.BeginUpdate()
         ListViewMathMeasurement.Items.Clear()
 
@@ -598,7 +725,7 @@ Friend Class FormTarir
 
             sampleX = tempVolts
             isSortOrder = False
-            ShowMessageToStatusBar(String.Format("Выбрана точка {0} для канала <{1}>", currentPoint, selectChannelName))
+            ShowMessageToStatusBar($"Выбрана точка {currentPoint} для канала <{selectChannelName}>")
             MathematicalTreatmentSample()
         End If
     End Sub
@@ -809,7 +936,7 @@ Friend Class FormTarir
             Dim caption As String = $"Ошибка обновления коэффициентов тарировки в процедуре: {NameOf(SavePolynomial)}."
             Dim text As String = ex.ToString
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED(String.Format("<{0}> {1}", caption, text))
+            RegistrationEventLog.EventLog_MSG_DB_UPDATE_FAILED($"<{caption}> {text}")
         Finally
             If (cn.State = ConnectionState.Open) Then cn.Close()
         End Try
@@ -902,7 +1029,7 @@ Friend Class FormTarir
         End If
     End Sub
 
-    Private Sub NIEditКоличествоОпросов_AfterChangeValue(ByVal sender As Object, ByVal e As AfterChangeNumericValueEventArgs) Handles NEditCountSamples.AfterChangeValue
+    Private Sub NEditCountSamples_AfterChangeValue(ByVal sender As Object, ByVal e As AfterChangeNumericValueEventArgs) Handles NEditCountSamples.AfterChangeValue
         acquisitionCount = CInt(e.NewValue)
         InitializeVariables()
         ShowMessageToStatusBar("Установлено число опросов одной точки: " & acquisitionCount)
@@ -914,7 +1041,7 @@ Friend Class FormTarir
         ShowMessageToStatusBar($"Установлена задержка между опросами: {waitSleep} млсек.")
     End Sub
 
-    Private Sub NIEditКоличествоТочек_AfterChangeValue(ByVal sender As Object, ByVal e As AfterChangeNumericValueEventArgs) Handles NEditCountPoints.AfterChangeValue
+    Private Sub NEditCountPoints_AfterChangeValue(ByVal sender As Object, ByVal e As AfterChangeNumericValueEventArgs) Handles NEditCountPoints.AfterChangeValue
         If IsHandleCreated Then
             LoadTableMetrology(CInt(e.NewValue))
             PointTarirCount = CInt(e.NewValue)
@@ -1248,41 +1375,11 @@ Friend Class FormTarir
             polinomialTextBox(I).Text = CStr(CoefficientsPolynomial(I))
         Next
 
-        ' вычисления для графика
-        ScatterGraphADPhysical.ClearData()
-
-        '--- переменные графика ---------------------------------------
-        Dim pointsPolynomialCurveX((PointTarirCount - 1) * PointsCount) As Double ' точки Полином График для построения графика полиноминальной кривой
-        Dim physicistAverageForGraph(PointTarirCount - 1) As Double ' физика Среднее Для Графика
-        Dim xData(PointTarirCount - 1) As Double ' точки Графика X
-        Dim yData(PointTarirCount - 1) As Double ' точки Графика Y 
-
-        For I = 0 To PointTarirCount - 1
-            physicistAverageForGraph(I) = AverageInput(I + 1)
-            xData(I) = YOutput(I)
-            yData(I) = XPhisical(I)
-        Next
-
-        Dim maximumPhysicist, minimumPhysicist As Double
-        Dim indexOfMinimum, indexOfMaximum As Integer
-        ArrayOperation.MaxMin1D(physicistAverageForGraph, maximumPhysicist, indexOfMaximum, minimumPhysicist, indexOfMinimum)
-        ' для графика
-        Dim range As Double = Math.Abs(maximumPhysicist - minimumPhysicist)
-        Dim hundredRange As Integer = (PointTarirCount - 1) * PointsCount 'Граница
-
-        For I = 0 To hundredRange
-            pointsPolynomialCurveX(I) = I * range / hundredRange + AverageInput(1)
-        Next
-
-        ' показать точки на графике
-        ' вычислить для построения графика
-        ScatterPlotPolinomusDot1.PlotXY(pointsPolynomialCurveX, ArrayOperation.PolynomialEvaluation1D(pointsPolynomialCurveX, CoefficientsPolynomial))
-        ScatterPlotMeasurement1.PlotXY(xData, yData)
-        UpdateGraf2()
+        PlotGraphs()
 
         If CheckHand.CheckState = CheckState.Unchecked Then ProcessingTableTarir()
 
-        ShowMessageToStatusBar(String.Format("Произведено вычисление коэффициентов тарировки для канала <{0}> со степенью полинома {1} ", selectChannelName, polynomialOrder))
+        ShowMessageToStatusBar($"Произведено вычисление коэффициентов тарировки для канала <{selectChannelName}> со степенью полинома {polynomialOrder}")
         MenuFileSaveProtocol.Enabled = True
         MenuFilePrint.Enabled = True
         ButtonSaveProtocol.Enabled = True
@@ -1389,7 +1486,42 @@ Friend Class FormTarir
         TextPercent.Text = Format(погрешностьПроцент, "##0.0##")
     End Sub
 
-    Private Sub UpdateGraf2()
+    Private Sub PlotGraphs()
+        Dim I As Integer
+        ' вычисления для графика
+        ScatterGraphADPhysical.ClearData()
+
+        '--- переменные графика ---------------------------------------
+        Dim pointsPolynomialCurveX((PointTarirCount - 1) * PointsCount) As Double ' точки Полином График для построения графика полиноминальной кривой
+        Dim physicistAverageForGraph(PointTarirCount - 1) As Double ' физика Среднее Для Графика
+        Dim xData(PointTarirCount - 1) As Double ' точки Графика X
+        Dim yData(PointTarirCount - 1) As Double ' точки Графика Y 
+
+        For I = 0 To PointTarirCount - 1
+            physicistAverageForGraph(I) = AverageInput(I + 1)
+            xData(I) = YOutput(I)
+            yData(I) = XPhisical(I)
+        Next
+
+        Dim maximumPhysicist, minimumPhysicist As Double
+        Dim indexOfMinimum, indexOfMaximum As Integer
+        ArrayOperation.MaxMin1D(physicistAverageForGraph, maximumPhysicist, indexOfMaximum, minimumPhysicist, indexOfMinimum)
+        ' для графика
+        Dim range As Double = Math.Abs(maximumPhysicist - minimumPhysicist)
+        Dim hundredRange As Integer = (PointTarirCount - 1) * PointsCount 'Граница
+
+        For I = 0 To hundredRange
+            pointsPolynomialCurveX(I) = I * range / hundredRange + AverageInput(1)
+        Next
+
+        ' показать точки на графике
+        ' вычислить для построения графика
+        ScatterPlotPolinomusDot1.PlotXY(pointsPolynomialCurveX, ArrayOperation.PolynomialEvaluation1D(pointsPolynomialCurveX, CoefficientsPolynomial))
+        ScatterPlotMeasurement1.PlotXY(xData, yData)
+        UpdateGraph2()
+    End Sub
+
+    Private Sub UpdateGraph2()
         Dim PolynomialCurve((PointTarirCount - 1) * PointsCount) As Double
         Dim pointsPolynomialGraph As Double() ' точкиПолиномГрафик
         Dim xData(PointTarirCount - 1), yData(PointTarirCount - 1) As Double
@@ -1515,8 +1647,8 @@ Friend Class FormTarir
         ' смена параметра в комбинированном окне
         ' определение по массиву
         indexChannel = ComboBoxParameters.SelectedIndex + 1
-        'зто действенно при четком соответствии позиции в комбинированном списке с номером канала-1
-        'массив arrПараметры должен быть в возрастающем порядке, что и есть
+        ' зто действенно при четком соответствии позиции в комбинированном списке с номером канала-1
+        ' массив arrПараметры должен быть в возрастающем порядке, что и есть
         If CheckMeasurementChannels(indexChannel) Then
             ButtonRunSample.Enabled = True
         Else

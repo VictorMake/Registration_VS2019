@@ -90,7 +90,6 @@ Friend Class FormMetrologyGroup
             Next
         Next
 
-
         ' заполнить по содержанию второй лист
         Dim countItemsList1, countItemsList2 As Integer ' почему-то  вылетает из for
 
@@ -263,7 +262,11 @@ Friend Class FormMetrologyGroup
         For I As Integer = 0 To ListViewReceiver.Items.Count - 1
             For J As Integer = 1 To UBound(ParametersType)
                 If ParametersType(J).NameParameter = ListViewReceiver.Items(I).Text Then
-                    MetrologyGroup(I + 1) = ParametersType(J).NumberParameter ' TODO: проверить NumberParameter
+                    If IsWorkWithDaqController Then
+                        MetrologyGroup(I + 1) = ParametersType(J).NumberParameter
+                    Else
+                        MetrologyGroup(I + 1) = CShort(J)
+                    End If
                     Exit For
                 End If
             Next J
