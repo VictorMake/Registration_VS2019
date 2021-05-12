@@ -66,18 +66,18 @@ Public Class FormTestCompactRio
     ''' <remarks></remarks>
     Public Property Description() As String = "Это Тестовая форма CompactRio"
 
-    Private mIsDllVisible As Boolean = False
-    ''' <summary>
-    ''' Видима DLL или нет, т.е. имеются вкладки с другими окнами или она только вычисляет.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Overridable ReadOnly Property IsDllVisible() As Boolean
-        Get
-            Return mIsDllVisible
-        End Get
-    End Property
+    'Private mIsDllVisible As Boolean = False
+    '''' <summary>
+    '''' Видима DLL или нет, т.е. имеются вкладки с другими окнами или она только вычисляет.
+    '''' </summary>
+    '''' <value></value>
+    '''' <returns></returns>
+    '''' <remarks></remarks>
+    'Public Overridable ReadOnly Property IsDllVisible() As Boolean
+    '    Get
+    '        Return mIsDllVisible
+    '    End Get
+    'End Property
 
     ''' <summary>
     ''' Свойство для управления родителем закрытия окон плагина.
@@ -105,20 +105,20 @@ Public Class FormTestCompactRio
         End Get
         Set(ByVal value As Integer)
             mFrequencyAcquisition = value
-            timerInterval = 1000 \ value
-            TimerIntervalWait = timerInterval
+            timerIntervalTest = 1000 \ value
+            TimerIntervalWait = timerIntervalTest
         End Set
     End Property
 
-    Public Property TimerIntervalWait As Integer = timerInterval
+    Public Property TimerIntervalWait As Integer = timerIntervalTest
     Public Property IsStartAcquisition() As Boolean
 #End Region
 
-    Private AcquisitionValueOfDouble As Double() ' полученные данные каналов от Сервера получаются потребителями из основного окна, 
+    Private AcquisitionTimerChassis As Double() ' полученные данные каналов от Сервера получаются потребителями из основного окна, 
     Private eventHandlerTimerTick As EventHandler
     Private syncPoint As Integer = 0 ' для синхронизации
     Private WithEvents mmTimer As Multimedia.Timer
-    Private timerInterval As Integer = 10 ' миллисекунд
+    Private timerIntervalTest As Integer = 10 ' миллисекунд
     Private ReadOnly mFormMainMDI As FormMainMDI
 
     Public Sub New(inFormMainMDI As FormMainMDI)
@@ -138,7 +138,7 @@ Public Class FormTestCompactRio
         'Re.Dim(AcquisitionValueOfDouble, RegistrationMain.CountMeasurand + 1)
         ' TODO: изменить инициализацию  размерности массива по числу каналов для подключенных шасси, т.к. некоторые могут быть отключены
         ' значить и ParametersType должен учитывать подключенные шасси (а в базе этих полей может не быть)
-        Re.Dim(AcquisitionValueOfDouble, ParametersType.Length - 1)
+        Re.Dim(AcquisitionTimerChassis, ParametersType.Length - 1)
 
         'TestInitialize()
     End Sub
@@ -286,7 +286,7 @@ Public Class FormTestCompactRio
         'Public Sub StartAcquisitionTimer(inEventHandlerTimerTick As Action(Of Object, EventArgs))
         syncPoint = 0
         mmTimer = New Multimedia.Timer() With {.Mode = Multimedia.TimerMode.Periodic,
-                                               .Period = timerInterval,
+                                               .Period = timerIntervalTest,
                                                .Resolution = 1}
 
         Thread.CurrentThread.Priority = ThreadPriority.Normal
@@ -371,9 +371,9 @@ Public Class FormTestCompactRio
     Private Sub TestInitializeRandom()
         counterTimer += 1
         'TODO: убрать тест
-        For I As Integer = 0 To AcquisitionValueOfDouble.Length - 1
+        For I As Integer = 0 To AcquisitionTimerChassis.Length - 1
             Dim amplidude As Double = random.NextDouble * 5.0
-            AcquisitionValueOfDouble(I) = Math.Sin(counterTimer / 500.0 * Math.PI) * amplidude + amplidude / 10.0
+            AcquisitionTimerChassis(I) = Math.Sin(counterTimer / 500.0 * Math.PI) * amplidude + amplidude / 10.0
             'AcquisitionValueOfDouble(I) = random.NextDouble * 10.0
         Next
     End Sub
@@ -395,7 +395,7 @@ Public Class FormTestCompactRio
             'RaiseEvent CompactRioAcquiredData(Me, New AcquiredDataEventArgs(AcquisitionValueOfDouble))
 
             TestInitializeRandom()
-            RegistrationMain.DataValuesFromServer = AcquisitionValueOfDouble
+            RegistrationMain.DataValuesFromServer = AcquisitionTimerChassis
             RegistrationMain.AcquiredData()
             syncPoint = 0 ' освободить
 
@@ -416,7 +416,7 @@ Public Class FormTestCompactRio
 
         If sync = 0 Then
             TestInitializeRandom()
-            TarirForm.AcquiredData(AcquisitionValueOfDouble)
+            TarirForm.AcquiredData(AcquisitionTimerChassis)
             syncPoint = 0 ' освободить
         End If
     End Sub
@@ -500,4 +500,5 @@ Public Class FormTestCompactRio
     '    'arrПарамНакопленные(N) = dblСреднее
     '    Public Property CompactRioChannelsData() As Double()
     'End Class
+
 End Class

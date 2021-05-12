@@ -3,12 +3,11 @@ Imports System.Drawing.Design
 Imports System.Reflection ' для сереализации
 Imports System.Runtime.Serialization ' для сереализации
 
-
 ''' <summary>
 ''' Данные для идентификации целевого устройства compactRio
 ''' </summary>
 <Serializable()>
-Class TargetCRIO
+Friend Class TargetCRIO
     Implements ISerializationSurrogate
 
     ''' <summary>
@@ -16,10 +15,10 @@ Class TargetCRIO
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub New()
-        Me.New("New Target", New IPAddressCls("192.168.1.1"), EnumModeWork.Measurement, "Папка не указана")
+        Me.New("New Target", New IPAddressTargetCRIO("192.168.1.1"), EnumModeWork.Measurement, "Папка не указана")
     End Sub
 
-    Public Sub New(hostName As String, iPAddressRTtarget As IPAddressCls, modeWork As EnumModeWork, folderName As String)
+    Public Sub New(hostName As String, iPAddressRTtarget As IPAddressTargetCRIO, modeWork As EnumModeWork, folderName As String)
         mHostName = hostName
         mIPAddressRTtarget = iPAddressRTtarget
         mModeWork = modeWork
@@ -82,7 +81,7 @@ Class TargetCRIO
         End Set
     End Property
 
-    Private mIPAddressRTtarget As New IPAddressCls("192.168.1.1")
+    Private mIPAddressRTtarget As New IPAddressTargetCRIO("192.168.1.1")
 
     ''' <summary>
     ''' IP адрес  шасси cRio
@@ -92,11 +91,11 @@ Class TargetCRIO
     <Category("1. Target")>
     <PropertyOrder(20)>
     <Editor(GetType(IPAddressEditor), GetType(UITypeEditor))>
-    Public Property IPAddressRTtarget() As IPAddressCls
+    Public Property IPAddressRTtarget() As IPAddressTargetCRIO
         Get
             Return mIPAddressRTtarget
         End Get
-        Set(ByVal value As IPAddressCls)
+        Set(ByVal value As IPAddressTargetCRIO)
             mIPAddressRTtarget = value
         End Set
     End Property

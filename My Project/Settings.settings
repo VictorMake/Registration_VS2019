@@ -72,5 +72,14 @@
   &lt;string&gt;15&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="CompactRioFormState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="CompactRioFormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">517, 650</Value>
+    </Setting>
+    <Setting Name="CompactRioFormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">293, 226</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

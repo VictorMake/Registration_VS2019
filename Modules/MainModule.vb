@@ -66,6 +66,10 @@ Module MainModule
     ' Режимы запуска программы, установленные при запуске в настроечной форме
     Public IsServer, IsClient, IsWorkWithDaqController, IsTcpClient, IsCompactRio, IsSnapshot As Boolean
     ''' <summary>
+    ''' Флаг того, что сообщение было выведено один раз
+    ''' </summary>
+    Public IsCheckEmptyChassis As Boolean
+    ''' <summary>
     ''' Опрос Оборотов
     ''' </summary>
     ''' <remarks></remarks>
@@ -315,19 +319,6 @@ Module MainModule
     Public Enum BackupingResult
         BackupingIsSuccess ' Сжатие Произведено
         TimeOut ' Время Сжатия Истекло
-    End Enum
-
-    ''' <summary>
-    ''' Перечислитель режима работы шасси.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Enum EnumModeWork
-        <Description("Измерение")>
-        Measurement
-        <Description("Измерение и управление")>
-        Control
-        <Description("Неизв.")>
-        Unknown
     End Enum
 #End Region
 
@@ -1416,10 +1407,10 @@ Module MainModule
             ' Возвращаем найденное
             Return sTemp
         Catch ex As ApplicationException
-            Const CAPTION As String = "Ощибка чтения INI"
-            Dim text As String = String.Format("Функция sGetIni привела к ошибке:{0}{1}", vbCrLf, ex.ToString)
-            MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RegistrationEventLog.EventLog_MSG_FILE_IO_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+            Const caption As String = "Ощибка чтения INI"
+            Dim text As String = $"Функция sGetIni привела к ошибке:{vbCrLf}{ex.ToString}"
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            RegistrationEventLog.EventLog_MSG_FILE_IO_FAILED(String.Format("<{0}> {1}", caption, text))
             Return ""
         End Try
     End Function
@@ -1452,10 +1443,10 @@ Module MainModule
                        sKey & "=" & sValue)
             End If
         Catch ex As ApplicationException
-            Const CAPTION As String = "Ощибка чтения INI"
-            Dim text As String = String.Format("Процедура WriteINI привела к ошибке:{0}#{1}", vbCrLf, ex.ToString)
-            MessageBox.Show(text, CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RegistrationEventLog.EventLog_MSG_FILE_IO_FAILED(String.Format("<{0}> {1}", CAPTION, text))
+            Const caption As String = "Ощибка чтения INI"
+            Dim text As String = $"Процедура WriteINI привела к ошибке:{vbCrLf}#{ex.ToString}"
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            RegistrationEventLog.EventLog_MSG_FILE_IO_FAILED(String.Format("<{0}> {1}", caption, text))
         End Try
     End Sub
 
@@ -1858,7 +1849,7 @@ Module MainModule
         If Not File.Exists(xmlFile) Then
             ' Файла нет, значит нет и файла сериализации, надо создать,
             ' для примера коллекция из одного элемента экземпляра TargetCRIO.
-            Dim ArrayListObject As New ArrayList From {New TargetCRIO("New Target", New IPAddressCls("192.168.1.1"), EnumModeWork.Measurement, "Папка не указана")}
+            Dim ArrayListObject As New ArrayList From {New TargetCRIO("New Target", New IPAddressTargetCRIO("192.168.1.1"), EnumModeWork.Measurement, "Папка не указана")}
             SerializeHashtableToXML(xmlFile, ArrayListObject)
         End If
 
@@ -1888,6 +1879,7 @@ Module MainModule
         'End If
         'refDataTable.AcceptChanges()
 
+        ' выбрать записи, чьи поля <Chassis> таблицы каналов имеются в списке сконфигурированных шасси или записи параметров расчётных параметров
         Dim dataRowsToSelect = From itemDataRow As DataRow In refDataTable
                                Where namesTargetCRIO.Contains(CStr(IIf(IsDBNull(itemDataRow(Chassis)), " ", itemDataRow(Chassis)))) OrElse CSng(IIf(IsDBNull(itemDataRow("Погрешность")), 0, itemDataRow("Погрешность"))) = indexCalculated
                                Select itemDataRow
@@ -1902,6 +1894,72 @@ Module MainModule
                 End If
             Next
         End If
+
+        If IsCheckEmptyChassis Then Exit Sub
+        ' обратный фильтр
+        Dim dataRowsMissingTargetCRIO = From itemDataRow As DataRow In refDataTable
+                                        Where Not (namesTargetCRIO.Contains(CStr(IIf(IsDBNull(itemDataRow(Chassis)), " ", itemDataRow(Chassis)))) OrElse CSng(IIf(IsDBNull(itemDataRow("Погрешность")), 0, itemDataRow("Погрешность"))) = indexCalculated)
+                                        Select itemDataRow
+        Dim nameMissing As String
+        Dim namesMissTargetCRIO As New List(Of String)
+        For Each itemMissingDataRow As DataRow In dataRowsMissingTargetCRIO
+            Dim nameChassis As String = CStr(IIf(IsDBNull(itemMissingDataRow(Chassis)), " ", itemMissingDataRow(Chassis)))
+            If Not namesMissTargetCRIO.Contains(nameChassis) Then
+                namesMissTargetCRIO.Add(nameChassis)
+                nameMissing += $"<{nameChassis}> "
+            End If
+        Next
+
+        If namesMissTargetCRIO.Count > 0 Then
+            Const caption As String = NameOf(RemarkDataTableUseCompactRio)
+            Dim text As String = $"В базе данных рабочего стенда для параметров назначены шасси с именами:{Environment.NewLine}" &
+                $"{nameMissing}{Environment.NewLine}" &
+                $"которые отсутствуют в конфигурационном файле: {xmlFile}{Environment.NewLine}" &
+                $"Проверьте настройки каналов или настройки шасси.{Environment.NewLine}" &
+                $"Параметры для этих шасси будут отсутствовать при регистрации!"
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information)
+            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
+        End If
+
+        ' найти шасси, находящиеся в конфигурации, но отсутствующие в поле <Chassis> таблицы каналов. Будут ошибки регистрации.
+        namesMissTargetCRIO = New List(Of String)
+        nameMissing = String.Empty
+        Dim success As Boolean
+
+        For Each itemTargetCRIO As String In namesTargetCRIO
+            success = False
+            For I As Integer = 0 To refDataTable.Rows.Count - 1
+                Dim itemDataRow As DataRow = refDataTable.Rows(I)
+                If CSng(IIf(IsDBNull(itemDataRow("Погрешность")), 0, itemDataRow("Погрешность"))) = indexCalculated Then Continue For
+
+                Dim rowNameChassis As String = CStr(IIf(IsDBNull(refDataTable.Rows(I).Item(Chassis)), "DBNull", refDataTable.Rows(I).Item(Chassis)))
+                If rowNameChassis = "DBNull" Then Continue For
+
+                If itemTargetCRIO = rowNameChassis Then
+                    success = True ' присутствует в записях таблицы каналов
+                    Exit For
+                End If
+            Next
+
+            If Not success AndAlso Not namesMissTargetCRIO.Contains(itemTargetCRIO) Then
+                namesMissTargetCRIO.Add(itemTargetCRIO)
+                nameMissing += $"<{itemTargetCRIO}> "
+            End If
+        Next
+
+        If namesMissTargetCRIO.Count > 0 Then
+            Const caption As String = NameOf(RemarkDataTableUseCompactRio)
+            Dim text As String = $"В конфигурационном файле: {xmlFile}{Environment.NewLine}" &
+                $"находятся шасси с именами:{Environment.NewLine}" &
+                $"{nameMissing}{Environment.NewLine}" &
+                $"но эти шасси не назначены ни в одном поле <{Chassis}> таблицы каналов.{Environment.NewLine}" &
+                $"Проверьте настройки каналов или настройки шасси.{Environment.NewLine}" &
+                $"Запуск будет произведён с ошибкой!"
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information)
+            RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
+        End If
+
+        IsCheckEmptyChassis = True
     End Sub
 
     ''' <summary>

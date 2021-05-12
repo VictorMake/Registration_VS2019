@@ -229,6 +229,42 @@ Namespace My
                 Return CType(Me("NamberSSDList"),Global.System.Collections.Specialized.StringCollection)
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Normal")>  _
+        Public Property CompactRioFormState() As Global.System.Windows.Forms.FormWindowState
+            Get
+                Return CType(Me("CompactRioFormState"),Global.System.Windows.Forms.FormWindowState)
+            End Get
+            Set
+                Me("CompactRioFormState") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("517, 650")>  _
+        Public Property CompactRioFormSize() As Global.System.Drawing.Size
+            Get
+                Return CType(Me("CompactRioFormSize"),Global.System.Drawing.Size)
+            End Get
+            Set
+                Me("CompactRioFormSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("293, 226")>  _
+        Public Property CompactRioFormLocation() As Global.System.Drawing.Point
+            Get
+                Return CType(Me("CompactRioFormLocation"),Global.System.Drawing.Point)
+            End Get
+            Set
+                Me("CompactRioFormLocation") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

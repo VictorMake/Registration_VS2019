@@ -612,19 +612,19 @@ Public Class FormMainMDI
         TestBarometer.EnableNewDeleteButton()
     End Sub
 
-    Friend WithEvents GFormTestCompactRio As FormTestCompactRio
+    Friend WithEvents GFormCompactRio As FormCompactRio
 
     Private Sub LoadFormTestCompactRio()
         'отладка в последствии закоментировать а в наследующих классах в методе LOAD разкоментировать
-        GFormTestCompactRio = New FormTestCompactRio(Me) With {.PathSettingMdb = PathChannels}
-        GFormTestCompactRio.Show()
+        GFormCompactRio = New FormCompactRio(Me) With {.PathSettingMdb = PathChannels}
+        GFormCompactRio.Show()
     End Sub
 
     Private Sub CloseFormTestCompactRio()
-        If GFormTestCompactRio IsNot Nothing Then
-            GFormTestCompactRio.IsWindowClosed = True
-            GFormTestCompactRio.Close()
-            GFormTestCompactRio = Nothing
+        If GFormCompactRio IsNot Nothing Then
+            GFormCompactRio.IsWindowClosed = True
+            GFormCompactRio.Close()
+            GFormCompactRio = Nothing
         End If
     End Sub
 #End Region

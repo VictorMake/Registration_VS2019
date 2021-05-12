@@ -1926,7 +1926,7 @@ Module ModuleExplorer
         <Description("Использовать приведение к САУ параметра (используется для оборотов)")>
         <Category("2. Канал")>
         <PropertyOrder(110)>
-        <TypeConverter(GetType(BooleanTypeConverter))>
+        <TypeConverter(GetType(BooleanTypeConverter2))>
         Public Property Приведение() As Boolean
             Get
                 Return isConvert

@@ -1,12 +1,14 @@
 ﻿Imports System.ComponentModel
 
 ''' <summary>
-''' Атрибут для поддержки динамически показываемых свойств
+''' Атрибут для поддержки динамически показываемых свойств.
 ''' </summary>
-<AttributeUsage(AttributeTargets.[Property], Inherited:=True)> Class DynamicPropertyFilterAttribute
+<AttributeUsage(AttributeTargets.[Property], Inherited:=True)>
+Friend Class DynamicPropertyFilterAttribute
     Inherits Attribute
 
-    Private mPropertyName As String
+    Private ReadOnly mPropertyName As String
+
     ''' <summary>
     ''' Название свойства, от которого будет зависить видимость  
     ''' </summary>
@@ -16,7 +18,8 @@
         End Get
     End Property
 
-    Private mShowOn As String
+    Private ReadOnly mShowOn As String
+
     ''' <summary>
     ''' Значения свойства от которого зависит видимость 
     ''' (через запятую, если несколько), при котором свойство, к
@@ -42,34 +45,44 @@ End Class
 
 ''' <summary>
 ''' Базовый класс для объектов, поддерживающих динамическое 
-''' отображение свойств в PropertyGrid
+''' отображение свойств в PropertyGrid.
+''' Реализует интерфейс, с помощью которого предоставляются динамические сведения о пользовательских типах объектов.
 ''' </summary>
-<Serializable()> _
+<Serializable()>
 Public Class FilterablePropertyBase
     Implements ICustomTypeDescriptor
 
+    ''' <summary>
+    ''' Возвращает свойства для этого экземпляра компонента, используя массив атрибутов в качестве фильтра.
+    ''' </summary>
+    ''' <param name="attributes">Массив типа System.Attribute, используемый в качестве фильтра.</param>
+    ''' <returns>Коллекция System.ComponentModel.PropertyDescriptorCollection, представляющая фильтрованные свойства для этого экземпляра компонента.</returns>
+    ''' <remarks></remarks>
     Protected Function GetFilteredProperties(ByVal attributes As Attribute()) As PropertyDescriptorCollection
-        Dim pdc As PropertyDescriptorCollection = TypeDescriptor.GetProperties(Me, attributes, True)
-        Dim finalProps As New PropertyDescriptorCollection(New PropertyDescriptor(-1) {})
+        Dim pdc As PropertyDescriptorCollection = TypeDescriptor.GetProperties(Me, attributes, True) '  коллекция свойств для указанного компонента
+        Dim finalProps As New PropertyDescriptorCollection(New PropertyDescriptor(-1) {}) ' краткое описание свойства класса.
 
+        ' пройти по всем свойствам в поиске содержащих аттрибут типа DynamicPropertyFilterAttribute
         For Each pd As PropertyDescriptor In pdc
             Dim include As Boolean = False
-            Dim dynamic As Boolean = False
+            Dim propertyIsDynamic As Boolean = False
 
             For Each a As Attribute In pd.Attributes
                 If TypeOf a Is DynamicPropertyFilterAttribute Then
-                    dynamic = True
+                    propertyIsDynamic = True
 
                     Dim dpf As DynamicPropertyFilterAttribute = DirectCast(a, DynamicPropertyFilterAttribute)
-                    Dim temp As PropertyDescriptor = pdc(dpf.PropertyName)
+                    Dim temp As PropertyDescriptor = pdc(dpf.PropertyName) ' найти свойство, от которого зависит видимость  
 
+                    ' если в перечислении есть значение равное значению свойства, от которого зависит видимость, то:
                     If dpf.ShowOn.IndexOf(temp.GetValue(Me).ToString()) > -1 Then
                         include = True
                     End If
                 End If
             Next
 
-            If Not dynamic OrElse include Then
+            ' нединамические выдать как есть, а динамические выдать только с включённой видимостью
+            If Not propertyIsDynamic OrElse include Then
                 finalProps.Add(pd)
             End If
         Next
@@ -78,7 +91,6 @@ Public Class FilterablePropertyBase
     End Function
 
 #Region "ICustomTypeDescriptor Members"
-
     Public Function GetConverter() As TypeConverter Implements ICustomTypeDescriptor.GetConverter
         Return TypeDescriptor.GetConverter(Me, True)
     End Function
@@ -126,7 +138,5 @@ Public Class FilterablePropertyBase
     Public Function GetClassName() As String Implements ICustomTypeDescriptor.GetClassName
         Return TypeDescriptor.GetClassName(Me, True)
     End Function
-
 #End Region
-
 End Class

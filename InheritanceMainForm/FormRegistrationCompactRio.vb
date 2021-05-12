@@ -634,10 +634,10 @@ Friend Class FormRegistrationCompactRio
         LabelMessageTcpClient.Text = "Запуск сбора"
 
         ' не объединять два условия
-        If MainMDIFormParent.GFormTestCompactRio IsNot Nothing Then
-            MainMDIFormParent.GFormTestCompactRio.Initialize()
+        If MainMDIFormParent.GFormCompactRio IsNot Nothing Then
+            MainMDIFormParent.GFormCompactRio.Initialize()
             'MainMDIFormParent.GFormTestCompactRio.StartAcquisitionTimer(New Action(Of Object, EventArgs)(AddressOf MainMDIFormParent.GFormTestCompactRio.RegistrationTimerTick)) ' идёт последним - там настройка размерностей
-            MainMDIFormParent.GFormTestCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormTestCompactRio.RegistrationTimerTick)
+            MainMDIFormParent.GFormCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormCompactRio.RegistrationTimerTick)
         End If
     End Sub
 
@@ -646,10 +646,10 @@ Friend Class FormRegistrationCompactRio
     ''' Сбор на шасси и сетевой обмен с Registration продолжается.
     ''' </summary>
     Private Sub StopTimerCompactRio()
-        If MainMDIFormParent.GFormTestCompactRio IsNot Nothing Then
-            If MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then
+        If MainMDIFormParent.GFormCompactRio IsNot Nothing Then
+            If MainMDIFormParent.GFormCompactRio.IsStartAcquisition Then
                 ' вначале остановить таймер формы
-                MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
+                MainMDIFormParent.GFormCompactRio.StopAcquisition()
                 Thread.Sleep(50)
             End If
         End If

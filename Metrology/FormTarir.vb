@@ -361,9 +361,9 @@ Friend Class FormTarir
     ''' <returns></returns>
     Private Function MeasurementCompactRio() As Double()
         If RegistrationMain IsNot Nothing AndAlso RegistrationMain.IsRun Then InstallQuestionForm(WhoIsExamine.Nobody)
-        If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
+        If MainMDIFormParent.GFormCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormCompactRio.IsStartAcquisition Then MainMDIFormParent.GFormCompactRio.StopAcquisition()
 
-        MainMDIFormParent.GFormTestCompactRio.Initialize()
+        MainMDIFormParent.GFormCompactRio.Initialize()
         counterAcquiredDataCompactRio = 0
         'counterLoopTask = 0
         'average = 0
@@ -371,7 +371,7 @@ Friend Class FormTarir
         ShowHideControlAcquired(True)
         ProgressBar.Maximum = acquisitionCount
         ' здесь надо awaite вызов
-        MainMDIFormParent.GFormTestCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormTestCompactRio.TarirTimerTick)
+        MainMDIFormParent.GFormCompactRio.StartAcquisitionTimer(AddressOf MainMDIFormParent.GFormCompactRio.TarirTimerTick)
         RunStopAcquisitionCompactRio(True)
 
         Do
@@ -413,7 +413,7 @@ Friend Class FormTarir
         ' Прерывание уже было запрошено?
         If ct.IsCancellationRequested Then ct.ThrowIfCancellationRequested()
 
-        Dim timerIntervalWait As Integer = MainMDIFormParent.GFormTestCompactRio.TimerIntervalWait
+        Dim timerIntervalWait As Integer = MainMDIFormParent.GFormCompactRio.TimerIntervalWait
         Do
             If ct.IsCancellationRequested Then
                 'ct.ThrowIfCancellationRequested() ' выйти по исключению
@@ -496,8 +496,8 @@ Friend Class FormTarir
         counterAcquiredDataCompactRio += 1
 
         If counterAcquiredDataCompactRio >= acquisitionCount Then
-            If MainMDIFormParent.GFormTestCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormTestCompactRio.IsStartAcquisition Then
-                MainMDIFormParent.GFormTestCompactRio.StopAcquisition()
+            If MainMDIFormParent.GFormCompactRio IsNot Nothing AndAlso MainMDIFormParent.GFormCompactRio.IsStartAcquisition Then
+                MainMDIFormParent.GFormCompactRio.StopAcquisition()
                 RunStopAcquisitionCompactRio(False)
             End If
         End If

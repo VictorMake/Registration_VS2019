@@ -2,7 +2,7 @@
 ''' Хранит IP адрес
 ''' </summary>
 <Serializable()>
-Public Class IPAddressCls
+Public Class IPAddressTargetCRIO
     ''' <summary>
     ''' Конструктор
     ''' </summary>

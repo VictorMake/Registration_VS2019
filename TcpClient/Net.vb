@@ -24,7 +24,7 @@ Module Net
     Private HashTime As UInt32
     'Private arrayLengthAllChassis As Integer ' кол. всех каналов ССД (сумма по всем шасси)
     ' Этот канал ССД является счётчиком для оценки работы и частоты сбора
-    Private WatchdogChannel As String = String.Empty
+    'Private WatchdogChannel As String = String.Empty
     Private HashWatchdogPin As UInt32
 
     ''' <summary>
@@ -185,7 +185,7 @@ Module Net
                 offset += 1
 
                 'PacketArray.AddRange(System.Text.Encoding.ASCII.GetBytes(_string))
-                PacketArray.AddRange(ConvertUnicodeToSCIIByte(_string))
+                PacketArray.AddRange(ConvertUnicodeToWindows1251Byte(_string))
                 offset += sLen
                 Exit Select
             Case CommandSetServer.Description_54 ' Пакет Description
@@ -194,7 +194,7 @@ Module Net
                 offset += 1
 
                 'PacketArray.AddRange(System.Text.Encoding.ASCII.GetBytes(_string))
-                PacketArray.AddRange(ConvertUnicodeToSCIIByte(_string))
+                PacketArray.AddRange(ConvertUnicodeToWindows1251Byte(_string))
                 offset += sLen
                 Exit Select
             Case CommandSetServer.GetData_100 ' Пакет Get data
@@ -277,27 +277,29 @@ Module Net
     'End Function
 
     ''' <summary>
-    ''' Конвертировать строку в массив byte[]
+    ''' Получить представление строки в байтах
     ''' </summary>
     ''' <param name="unicodeString"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function ConvertUnicodeToSCIIByte(unicodeString As String) As Byte()
+    Public Function ConvertUnicodeToWindows1251Byte(unicodeString As String) As Byte()
         ' Все строчки в .net хранятся в юникоде. 
         ' Надо взять строку, и с помощью метода GetBytes нужной кодировки получить представление строки в байтах для данной кодировки. 
         ' Дальше берется этот массив байт и преобразуется в строку с помощью Encoding.GetString.
         ' Вызывать метод той кодировки, к которой необходимо преобразовать строку.
         ' Создать 2 различные кодировки.
-        'Encoding.GetEncoding("cp866")'Encoding.UTF7 ' Encoding.UTF8 'Encoding.ASCII 'Encoding.GetEncoding("koi8-r")'As New UTF8Encoding
-        Dim ascii As Text.Encoding = Text.Encoding.GetEncoding("windows-1251")
-        Dim [unicode] As Text.Encoding = Text.Encoding.Unicode 'As New UnicodeEncoding()
-        Dim unicodeBytes As Byte() = [unicode].GetBytes(unicodeString) ' Конвертировать строку в массив byte[].
-        Dim asciiBytes As Byte() = Text.Encoding.Convert([unicode], ascii, unicodeBytes) ' Произвести конвертацию из одной кодировки в другую.
-
+        ' Encoding.GetEncoding("cp866")'Encoding.UTF7 ' Encoding.UTF8 'Encoding.ASCII 'Encoding.GetEncoding("koi8-r")'As New UTF8Encoding
+        Dim asciiEncoding As Text.Encoding = System.Text.Encoding.GetEncoding("windows-1251")
+        Dim unicodeEncoding As Text.Encoding = System.Text.Encoding.Unicode 'As New UnicodeEncoding()
+        ' Конвертировать строку в массив byte[].
+        Dim unicodeBytes As Byte() = unicodeEncoding.GetBytes(unicodeString)
+        ' Произвести конвертацию из одной кодировки в другую.
+        Dim asciiBytes As Byte() = System.Text.Encoding.Convert(unicodeEncoding, asciiEncoding, unicodeBytes)
         ' Конвертировать новый byte[] в char[] а затем в строку.
         ' Немного другой подход конвертации  GetCharCount/GetChars.
-        Dim asciiChars(ascii.GetCharCount(asciiBytes, 0, asciiBytes.Length) - 1) As Char
-        ascii.GetChars(asciiBytes, 0, asciiBytes.Length, asciiChars, 0)
+        Dim asciiChars(asciiEncoding.GetCharCount(asciiBytes, 0, asciiBytes.Length) - 1) As Char
+        asciiEncoding.GetChars(asciiBytes, 0, asciiBytes.Length, asciiChars, 0)
+
         'Dim asciiString As New String(asciiChars)
 
         ' Тест показа строк до и после конвертации, чтобы показать, что обратная конвертация правильна.
@@ -312,5 +314,4 @@ Module Net
         'Return asciiString
         Return asciiBytes
     End Function
-
 End Module

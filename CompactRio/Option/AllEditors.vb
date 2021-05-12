@@ -7,7 +7,6 @@ Imports Registration.My
 Module AllEditors
 
 #Region "Редакторы типа UITypeEditor"
-
 #Region "EnumModeWorkEditor"
     ''' <summary>
     ''' Добавляет картинки, соответствующие каждому члену перечисления (для свойства ModeWork() As EnumModeWork)
@@ -62,7 +61,7 @@ Module AllEditors
                 Dim svc As IWindowsFormsEditorService = DirectCast(provider.GetService(GetType(IWindowsFormsEditorService)), IWindowsFormsEditorService)
 
                 If svc IsNot Nothing Then
-                    Using ipfrm As New IPAddressEditorForm((DirectCast(value, IPAddressCls)))
+                    Using ipfrm As New FormIPAddressEditor((DirectCast(value, IPAddressTargetCRIO)))
                         If svc.ShowDialog(ipfrm) = DialogResult.OK Then
                             value = ipfrm.IP
                         End If
@@ -92,7 +91,7 @@ Module AllEditors
     ''' Класс для установки фильтра по расширению при выборе Конфигурационного файла Сервера (*.xml).
     ''' При редактировании свойства, вызывается OpenFileDialog.
     ''' </summary>
-    Class ChannelsFileEditor
+    Public Class ChannelsFileEditor
         Inherits FileNameEditor
         ''' <summary>
         ''' Настройка фильтра расширений 
@@ -107,7 +106,7 @@ Module AllEditors
     ''' Класс для установки каталога исполняемых файлов для копирования.
     ''' При редактировании свойства, вызывается FolderBrowser.
     ''' </summary>
-    Class CatalogEditor
+    Public Class CatalogEditor
         Inherits FolderNameEditor
 
         ''' <summary>
@@ -131,8 +130,13 @@ Module AllEditors
     ''' для задания заголовка и запоминания положения окна.
     ''' Реализует пользовательский интерфейс, позволяющий редактировать коллекции большинства типов во время разработки.
     ''' </summary>
-    Class ChassisCollectionEditor
+    Public Class ChassisCollectionEditor
         Inherits CollectionEditor
+
+        Private collForm As CollectionForm ' = MyBase.CreateCollectionForm()' Предоставляет модальное диалоговое окно для редактирования содержимого коллекции с помощью System.Drawing.Design.UITypeEditor.
+        Private labelDescriptionProperties As New Label()
+        Const PropertiesText As String = "&Список шасси cRio в ИВК:"
+        Const MembersText As String = "&Target:"
 
         ''' <summary>
         ''' Конструктор
@@ -140,11 +144,6 @@ Module AllEditors
         Public Sub New(ByVal t As Type)
             MyBase.New(t)
         End Sub
-
-        Private collForm As CollectionForm ' = MyBase.CreateCollectionForm()' Предоставляет модальное диалоговое окно для редактирования содержимого коллекции с помощью System.Drawing.Design.UITypeEditor.
-        Private labelDescriptionProperties As New Label()
-        Const PropertiesText As String = "&Список шасси cRio в ИВК:"
-        Const MembersText As String = "&Target:"
 
         ''' <summary>
         ''' Перекрытый метод создания формы редактора - для сохранения/восстановления

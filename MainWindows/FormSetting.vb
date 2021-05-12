@@ -360,6 +360,7 @@ Public Class FormSetting
         End If
 
         SetLastChannelDBase()
+        IsCheckEmptyChassis = False
         LoadChannels() ' в шапке выбирается номер стенда
 
         If Not isCompensationReferenceJunction Then SaveCoefficientBringingTBoxing()
@@ -1035,7 +1036,9 @@ Public Class FormSetting
 
     Private Sub LinkLabelSettingCompactRio_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabelSettingCompactRio.LinkClicked
         LinkLabelSettingCompactRio.Enabled = False
-        ' TODO: заново сделать доступным после закрытия настроечной формы конфигурации
+        Dim mFormCompactRioSetting As FormCompactRioSetting = New FormCompactRioSetting
+        mFormCompactRioSetting.ShowDialog(Me)
+        LinkLabelSettingCompactRio.Enabled = True
     End Sub
 #End Region
 

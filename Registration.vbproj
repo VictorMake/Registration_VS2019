@@ -59,7 +59,7 @@
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>Win32 = True</DefineConstants>
+    <DefineConstants>Win32 = True, DEBUG_ClientTest = True</DefineConstants>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <DebugSymbols>true</DebugSymbols>
@@ -283,7 +283,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Registration.ico" />
+    <None Include="Resources\AcquisitionStart.png" />
+    <None Include="Resources\AcquisitionStop.png" />
     <Content Include="Trash\Git.txt" />
+    <None Include="CompactRio\UnhandledExceptionBaseCode\SchemaForLogFile.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="InheritanceMainForm\ClassDiagramFormMain.cd" />
     <None Include="Resources\StopSave.png" />
     <None Include="Resources\StopSave2.png" />
@@ -377,22 +382,71 @@
     <None Include="Resources\recycled1.png" />
     <None Include="Resources\binary.png" />
     <None Include="Resources\recycled.png" />
+    <Compile Include="CompactRio\FormAboutBoxCompactRio.Designer.vb">
+      <DependentUpon>FormAboutBoxCompactRio.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\FormAboutBoxCompactRio.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\Chassis\ChannelRio.vb" />
+    <Compile Include="CompactRio\Chassis\Chassis.vb" />
+    <Compile Include="CompactRio\Chassis\ChassisValue.vb" />
+    <Compile Include="CompactRio\Chassis\ChannelsRio.vb" />
+    <Compile Include="CompactRio\Chassis\TargetsChassis.vb" />
+    <Compile Include="CompactRio\FormCompactRio.Designer.vb">
+      <DependentUpon>FormCompactRio.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\FormCompactRio.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\ConnectionInfo\ConnectionInfoServer.vb" />
+    <Compile Include="CompactRio\ConnectionInfo\MonitorInfo.vb" />
     <Compile Include="CompactRio\FormTestCompactRio.Designer.vb">
       <DependentUpon>FormTestCompactRio.vb</DependentUpon>
     </Compile>
     <Compile Include="CompactRio\FormTestCompactRio.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="CompactRio\Ftp\DirectoryListParser.vb" />
+    <Compile Include="CompactRio\Ftp\FtpClient.vb" />
+    <Compile Include="CompactRio\ModuleCompactRio.vb" />
+    <Compile Include="CompactRio\NameSpaceAdditions\MessageBoxCode.vb" />
     <Compile Include="CompactRio\Option\AllEditors.vb" />
-    <Compile Include="CompactRio\Option\AllTypesConverter.vb" />
-    <Compile Include="CompactRio\Option\IPAddressCls.vb" />
-    <Compile Include="CompactRio\Option\IPAddressEditorForm.Designer.vb">
-      <DependentUpon>IPAddressEditorForm.vb</DependentUpon>
+    <Compile Include="CompactRio\Option\AllProperties.vb" />
+    <Compile Include="CompactRio\Option\DynamicPropertyFilterAttribute.vb" />
+    <Compile Include="CompactRio\Option\IPAddressTargetCRIO.vb" />
+    <Compile Include="CompactRio\Option\FormIPAddressEditor.Designer.vb">
+      <DependentUpon>FormIPAddressEditor.vb</DependentUpon>
     </Compile>
-    <Compile Include="CompactRio\Option\IPAddressEditorForm.vb">
+    <Compile Include="CompactRio\Option\FormIPAddressEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\Option\OptionDataCRIO.vb" />
+    <Compile Include="CompactRio\Option\FormCompactRioSetting.Designer.vb">
+      <DependentUpon>FormCompactRioSetting.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\Option\FormCompactRioSetting.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CompactRio\Option\TargetCRIO.vb" />
+    <Compile Include="CompactRio\Partial\FormMiscCompactRio.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\FormExceptionDialog.designer.vb">
+      <DependentUpon>FormExceptionDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\FormExceptionDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\Methods.vb" />
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\StackTracer.vb" />
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\UnhandledExceptions.vb" />
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\FormExceptionLogViewer.Designer.vb">
+      <DependentUpon>FormExceptionLogViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompactRio\UnhandledExceptionBaseCode\FormExceptionLogViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DecodingSnapshot\AbstractFactory\AbstractFactory.vb" />
     <Compile Include="DecodingSnapshot\AbstractFactory\AbstractProducts.vb" />
     <Compile Include="DecodingSnapshot\AbstractFactory\Client.vb" />
@@ -663,7 +717,7 @@
     <Compile Include="TcpClient\ConnectionInfoClient.vb" />
     <Compile Include="TcpClient\Net.vb" />
     <Compile Include="Trash\RudimentaryMultiValuedDictionary.vb" />
-    <Compile Include="TypeConverterForProperty\AllTypeConverterChannelAndFormulaEditor.vb" />
+    <Compile Include="CompactRio\Option\AllTypeConverterChannelAndFormulaEditor.vb" />
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -674,10 +728,10 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FunctionalPanel\BasicHostLoader.vb" />
-    <Compile Include="TypeConverterForProperty\FormChannelEditor.designer.vb">
+    <Compile Include="CompactRio\Option\FormChannelEditor.designer.vb">
       <DependentUpon>FormChannelEditor.vb</DependentUpon>
     </Compile>
-    <Compile Include="TypeConverterForProperty\FormChannelEditor.vb">
+    <Compile Include="CompactRio\Option\FormChannelEditor.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ServiceBases\ChannelsDigitalOutputDataSet.Designer.vb">
@@ -865,7 +919,6 @@
     <Compile Include="DigitalPort\DirectoryTreeView.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TypeConverterForProperty\DynamicPropertyFilterAttribute.vb" />
     <Compile Include="DigitalPort\FileListView.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -1033,11 +1086,27 @@
     <Compile Include="FindSnapshot\ConditionCollection.vb">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="CompactRio\FormAboutBoxCompactRio.resx">
+      <DependentUpon>FormAboutBoxCompactRio.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompactRio\FormCompactRio.resx">
+      <DependentUpon>FormCompactRio.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CompactRio\FormTestCompactRio.resx">
       <DependentUpon>FormTestCompactRio.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CompactRio\Option\IPAddressEditorForm.resx">
-      <DependentUpon>IPAddressEditorForm.vb</DependentUpon>
+    <EmbeddedResource Include="CompactRio\Option\FormIPAddressEditor.resx">
+      <DependentUpon>FormIPAddressEditor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompactRio\Option\FormCompactRioSetting.resx">
+      <DependentUpon>FormCompactRioSetting.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompactRio\UnhandledExceptionBaseCode\FormExceptionDialog.resx">
+      <DependentUpon>FormExceptionDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompactRio\UnhandledExceptionBaseCode\FormExceptionLogViewer.resx">
+      <DependentUpon>FormExceptionLogViewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DecodingSnapshot\FormAdjustment.resx">
       <DependentUpon>FormAdjustment.vb</DependentUpon>
@@ -1095,7 +1164,7 @@
     <EmbeddedResource Include="My Project\licenses.licx" />
     <EmbeddedResource Include="Resources\Bullet.bmp" />
     <EmbeddedResource Include="Resources\BulletEmpty.bmp" />
-    <EmbeddedResource Include="TypeConverterForProperty\FormChannelEditor.resx">
+    <EmbeddedResource Include="CompactRio\Option\FormChannelEditor.resx">
       <DependentUpon>FormChannelEditor.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

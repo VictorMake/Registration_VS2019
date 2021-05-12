@@ -23,9 +23,9 @@ Partial Class FormSetting
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSetting))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSetting))
         Me.OpenFileDialogPuth = New System.Windows.Forms.OpenFileDialog()
         Me.HelpProvider1 = New System.Windows.Forms.HelpProvider()
         Me.ComboNumberStand = New System.Windows.Forms.ComboBox()
@@ -45,6 +45,8 @@ Partial Class FormSetting
         Me.LabelRegime = New System.Windows.Forms.Label()
         Me.LabelStend = New System.Windows.Forms.Label()
         Me.LabelDate = New System.Windows.Forms.Label()
+        Me.PanelSettingCompactRio = New System.Windows.Forms.Panel()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.LinkLabelSettingCompactRio = New System.Windows.Forms.LinkLabel()
         Me.TabPageStartStop = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelStartStop = New System.Windows.Forms.TableLayoutPanel()
@@ -139,13 +141,13 @@ Partial Class FormSetting
         Me.hpPlainHTML = New System.Windows.Forms.HelpProvider()
         Me.TableLayoutPanelTypeWork = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageListChannel = New System.Windows.Forms.ImageList(Me.components)
-        Me.PanelSettingCompactRio = New System.Windows.Forms.Panel()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.TabOption.SuspendLayout()
         Me.TabPageProduct.SuspendLayout()
         Me.TableLayoutPanelProduct.SuspendLayout()
         Me.FraProduct.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
+        Me.PanelSettingCompactRio.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageStartStop.SuspendLayout()
         Me.TableLayoutPanelStartStop.SuspendLayout()
         Me.PanelNameVarStopWrite.SuspendLayout()
@@ -174,8 +176,6 @@ Partial Class FormSetting
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.FrameTypeWork.SuspendLayout()
         Me.TableLayoutPanelTypeWork.SuspendLayout()
-        Me.PanelSettingCompactRio.SuspendLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ComboNumberStand
@@ -434,6 +434,26 @@ Partial Class FormSetting
         Me.LabelDate.TabIndex = 74
         Me.LabelDate.Text = "Дата:"
         Me.LabelDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'PanelSettingCompactRio
+        '
+        Me.TableLayoutPanelProduct.SetColumnSpan(Me.PanelSettingCompactRio, 2)
+        Me.PanelSettingCompactRio.Controls.Add(Me.PictureBox2)
+        Me.PanelSettingCompactRio.Controls.Add(Me.LinkLabelSettingCompactRio)
+        Me.PanelSettingCompactRio.Location = New System.Drawing.Point(100, 209)
+        Me.PanelSettingCompactRio.Margin = New System.Windows.Forms.Padding(100, 3, 3, 3)
+        Me.PanelSettingCompactRio.Name = "PanelSettingCompactRio"
+        Me.PanelSettingCompactRio.Size = New System.Drawing.Size(247, 39)
+        Me.PanelSettingCompactRio.TabIndex = 80
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(3, 3)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(32, 32)
+        Me.PictureBox2.TabIndex = 0
+        Me.PictureBox2.TabStop = False
         '
         'LinkLabelSettingCompactRio
         '
@@ -1680,26 +1700,6 @@ Partial Class FormSetting
         Me.ImageListChannel.Images.SetKeyName(11, "")
         Me.ImageListChannel.Images.SetKeyName(12, "")
         '
-        'PanelSettingCompactRio
-        '
-        Me.TableLayoutPanelProduct.SetColumnSpan(Me.PanelSettingCompactRio, 2)
-        Me.PanelSettingCompactRio.Controls.Add(Me.PictureBox2)
-        Me.PanelSettingCompactRio.Controls.Add(Me.LinkLabelSettingCompactRio)
-        Me.PanelSettingCompactRio.Location = New System.Drawing.Point(100, 209)
-        Me.PanelSettingCompactRio.Margin = New System.Windows.Forms.Padding(100, 3, 3, 3)
-        Me.PanelSettingCompactRio.Name = "PanelSettingCompactRio"
-        Me.PanelSettingCompactRio.Size = New System.Drawing.Size(247, 39)
-        Me.PanelSettingCompactRio.TabIndex = 80
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(32, 32)
-        Me.PictureBox2.TabIndex = 0
-        Me.PictureBox2.TabStop = False
-        '
         'FormSetting
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1725,6 +1725,9 @@ Partial Class FormSetting
         Me.FraProduct.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
+        Me.PanelSettingCompactRio.ResumeLayout(False)
+        Me.PanelSettingCompactRio.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPageStartStop.ResumeLayout(False)
         Me.TableLayoutPanelStartStop.ResumeLayout(False)
         Me.TableLayoutPanelStartStop.PerformLayout()
@@ -1760,9 +1763,6 @@ Partial Class FormSetting
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.FrameTypeWork.ResumeLayout(False)
         Me.TableLayoutPanelTypeWork.ResumeLayout(False)
-        Me.PanelSettingCompactRio.ResumeLayout(False)
-        Me.PanelSettingCompactRio.PerformLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

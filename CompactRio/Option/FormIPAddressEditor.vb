@@ -1,10 +1,10 @@
 ﻿Imports System.Text.RegularExpressions
 
-Friend Class IPAddressEditorForm
+Friend Class FormIPAddressEditor
     ''' <summary>
     ''' Форма для редактирования ip-адреса
     ''' </summary>
-    Public Sub New(ByVal ipMemo As IPAddressCls)
+    Public Sub New(ByVal ipMemo As IPAddressTargetCRIO)
         MyBase.New()
 
         ' This call is required by the Windows Form Designer.
@@ -18,15 +18,15 @@ Friend Class IPAddressEditorForm
     ''' Преобразование представления ip в MaskedTextBox
     ''' и в нормальном виде
     ''' </summary>
-    Public Property IP() As IPAddressCls
+    Public Property IP() As IPAddressTargetCRIO
         ' MaskedTextBox добивает короткие части ip пробелами до 3-х знаков
         ' эти пробелы нужно удалять
         Get
-            Return New IPAddressCls(IPmaskedTextBox.Text.Replace(" ", ""))
+            Return New IPAddressTargetCRIO(IPmaskedTextBox.Text.Replace(" ", ""))
         End Get
 
         ' а здесь наоборот - надо выровнять пробелами
-        Set(ByVal value As IPAddressCls)
+        Set(ByVal value As IPAddressTargetCRIO)
             ' если части IP короче 3 знаков, MaskedTextBox их слепляет :(
             ' надо их при необходимости подравнять пробелами
             ' чтоб легли в маску

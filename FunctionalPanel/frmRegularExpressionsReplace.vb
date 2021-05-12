@@ -959,7 +959,7 @@ Public Class frmRegularExpressionsReplace
             ' Обновляем список открывавшихся файлов
             RecentAdd(sName)
         Catch ex As Exception
-            Throw New Exception("Невозможно открыть конфигурационный файл """ & sName & """" & Environment.NewLine & "Ошибка: " & ex.ToString)
+            Throw New Exception($"Невозможно открыть конфигурационный файл ""{sName}""{Environment.NewLine}Ошибка: {ex.ToString}")
         Finally
             m_bLoading = False
         End Try
