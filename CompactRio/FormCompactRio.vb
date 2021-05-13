@@ -48,14 +48,6 @@ Public Class FormCompactRio
 #Region "Properties"
     Private mPathSettingMdb As String
     ''' <summary>
-    ''' Путь к каталогу с дополнительными файлами к программе.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property PathCatalog() As String
-
-    ''' <summary>
     ''' Путь к базе Access с настройками.
     ''' </summary>
     ''' <value></value>
@@ -83,7 +75,7 @@ Public Class FormCompactRio
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Property PathSettingXml() As String
+    Private Property PathSettingXml() As String
         Get
             Return mPathSettingXml
         End Get
@@ -95,14 +87,6 @@ Public Class FormCompactRio
             End If
         End Set
     End Property
-
-    ''' <summary>
-    ''' Описание для окна уточняется из файла конфигурации.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property Description() As String = "Это Тестовая форма CompactRio"
 
     ''' <summary>
     ''' Свойство для управления родителем закрытия окон плагина.
@@ -438,6 +422,14 @@ Public Class FormCompactRio
     Private RefreshScreen As Integer
 #End Region
 
+    ''' <summary>
+    ''' Путь к каталогу с дополнительными файлами к программе.
+    ''' </summary>
+    Private PathCatalog As String
+    ''' <summary>
+    ''' Описание для окна уточняется из файла конфигурации.
+    ''' </summary>
+    Private Description As String = "Это Тестовая форма CompactRio"
     ' Один токен отмены должен относиться к одной отменяемой операции, однако эта операция может быть реализована в программе.
     ' После того как свойство IsCancellationRequested токена примет значение true, для него невозможно будет восстановить значение false. 
     ' Таким образом, токены отмены невозможно использовать повторно после выполнения отмены.
@@ -1042,7 +1034,6 @@ Public Class FormCompactRio
     Private Sub StartStopButton_Click(sender As Object, e As EventArgs) Handles StartStopButton.Click
         StartStopAcquisitionTargetCRIO(StartStopButton.Checked)
     End Sub
-#End Region
 
     ''' <summary>
     ''' Создание серверного слушающего сокета ИВК и связанного с ним потока.
@@ -1094,6 +1085,7 @@ Public Class FormCompactRio
             Next
         End If
     End Sub
+#End Region
 
 #Region "Запуск Сбора на шасси"
     Private Sub ActivateTargetButton_Click(sender As Object, e As EventArgs) Handles ActivateTargetButton.Click
@@ -1632,7 +1624,6 @@ Public Class FormCompactRio
                 Return cmdSetUnknown
         End Select
     End Function
-
 #End Region
 
 #Region "Команды отсылаемые Сервером"
@@ -1927,7 +1918,7 @@ Public Class FormCompactRio
     ''' Вызвать запуск серверной (слушающей) части ИВК из потока метода SSDRun
     ''' </summary>
     ''' <remarks></remarks>
-    Public Sub InvokeStartAcquisitionTargetCRIO()
+    Private Sub InvokeStartAcquisitionTargetCRIO()
         Sleep(WaiteStartStopAcquisition)
         Dim doStartAcquisitionTargetCRIO As New Action(Of Boolean)(AddressOf StartStopAcquisitionTargetCRIO)
         Invoke(doStartAcquisitionTargetCRIO, True)
