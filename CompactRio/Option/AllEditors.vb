@@ -48,7 +48,10 @@ Module AllEditors
 
 #Region "IPAddressEditor"
     ''' <summary>
-    ''' Модальный редактор IP адреса для PropertyGrid
+    ''' Модальный редактор IP адреса для PropertyGrid.
+    ''' Предоставляет класс, используемый для конструирования редакторов значений,
+    ''' которые обеспечивают пользовательский интерфейс для визуализации и редактирования
+    ''' значений объектов поддерживаемых типов данных.
     ''' </summary>
     Public Class IPAddressEditor
         Inherits UITypeEditor
@@ -73,7 +76,8 @@ Module AllEditors
         End Function
 
         ''' <summary>
-        ''' Возвращаем стиль редактора - модальное окно
+        ''' Получает стиль редактирования, используемый методом System.Drawing.Design.UITypeEditor.EditValue(System.IServiceProvider,System.Object).
+        ''' Возвращаем модальный стиль редактора - модальное окно.
         ''' </summary>
         Public Overloads Overrides Function GetEditStyle(ByVal context As ITypeDescriptorContext) As UITypeEditorEditStyle
             If context IsNot Nothing Then
@@ -126,7 +130,7 @@ Module AllEditors
     ' меняет стандартные подписи на соответствующие редактируемым данным и добавляет окно с расширенной подсказкой по свойствам:
 
     ''' <summary>
-    ''' Свойтво CollectionEditor для редактирования списка подключённых шасси -
+    ''' Класс для отображения Свойства CollectionEditor для редактирования списка подключённых шасси -
     ''' для задания заголовка и запоминания положения окна.
     ''' Реализует пользовательский интерфейс, позволяющий редактировать коллекции большинства типов во время разработки.
     ''' </summary>
@@ -174,39 +178,39 @@ Module AllEditors
             Catch
                 'Trace.WriteLine("ConstraintIrregularityCollectionEditor::CreateCollectionForm() exception")
             End Try
-            collForm.Text = "Редактор настроек шасси и каталога с программой для закачки"
+            collForm.Text = "Редактор настроек шасси и каталога с программой FPGA для закачки"
 
             '--- Русификация и кастомизация надписей на форме ----------------
             ' перебираем все контролы на форме и заменяем
             ' неправильные надписи
             For Each ctrl As Control In collForm.Controls
-                For Each ctrl1 As Control In ctrl.Controls
+                For Each subCtrl As Control In ctrl.Controls
 
-                    If ctrl1.[GetType]().ToString() = "System.Windows.Forms.Label" AndAlso (ctrl1.Text = "&Members:" OrElse ctrl1.Text = "&Члены:") Then
-                        ctrl1.Text = MembersText
+                    If subCtrl.[GetType]().ToString() = "System.Windows.Forms.Label" AndAlso (subCtrl.Text = "&Members:" OrElse subCtrl.Text = "&Члены:") Then
+                        subCtrl.Text = MembersText
                     End If
 
-                    If ctrl1.[GetType]().ToString() = "System.Windows.Forms.Label" AndAlso (ctrl1.Text.Contains("&properties") OrElse ctrl1.Text.Contains("&Cвойства")) Then
-                        labelDescriptionProperties = DirectCast(ctrl1, Label)
+                    If subCtrl.[GetType]().ToString() = "System.Windows.Forms.Label" AndAlso (subCtrl.Text.Contains("&properties") OrElse subCtrl.Text.Contains("&Cвойства")) Then
+                        labelDescriptionProperties = DirectCast(subCtrl, Label)
                         labelDescriptionProperties.Text = PropertiesText
                     End If
 
-                    If ctrl1.[GetType]().ToString() = "System.ComponentModel.Design.CollectionEditor+FilterListBox" Then
+                    If subCtrl.[GetType]().ToString() = "System.ComponentModel.Design.CollectionEditor+FilterListBox" Then
                         ' это самый правильный обработчик, но после него
                         ' срабатывает обработчик формы и меняет надпись на свою
 
                         ' вместо одного правильного - два обходных - 
                         ' на смену индекса в листбоксе:
 
-                        AddHandler DirectCast(ctrl1, ListBox).SelectedIndexChanged, AddressOf ListBox_SelectedIndexChanged
+                        AddHandler DirectCast(subCtrl, ListBox).SelectedIndexChanged, AddressOf ListBox_SelectedIndexChanged
                     End If
 
-                    If ctrl1.[GetType]().ToString() = "System.Windows.Forms.Design.VsPropertyGrid" Then
+                    If subCtrl.[GetType]().ToString() = "System.Windows.Forms.Design.VsPropertyGrid" Then
                         ' и на редактирование в PropertyGrid
-                        AddHandler DirectCast(ctrl1, PropertyGrid).SelectedGridItemChanged, AddressOf PropertyGrid_SelectedGridItemChanged
+                        AddHandler DirectCast(subCtrl, PropertyGrid).SelectedGridItemChanged, AddressOf PropertyGrid_SelectedGridItemChanged
                         ' также сделать доступным окно с подсказками по параметрам в нижней части 
-                        DirectCast(ctrl1, PropertyGrid).HelpVisible = True
-                        DirectCast(ctrl1, PropertyGrid).HelpBackColor = System.Drawing.SystemColors.Info
+                        DirectCast(subCtrl, PropertyGrid).HelpVisible = True
+                        DirectCast(subCtrl, PropertyGrid).HelpBackColor = System.Drawing.SystemColors.Info
                     End If
                 Next
             Next

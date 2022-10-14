@@ -54,22 +54,28 @@ Friend Class TargetsChassis
         mChassis.Clear()
     End Sub
 
-    Public Function IsCheckNewChassis(ByRef inChassis As Chassis) As Boolean
+    ''' <summary>
+    ''' Добавление нового шасси из конфигурации целевых устройств
+    ''' после проверки корректного содержимого файлов для копирования.
+    ''' </summary>
+    ''' <param name="newChassis"></param>
+    ''' <returns></returns>
+    Public Function IsCheckAddNewChassis(ByRef newChassis As Chassis) As Boolean
         Dim success As Boolean = False
 
-        If mChassis.ContainsKey(inChassis.HostName) Then
-            MessageBox.Show($"Шасси с именем {inChassis.HostName} уже загружен!", "Загрузка нового шасси", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        If mChassis.ContainsKey(newChassis.HostName) Then
+            MessageBox.Show($"Шасси с именем {newChassis.HostName} уже загружен!", "Загрузка нового шасси", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return success
         End If
 
         Try
 #If DEBUG_ClientTest = True Then
-            mChassis.Add(inChassis.HostName, inChassis)
-            success = mChassis.ContainsKey(inChassis.HostName)
+            mChassis.Add(newChassis.HostName, newChassis)
+            success = mChassis.ContainsKey(newChassis.HostName)
 #Else
-            If IsCheckFolderToCopy(inChassis) Then
-                mChassis.Add(inChassis.HostName, inChassis)
-                success = mChassis.ContainsKey(inChassis.HostName)
+            If IsCheckFolderToCopy(newChassis) Then
+                mChassis.Add(newChassis.HostName, newChassis)
+                success = mChassis.ContainsKey(newChassis.HostName)
             End If
 #End If
         Catch exp As Exception
@@ -95,32 +101,33 @@ Friend Class TargetsChassis
     ''' Проверка наличия и корректного содержимого папки с программой для копирования на целевое устройство.
     ''' Проверить Состав Папки Для Копирования
     ''' </summary>
-    ''' <param name="TempTargetCRIO"></param>
+    ''' <param name="newChassis"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function IsCheckFolderToCopy(ByRef tempTargetCRIO As Chassis) As Boolean
-        Dim caption As String = $"Проверить состав папки для копирования в шасси: <{tempTargetCRIO.HostName}>"
+    Public Function IsCheckFolderToCopy(ByRef newChassis As Chassis) As Boolean
+        Dim caption As String = $"Проверить состав папки для копирования в шасси: <{newChassis.HostName}>"
         Dim text As String
-        Dim isFolderEqual As Boolean = False ' папки Совпадают
         Dim success As Boolean = False
+        Dim targetCRIOFolderName As String = newChassis.FolderName
 
-        If Directory.Exists(tempTargetCRIO.FolderName) = False Then
-            text = $"Папка с программой для шасси: <{tempTargetCRIO.HostName}> по указанному пути: <{tempTargetCRIO.FolderName}> отсутствует!{Environment.NewLine}Шасси не будет запущено!"
+        If Directory.Exists(targetCRIOFolderName) = False Then
+            text = $"Папка с программой для шасси: <{newChassis.HostName}> по указанному пути: <{newChassis.FolderName}> отсутствует!{Environment.NewLine}Шасси не будет запущено!"
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
             RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
             Return success
         End If
 
-        For Each itemTargetCRIO As Chassis In mChassis.Values
-            If tempTargetCRIO.FolderName = itemTargetCRIO.FolderName Then
-                text = $"Папка с программой для шасси: <{tempTargetCRIO.HostName}> совпадает с папкой с программой для шасси: <{itemTargetCRIO.HostName}>{Environment.NewLine}Шасси не будет запущено из-за конфликта каналов из двух повторных конфигураций!"
-                MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Dim chassisFolderName = mChassis.Values.Where(Function(chassis) chassis.FolderName = targetCRIOFolderName)
+
+        If chassisFolderName.Any() Then ' папки Совпадают
+            For Each itemChassis As Chassis In chassisFolderName
+                text = $"Папка с программой для шасси: <{newChassis.HostName}> совпадает с папкой с программой для шасси: <{itemChassis.HostName}>{Environment.NewLine}Шасси не будет запущено из-за конфликта каналов из двух повторных конфигураций!"
+                MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.[Error])
                 RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{caption}> {text}")
-                isFolderEqual = True
-                Exit For
-            End If
-        Next
-        If isFolderEqual Then Return success
+            Next
+
+            Return success
+        End If
 
         Try
             ' должны присутствовать 2 папки 1)c не обязательно 2)FPGA Bitfiles
@@ -129,47 +136,37 @@ Friend Class TargetsChassis
             ' каталог c\ni-rt\startup  файл startup.rtexe
 
             ' вызвать метод GetFiles чтобы получить массив файлов в директории
-            Dim dirInfo As New DirectoryInfo(tempTargetCRIO.FolderName)
-            Dim aDirectories As DirectoryInfo() = dirInfo.GetDirectories(NI_RT, SearchOption.AllDirectories) 'SearchOption.TopDirectoryOnly
-            Dim isDir_Ni_Rt_Availability As Boolean = False ' присутствует
+            Dim dirInfo As New DirectoryInfo(newChassis.FolderName)
             Dim isError_FPGA_Bitfiles As Boolean = False
 
-            For Each dri As DirectoryInfo In aDirectories
-                If dri.Name = NI_RT Then
-                    isDir_Ni_Rt_Availability = True
-                    Exit For
-                End If
-            Next
-
-            If isDir_Ni_Rt_Availability = False Then
-                text = $"Папка с программой в каталоге: <{NI_RT}> по указанному пути: <{tempTargetCRIO.FolderName}> отсутствует!{Environment.NewLine}Шасси не будет запущено!"
+            If Not dirInfo.GetDirectories(NI_RT, SearchOption.AllDirectories).Where(Function(dri) dri.Name = NI_RT).Any() Then ' отсутствует
+                text = $"Папка с программой в каталоге: <{NI_RT}> по указанному пути: <{newChassis.FolderName}> отсутствует!{Environment.NewLine}Шасси не будет запущено!"
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 RegistrationEventLog.EventLog_MSG_APPLICATION_MESSAGE($"<{caption}> {text}")
                 Return success
             End If
 
-            aDirectories = dirInfo.GetDirectories(FPGA_BITFILES, SearchOption.AllDirectories)
-            For Each dri As DirectoryInfo In aDirectories
+            For Each dri As DirectoryInfo In dirInfo.GetDirectories(FPGA_BITFILES, SearchOption.AllDirectories)
                 If dri.Name = FPGA_BITFILES Then
                     ' вызвать метод GetFiles чтобы получить массив файлов в директории
-                    Dim afiFiles As FileInfo() = dri.GetFiles(SEARCH_PATTERN_LVBITX, SearchOption.AllDirectories)
+                    Dim filesCount As Integer = dri.GetFiles(SEARCH_PATTERN_LVBITX, SearchOption.AllDirectories).Count()
 
-                    If afiFiles.Count = 0 Then
+                    If filesCount = 0 Then
                         text = $"Хотя каталог: <{FPGA_BITFILES}> присутствует, но в нём не содержится ни одного файла <{SEARCH_PATTERN_LVBITX}>{Environment.NewLine}Шасси не будет запущено до исправления папки!"
                         MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
                         RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{caption}> {text}")
                         isError_FPGA_Bitfiles = True
-                    ElseIf afiFiles.Count > 1 Then
+                    ElseIf filesCount > 1 Then
                         text = $"В каталоге: <{FPGA_BITFILES}> присутствует более одного файла <{SEARCH_PATTERN_LVBITX}>{Environment.NewLine}Шасси не будет запущено до исправления папки!"
                         MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error)
                         RegistrationEventLog.EventLog_MSG_EXCEPTION($"<{caption}> {text}")
                         isError_FPGA_Bitfiles = True
                     Else ' один файл
-                        tempTargetCRIO.IsContainsFPGABitfiles = True
+                        newChassis.IsContainsFPGABitfiles = True
                     End If
                     Exit For
                 End If
-            Next dri
+            Next
 
             If isError_FPGA_Bitfiles Then Return success
             success = True
@@ -186,7 +183,6 @@ Friend Class TargetsChassis
     ''' <summary>
     ''' Заполнить коллекцию шасси с контролем корректности
     ''' создания вспомогательных файлов.
-    ''' Загрузить Шасси
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
@@ -196,7 +192,7 @@ Friend Class TargetsChassis
         Try
             For Each itemTargetCRIO As TargetCRIO In mOptionData.CollectionTargetCRIO
                 ' при создании автоматом добавляется в коллекцию
-                If IsCheckNewChassis(New Chassis(itemTargetCRIO.HostName,
+                If IsCheckAddNewChassis(New Chassis(itemTargetCRIO.HostName,
                                                itemTargetCRIO.IPAddressRTtarget,
                                                itemTargetCRIO.ModeWork,
                                                itemTargetCRIO.FolderName,
@@ -232,7 +228,7 @@ Friend Class TargetsChassis
         ' Netw - группа для сетевых переменных управления
         ' Comm - группа для сетевой переменной команды внешнего управления 
         ' Имя сетевой переменной в атрибуте Name каналов Сервера и состоит из имени Шасси и имени самой переменной
-        ' придумать идентификатор сетевого имени каналов управления типа ИмяШасси:СетевоеИмяКаналаУправления наприммер cRIO-9012-Victor:СетеваяУправления
+        ' идентификатор сетевого имени каналов управления типа ИмяШасси:СетевоеИмяКаналаУправления наприммер cRIO-9012-Victor:СетеваяУправления
         ' также сетевой канал несущий признак, что управлением шасси взято извне ИмяШасси:Command наприммер cRIO-9012-Victor:СетеваяКомандная
         ' Пины состоят из (NИВК)(P,T,I,V,D,N,C)(Nшасси в ИВК)(0-100)
         ' NИВК номер ИВК
@@ -529,7 +525,7 @@ Friend Class TargetsChassis
     ''' <remarks></remarks>
     Public Sub ChangeChassisConnection(infoHostName As String, IsConnected As Boolean)
         If mChassis.ContainsKey(infoHostName) Then
-            mChassis(infoHostName).IsConnected = IsConnected
+            mChassis(infoHostName).IsConnected = IsConnected ' равно False
 
             Dim text As String = $"Шасси: <{infoHostName}> - отсоединилось от ИВК."
             RegistrationEventLog.EventLog_CONNECT_FAILED($"<{NameOf(ChangeChassisConnection)}> {text}")

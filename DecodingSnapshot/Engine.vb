@@ -279,3 +279,27 @@ Friend Class Engine39_3
         End Select
     End Sub
 End Class
+
+''' <summary>
+''' 222
+''' </summary>
+Friend Class Engine222
+    Inherits Engine
+
+    Public Sub New(inModeRegime As String)
+        Const conRegimeB As String = "Изделие АИ-222-25-Б"
+        Const conRegimeUB As String = "Изделие АИ-222-25-УБ"
+
+        Type = EngineType.Engine222
+        NameColumn = conRegimeB
+
+        Select Case inModeRegime
+            Case B
+                NameColumn = conRegimeB
+                Exit Select
+            Case UB
+                NameColumn = conRegimeUB
+                Exit Select
+        End Select
+    End Sub
+End Class

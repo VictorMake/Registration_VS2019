@@ -194,6 +194,8 @@ Friend Class EngineManager
                     clsEngine = New EngineM1_25_1(ModeRegime)
                 Case cEngine39_3
                     clsEngine = New Engine39_3(ModeRegime)
+                Case cEngine222
+                    clsEngine = New Engine222(ModeRegime)
                 Case Else
                     Exit Select
             End Select

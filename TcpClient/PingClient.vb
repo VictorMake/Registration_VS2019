@@ -165,7 +165,7 @@ Public Class PingClient
     End Sub
 
 #Region "IDisposable Support"
-    Private disposedValue As Boolean 'флаг не более одного раза Чтобы обнаружить избыточные вызовы
+    Private disposedValue As Boolean ' флаг не более одного раза Чтобы обнаружить избыточные вызовы
 
     Protected Overridable Sub Dispose(disposing As Boolean)
         If Not Me.disposedValue Then

@@ -350,6 +350,7 @@ Public Class ConnectionInfoServer
                             Re.Dim(.byteBuffer, .newLength - 1)
                             .isReadingFragment = False
                         Else
+                            ' поместить сообщение в очередь, чтобы потом обработать в другом потоке
                             .tempBytes = New Byte(.mLastReadLength - 1) {}
                             Array.Copy(.byteBuffer, 0, .tempBytes, 0, .mLastReadLength)
                             .mDataQueue.Enqueue(.tempBytes)

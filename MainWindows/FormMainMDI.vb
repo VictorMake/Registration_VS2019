@@ -1393,7 +1393,7 @@ Public Class FormMainMDI
             Next
 
             If CheckExistServerCfglmzXml(PathServerCfglmzXml) = False Then
-                'Throw New FileNotFoundException("Неправильный путь к конфигурационному файлу стенда №:" & mstrНомерСтенда, pathServerCfglmzXml)
+                'Throw New FileNotFoundException("Неправильный путь к конфигурационному файлу стенда №:" & numbersStand, pathServerCfglmzXml)
                 Do While ReloadCfgPath() = False
                     MessageBox.Show("Необходимо переопределить путь к конфигурационному xml файлу", "Определить путь к Cfg файлу", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Loop
@@ -1401,8 +1401,8 @@ Public Class FormMainMDI
             End If
 
             ' 2)номер изделия
-            'strМодификация = sGetIni(strПутьОпции, "Product", "Modifikacia", cEngine39)
-            'txtМодификацияИзделия.Text = strМодификация
+            'ModificationEngine = sGetIni(strПутьОпции, "Product", "Modifikacia", cEngine39)
+            'txtModificationEngine.Text = ModificationEngine
             'Dim mkeyConfig As Integer = CInt(sGetIni(strПутьОпции, "Options", "LastTCPkeyConfig", "0"))
             keyConfig = CInt(GetIni(PathOptions, "Options", "LastTCPkeyConfig", "0"))
 

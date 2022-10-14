@@ -24,7 +24,7 @@ Public Class DirectoryListParser
     Private ReadOnly structFiles As List(Of FileStruct)
 
     ''' <summary>
-    ''' Перевод коллекции всей файловой структуры в массив
+    ''' Перевод коллекции всей файловой структуры в массив.
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
@@ -36,7 +36,7 @@ Public Class DirectoryListParser
     End Property
 
     ''' <summary>
-    ''' Перевод только файлов из коллекции файловой структуры в массив
+    ''' Перевод только файлов из коллекции файловой структуры в массив.
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
@@ -54,7 +54,7 @@ Public Class DirectoryListParser
     End Property
 
     ''' <summary>
-    ''' Перевод только папок из коллекции файловой структуры в массив
+    ''' Перевод только папок из коллекции файловой структуры в массив.
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
@@ -76,7 +76,7 @@ Public Class DirectoryListParser
     End Sub
 
     ''' <summary>
-    ''' Разбор потока ответа от запроса FTP клиента о составе файловой системы по указанному сетевому адресу
+    ''' Разбор потока ответа от запроса FTP клиента о составе файловой системы по указанному сетевому адресу.
     ''' </summary>
     ''' <param name="dataString"></param>
     ''' <returns></returns>
@@ -109,7 +109,7 @@ Public Class DirectoryListParser
     End Function
 
     ''' <summary>
-    ''' По вхождению символов в ответе определить файловую систему запрашиваемого ресурса
+    ''' По вхождению символов в ответе определить файловую систему запрашиваемого ресурса.
     ''' </summary>
     ''' <param name="recordList"></param>
     ''' <returns></returns>
@@ -190,7 +190,7 @@ Public Class DirectoryListParser
     End Function
 
     ''' <summary>
-    ''' Делает простую проверку строки даты по шаблону с не точной проверкой даты и времени файла
+    ''' Делает простую проверку строки даты по шаблону с не точной проверкой даты и времени файла.
     ''' </summary>
     ''' <param name="record"></param>
     ''' <returns></returns>

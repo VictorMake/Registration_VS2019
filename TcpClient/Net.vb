@@ -1,5 +1,8 @@
 ﻿Imports System.Collections.Generic
 
+''' <summary>
+''' Функции поддержки сетевого взаимодействия с compactRio и Сервером.
+''' </summary>
 Module Net
     Public Enum CommandSetServer As Byte
         Default_0 = 0

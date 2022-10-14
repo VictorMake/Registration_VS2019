@@ -1,10 +1,10 @@
 ﻿''' <summary>
-''' Хранит IP адрес
+''' Хранит IP адрес.
 ''' </summary>
 <Serializable()>
 Public Class IPAddressTargetCRIO
     ''' <summary>
-    ''' Конструктор
+    ''' Конструктор.
     ''' </summary>
     Public Sub New(ip As String)
         ip_ = ip
@@ -16,7 +16,7 @@ Public Class IPAddressTargetCRIO
     Private ip_ As String
 
     ''' <summary>
-    ''' Строка с IP адресом
+    ''' Строка с IP адресом.
     ''' </summary>
     Public Property IP() As String
         Get
@@ -28,7 +28,7 @@ Public Class IPAddressTargetCRIO
     End Property
 
     ''' <summary>
-    ''' Представление в виде строки
+    ''' Представление в виде строки.
     ''' </summary>
     Public Overloads Overrides Function ToString() As String
         Return ip_

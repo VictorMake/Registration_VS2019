@@ -12,7 +12,11 @@ Friend Class AnalysisСбросАИ222
     End Sub
 
     Private Sub AllocateProtocol()
-        EngineDefineTU()
+        ' EngineDefineTU() <- В базе "ТехническиеУсловия" настроек для АИ222 нет
+        ' очистку сделать здесь
+        totalErrorsMessage = String.Empty
+        IsTotalErrors = False
+
         Re.Dim(Protocol, 8, 3)
         PopulateProtocol(1, {"Контрольный лист №", CStr(Parent.NumberProductionSnapshot), ""})
         PopulateProtocol(2, {"Кадр предъявляется", "п/заказчика", ""})

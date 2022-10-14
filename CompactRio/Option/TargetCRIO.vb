@@ -5,19 +5,27 @@ Imports System.Runtime.Serialization ' для сереализации
 
 ''' <summary>
 ''' Данные для идентификации целевого устройства compactRio
+''' при сериализации и десериализации его как колекции представленной ArrayList.
 ''' </summary>
 <Serializable()>
 Friend Class TargetCRIO
     Implements ISerializationSurrogate
 
     ''' <summary>
-    ''' конструктор по умолчанию
+    ''' Конструктор по умолчанию.
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub New()
         Me.New("New Target", New IPAddressTargetCRIO("192.168.1.1"), EnumModeWork.Measurement, "Папка не указана")
     End Sub
 
+    ''' <summary>
+    ''' Конструктор с определёнными параметрами.
+    ''' </summary>
+    ''' <param name="hostName"></param>
+    ''' <param name="iPAddressRTtarget"></param>
+    ''' <param name="modeWork"></param>
+    ''' <param name="folderName"></param>
     Public Sub New(hostName As String, iPAddressRTtarget As IPAddressTargetCRIO, modeWork As EnumModeWork, folderName As String)
         mHostName = hostName
         mIPAddressRTtarget = iPAddressRTtarget
@@ -25,7 +33,13 @@ Friend Class TargetCRIO
         mFolderName = folderName
     End Sub
 
-    ' для сереализации
+    ''' <summary>
+    ''' Заполняет предоставленный System.Runtime.Serialization.SerializationInfo данными,
+    ''' необходимыми для сериализации объекта.
+    ''' </summary>
+    ''' <param name="obj"></param>
+    ''' <param name="info"></param>
+    ''' <param name="context"></param>
     Public Sub GetObjectData(ByVal obj As Object,
                              ByVal info As SerializationInfo,
                              ByVal context As StreamingContext) Implements ISerializationSurrogate.GetObjectData
@@ -40,6 +54,15 @@ Friend Class TargetCRIO
         Next
     End Sub
 
+    ''' <summary>
+    ''' Заполняет объект с помощью сведений в System.Runtime.Serialization.SerializationInfo.
+    ''' Возврат: Заполняет десериализованный объект.
+    ''' </summary>
+    ''' <param name="obj"></param>
+    ''' <param name="info"></param>
+    ''' <param name="context"></param>
+    ''' <param name="selector"></param>
+    ''' <returns></returns>
     Public Function SetObjectData(ByVal obj As Object,
                                   ByVal info As SerializationInfo,
                                   ByVal context As StreamingContext,
@@ -58,7 +81,7 @@ Friend Class TargetCRIO
     End Function
 
     ''' <summary>
-    ''' для связи со строкой таблицы в основной форме
+    ''' Для связи со строкой таблицы в основной форме.
     ''' </summary>
     ''' <remarks></remarks>
     <NonSerialized()> Public IndexRow As Integer
@@ -66,7 +89,7 @@ Friend Class TargetCRIO
     Private mHostName As String
 
     ''' <summary>
-    ''' Hostname
+    ''' Hostname (Имя шасси cRio).
     ''' </summary>
     <DisplayName("Hostname")>
     <Description("Имя шасси cRio")>
@@ -84,7 +107,7 @@ Friend Class TargetCRIO
     Private mIPAddressRTtarget As New IPAddressTargetCRIO("192.168.1.1")
 
     ''' <summary>
-    ''' IP адрес  шасси cRio
+    ''' IP адрес  шасси cRio.
     ''' </summary>
     <DisplayName("IP адрес")>
     <Description("IP адрес шасси cRio")>
@@ -103,7 +126,7 @@ Friend Class TargetCRIO
     Private mModeWork As EnumModeWork = EnumModeWork.Measurement
 
     ''' <summary>
-    ''' Тип работы шасси
+    ''' Тип работы шасси.
     ''' </summary>
     <DisplayName("Тип работы шасси")>
     <Description("Тип работы шасси сбор или управление")>
@@ -123,7 +146,7 @@ Friend Class TargetCRIO
     Private mFolderName As String = "Папка не указана"
 
     ''' <summary>
-    ''' Путь к каталогу с файлами
+    ''' Путь к каталогу с файлами.
     ''' </summary>
     <DisplayName("Каталог с файлами")>
     <Description("Каталог с исполняемыми файлами для копирования на целевое устройство")>
@@ -145,7 +168,7 @@ Friend Class TargetCRIO
     Private _CopyFolder As Boolean = True
 
     ''' <summary>
-    ''' Копировать файлы
+    ''' Копировать файлы?
     ''' </summary>
     <DisplayName("Копировать файлы?")>
     <Description("Если копирование исполняемых файлов было произведено хотя бы раз, можно отключить для ускорения загрузки.")>
@@ -163,7 +186,7 @@ Friend Class TargetCRIO
 
     ''' <summary>
     ''' Представление в виде строки, используется для показа списка вариантов 
-    ''' при редактировании в PropertyGrid
+    ''' при редактировании в PropertyGrid.
     ''' </summary>
     Public Overloads Overrides Function ToString() As String
         Return mHostName

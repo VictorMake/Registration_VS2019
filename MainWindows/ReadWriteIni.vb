@@ -2,7 +2,7 @@
 Imports System.Xml.Linq
 
 ''' <summary>
-''' Хранение настроек приложения в конфигурационном файле XML
+''' Хранение настроек приложения в конфигурационном файле XML.
 ''' </summary>
 ''' <remarks></remarks>
 Public Class ReadWriteIni
@@ -13,8 +13,8 @@ Public Class ReadWriteIni
     End Sub
 
     ''' <summary>
-    ''' Получить значение ключа
-    ''' Перегруженная версия
+    ''' Получить значение ключа.
+    ''' Перегруженная версия.
     ''' </summary>
     ''' <param name="inPartition"></param>
     ''' <param name="inSection"></param>
@@ -29,8 +29,8 @@ Public Class ReadWriteIni
     End Function
 
     ''' <summary>
-    ''' Получить значение ключа
-    ''' Перегруженная версия
+    ''' Получить значение ключа.
+    ''' Перегруженная версия.
     ''' </summary>
     ''' <param name="xmlDoc"></param>
     ''' <param name="inPartition"></param>
@@ -67,8 +67,8 @@ Public Class ReadWriteIni
         Return Nothing
     End Function
 
-    ''' <summary>nodePartition
-    ''' Создать Раздел
+    ''' <summary>
+    ''' Создать Раздел.
     ''' </summary>
     ''' <param name="xmlDoc"></param>
     ''' <param name="inPartition"></param>
@@ -83,8 +83,8 @@ Public Class ReadWriteIni
     End Function
 
     ''' <summary>
-    ''' Создать Секцию
-    ''' </summary>nodePartition
+    ''' Создать Секцию.
+    ''' </summary>
     ''' <param name="xmlDoc"></param>
     ''' <param name="refNodePartition"></param>
     ''' <param name="inSection"></param>
@@ -98,7 +98,7 @@ Public Class ReadWriteIni
     End Function
 
     ''' <summary>
-    ''' Создать Ключ
+    ''' Создать Ключ.
     ''' </summary>
     ''' <param name="xmlDoc"></param>
     ''' <param name="refNodeSection"></param>
@@ -114,8 +114,8 @@ Public Class ReadWriteIni
     End Function
 
     ''' <summary>
-    ''' Сохранить значение ключа
-    ''' Перегруженная версия
+    ''' Сохранить значение ключа.
+    ''' Перегруженная версия.
     ''' </summary>
     ''' <param name="inPartition"></param>
     ''' <param name="inSection"></param>
@@ -129,8 +129,8 @@ Public Class ReadWriteIni
     End Sub
 
     ''' <summary>
-    ''' Сохранить значение ключа
-    ''' Перегруженная версия
+    ''' Сохранить значение ключа.
+    ''' Перегруженная версия.
     ''' </summary>
     ''' <param name="xmlDoc"></param>
     ''' <param name="inPartition"></param>
@@ -153,21 +153,7 @@ Public Class ReadWriteIni
                 xmlDoc.Save(PathXmlFile)
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.ToString, String.Format("Редактирование значения ключа: {0}={1}", inKey, sValue), MessageBoxButtons.OK, MessageBoxIcon.[Error])
+            MessageBox.Show(ex.ToString, $"Редактирование значения ключа: {inKey }={sValue }", MessageBoxButtons.OK, MessageBoxIcon.[Error])
         End Try
     End Sub
-
-    Private Function GetValueOfNode(root As XElement, childElement As String) As String
-        Dim nodeText As String = String.Empty
-
-        Dim c1 As IEnumerable(Of XElement) =
-            From el In root.Elements(childElement)
-            Select el
-
-        For Each el As XElement In c1
-            'Console.WriteLine(el.Value)
-            nodeText += el.Value
-        Next
-        Return nodeText
-    End Function
 End Class

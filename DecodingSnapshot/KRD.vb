@@ -1,7 +1,7 @@
 ﻿Imports MathematicalLibrary.Spline3
 
 ''' <summary>
-''' "КРД-А", "КРД-Б", "АРД-39", "КРД99Ц", "ЦРД99"
+''' "КРД-А", "КРД-Б", "АРД-39", "КРД99Ц", "ЦРД99", "ЭСУ-222"
 ''' </summary>
 Friend MustInherit Class KRD
     ''' <summary>
@@ -267,6 +267,37 @@ Friend Class CRD_99
 
     Public Sub New()
         Type = KRDType.CRD_99
+
+        ' Настройка N1 N2 КРД при +15 град.
+        TuningN1KRD_15 = 98.875
+        TuningN2KRD_15 = 102.8
+        ' для расчета используется INTERP1 - массив начинается с 1
+        PointN1_X = {-1, -60.0, -20.0, 60.0}
+        PointN1_Y = {-1, 90.0, 98.0, 100.0}
+        PointN2_X = {-1, -60.0, -20.0, 15.0, 40.0}
+        PointN2_Y = {-1, 90.2, 98.0, 102.8, 100.7}
+    End Sub
+
+    ''' <summary>
+    ''' Рассчитать настройки КРД
+    ''' </summary>
+    ''' <param name="inTbox"></param>
+    ''' <param name="inN1КРД15"></param>
+    ''' <param name="inN2КРД15"></param>
+    Public Overrides Sub Calculate(inTbox As Double, inN1КРД15 As Double, inN2КРД15 As Double)
+        CalculateBase(inTbox, inN1КРД15, inN2КРД15)
+        ' или может реализовать собственную логику расчёта
+    End Sub
+End Class
+
+''' <summary>
+''' ЭСУ-222
+''' </summary>
+Friend Class ESU_222
+    Inherits KRD
+
+    Public Sub New()
+        Type = KRDType.ESU_222
 
         ' Настройка N1 N2 КРД при +15 град.
         TuningN1KRD_15 = 98.875

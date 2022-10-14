@@ -70,7 +70,7 @@ Public Class FormCompactRioSetting
 
 #Region "Запись и считывание настроек"
     ''' <summary>
-    ''' Считать Настройки
+    ''' Считать Настройки.
     ''' </summary>
     Private Sub LoadSettings()
         PathOptions_xml = Path.Combine(PathResourses, "OptionsCRIO.xml")
@@ -133,7 +133,7 @@ Public Class FormCompactRioSetting
                 .GetIni(xmlDoc, partition, section, CRIOChassisList, xmlFile)
             End If
 
-            ' извлекаем из Hashtable элементы (они экземпляры классов свойств TargetCRIO уже известного типа - приводит тип не надо)
+            ' извлекаем из Hashtable элементы (они экземпляры классов свойств TargetCRIO уже известного типа - привести к типу TargetCRIO)
             For Each de As DictionaryEntry In DeserializeHashtableFromXML(xmlFile)
                 'Console.WriteLine("Key={0}  Value={1}", de.Key, de.Value)
                 mOptionData.CollectionTargetCRIO.Add(CType(de.Value, TargetCRIO))
@@ -147,7 +147,7 @@ Public Class FormCompactRioSetting
     End Sub
 
     ''' <summary>
-    ''' Записать Настройки
+    ''' Записать Настройки.
     ''' </summary>
     Private Sub WriteSettings()
         Dim partition, section As String
@@ -201,8 +201,8 @@ Public Class FormCompactRioSetting
 
 #Region "Серелизация и десериализация ArrayList в Hashtable"
     ''' <summary>
-    ''' Получить Hashtable Из Файла
-    ''' По пути к XML файлу десериализовать его в Hashtable
+    ''' Получить Hashtable из Файла.
+    ''' По пути к XML файлу десериализовать его в Hashtable.
     ''' </summary>
     ''' <param name="strFileXML"></param>
     ''' <returns></returns>
@@ -224,7 +224,7 @@ Public Class FormCompactRioSetting
     End Function
 
     ''' <summary>
-    ''' Записать Hashtable В Файл
+    ''' Записать Hashtable в файл.
     ''' Серелизация коллекции представленной ArrayList и запись в XML файл.
     ''' </summary>
     ''' <param name="strFileXML"></param>
@@ -253,7 +253,7 @@ Public Class FormCompactRioSetting
 #End Region
 
 #Region "Сохранение/восстановление положения окна"
-    ' Сохранение положения окна
+    ' Сохранение положения окна.
     Private Sub SavePosition()
         MySettings.[Default].CompactRioFormState = WindowState
         If WindowState = FormWindowState.Normal Then
@@ -264,10 +264,10 @@ Public Class FormCompactRioSetting
             MySettings.[Default].CompactRioFormLocation = RestoreBounds.Location
         End If
 
-        'Trace.WriteLine("MainForm::SavePos(): " & MySettings.[Default].MainFormSize.Height & ", " & MySettings.[Default].MainFormSize.Width & ", " & MySettings.[Default].MainFormLocation.X & ", " & MySettings.[Default].MainFormLocation.Y & ", " & MySettings.[Default].MainFormState)
+        'Trace.WriteLine($"{NameOf(FormCompactRioSetting)}::{NameOf(SavePosition)}: Height={MySettings.[Default].CompactRioFormSize.Height}, Width={MySettings.[Default].CompactRioFormSize.Width}, X={MySettings.[Default].CompactRioFormLocation.X}, Y={MySettings.[Default].CompactRioFormLocation.Y}, CompactRioFormState={MySettings.[Default].CompactRioFormState}")
     End Sub
 
-    ' Восстановление положения окна
+    ' Восстановление положения окна.
     Private Sub RestorePosition()
         ' пока это положение первый раз не сохранено, при 
         ' попытке чтения будет кирдык
@@ -276,10 +276,10 @@ Public Class FormCompactRioSetting
             Location = MySettings.[Default].CompactRioFormLocation
             WindowState = MySettings.[Default].CompactRioFormState
         Catch
-            Trace.WriteLine("MainForm::RestorePos() exception")
+            Trace.WriteLine($"{NameOf(FormCompactRioSetting)}::{NameOf(RestorePosition)}: exception")
         End Try
 
-        'Trace.WriteLine("MainForm::RestorePos(): " & Size.Height & ", " & Size.Width & ", " & Location.X & ", " & Location.Y & ", " & WindowState)
+        'Trace.WriteLine($"{NameOf(FormCompactRioSetting)}::{NameOf(RestorePosition)}: Height={MySettings.[Default].CompactRioFormSize.Height}, Width={MySettings.[Default].CompactRioFormSize.Width}, X={MySettings.[Default].CompactRioFormLocation.X}, Y={MySettings.[Default].CompactRioFormLocation.Y}, CompactRioFormState={MySettings.[Default].CompactRioFormState}")
     End Sub
 
     ' Как запомнить и восстановить положение разделителя колонок в PropertyGrid?
@@ -287,7 +287,7 @@ Public Class FormCompactRioSetting
     ' Вызываются они соответственно перед закрытием и перед загрузкой окна формы, содержащей PropertyGrid:
 
     ''' <summary>
-    ''' Сохранение положения разделителя в гриде
+    ''' Сохранение положения разделителя в гриде.
     ''' </summary>
     Private Sub SaveGridSplitterPosition()
         Dim type As Type = propertyGridChassis.[GetType]() ' получить тип объекта
@@ -298,11 +298,11 @@ Public Class FormCompactRioSetting
         ' в итоге вызывает член типа для получения ширины метки
         MySettings.[Default].GridSplitterPos = CInt(gridType.InvokeMember("GetLabelWidth", BindingFlags.[Public] Or BindingFlags.InvokeMethod Or BindingFlags.Instance, Nothing, valGrid, {}))
 
-        'Trace.WriteLine("SaveGridSplitterPos(): " + CStr(MySettings.[Default].GridSplitterPos))
+        'Trace.WriteLine($"{NameOf(SaveGridSplitterPosition)}: {Convert.ToString(MySettings.[Default].GridSplitterPos)}")
     End Sub
 
     ''' <summary>
-    ''' Восстановление положения разделителя в гриде
+    ''' Восстановление положения разделителя в гриде.
     ''' </summary>
     Private Sub RestoreGridSplitterPosition()
         Try
@@ -312,18 +312,18 @@ Public Class FormCompactRioSetting
             Dim valGrid As Object = field.GetValue(propertyGridChassis) ' хотя объект сетка недоступна напрямую она извлекается рефлексией 
             Dim gridType As Type = valGrid.[GetType]() ' получить тип объекта
             ' в итоге вызывает член типа для перемещения разделителя на позицию ширины метки
-            gridType.InvokeMember("MoveSplitterTo", BindingFlags.NonPublic Or BindingFlags.InvokeMethod Or BindingFlags.Instance, Nothing, valGrid, {MySettings.[Default].GridSplitterPos})
-
             'Trace.WriteLine($"{NameOf(RestoreGridSplitterPosition)}: {MySettings.[Default].GridSplitterPos}")
-        Catch
-            Trace.WriteLine($"{NameOf(FormCompactRioSetting)}::{NameOf(RestoreGridSplitterPosition)} exception...")
+            gridType.InvokeMember("MoveSplitterTo", BindingFlags.NonPublic Or BindingFlags.InvokeMethod Or BindingFlags.Instance, Nothing, valGrid, {MySettings.[Default].GridSplitterPos})
+        Catch ex As MissingMethodException
+            Trace.WriteLine($"{NameOf(FormCompactRioSetting)}::{NameOf(RestoreGridSplitterPosition)} exception: {ex.ToString}")
         End Try
     End Sub
 #End Region
 
-    Private Sub BtnOK_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnOK.Click
-        Close()
-    End Sub
+    ' закоментировал для предотвращения повторного вызова
+    'Private Sub BtnOK_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnOK.Click
+    '    Close()
+    'End Sub
 
     ''' <summary>
     ''' Обработчик события PropertyGrid – PropertyValueChanged для свойства, видимость которого зависит от другого свойства 
@@ -358,7 +358,7 @@ Public Class FormCompactRioSetting
     End Sub
 
     ''' <summary>
-    ''' Проверить Значения Поля
+    ''' Проверить числовое значение Поля.
     ''' </summary>
     ''' <param name="inTextBox"></param>
     ''' <param name="propertyDescriptor"></param>

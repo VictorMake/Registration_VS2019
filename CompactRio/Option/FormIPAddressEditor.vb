@@ -1,5 +1,9 @@
 ﻿Imports System.Text.RegularExpressions
 
+''' <summary>
+''' Представление формы для редактирования ip-адреса
+''' и исключения ошибочного его форматирования
+''' </summary>
 Friend Class FormIPAddressEditor
     ''' <summary>
     ''' Форма для редактирования ip-адреса

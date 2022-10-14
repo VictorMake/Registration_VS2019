@@ -214,15 +214,33 @@ End Class
 #Region "Конверторы типа BooleanConverter"
 #Region "ТипРаботыBooleanTypeConverter"
 ''' <summary>
+''' Предоставляет преобразователь типов для преобразования строковых объектов в другие
+''' представления и обратно.
 ''' TypeConverter для Property СКонтроллером() As Boolean
 ''' </summary>
 Public Class ТипРаботыBooleanTypeConverter
     Inherits BooleanConverter
 
+    ''' <summary>
+    ''' Преобразовывает указанное значение объекта в указанный тип.
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="culture"></param>
+    ''' <param name="value"></param>
+    ''' <param name="destType"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function ConvertTo(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object, ByVal destType As Type) As Object
         Return IIf(CBool(value), "С контроллером", "Автономно")
     End Function
 
+    ''' <summary>
+    ''' Возвращает значение, указывающее, может ли данный преобразователь преобразовать
+    ''' объект с помощью контекста в заданный конечный тип
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="culture"></param>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function ConvertFrom(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object) As Object
         Return DirectCast(value, String) = "С контроллером"
     End Function
@@ -246,14 +264,30 @@ Public Class BooleanTypeConverter
 End Class
 
 ''' <summary>
-''' TypeConverter для bool
+''' Класс TypeConverter для типа bool
 ''' </summary>
 Public Class BooleanTypeConverter2
     Inherits BooleanConverter
+    ''' <summary>
+    ''' Преобразовывает указанное значение объекта в указанный тип.
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="culture"></param>
+    ''' <param name="value"></param>
+    ''' <param name="destType"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function ConvertTo(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object, ByVal destType As Type) As Object
         Return IIf(CBool(value), "Да", "Нет")
     End Function
 
+    ''' <summary>
+    ''' Возвращает значение, указывающее, может ли данный преобразователь преобразовать
+    ''' объект с помощью контекста в заданный конечный тип
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="culture"></param>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function ConvertFrom(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object) As Object
         Return DirectCast(value, String) = "Да"
     End Function
@@ -268,6 +302,8 @@ Public Class CollectionTypeConverter
     Inherits TypeConverter
 
     ''' <summary>
+    ''' Возвращает значение, показывающее, может ли этот преобразователь преобразовать
+    ''' объект в заданный тип с помощью указанного контекста.
     ''' Только в строку
     ''' </summary>
     Public Overloads Overrides Function CanConvertTo(ByVal context As ITypeDescriptorContext, ByVal destType As Type) As Boolean
@@ -275,6 +311,8 @@ Public Class CollectionTypeConverter
     End Function
 
     ''' <summary>
+    ''' Преобразует заданный объект в тип этого преобразователя, используя указанные
+    ''' сведения о контексте и языке и региональных параметрах.
     ''' И только так
     ''' </summary>
     Public Overloads Overrides Function ConvertTo(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object, ByVal destType As Type) As Object
@@ -369,10 +407,25 @@ Public Class EnumTypeConverter
         _EnumType = type
     End Sub
 
+    ''' <summary>
+    ''' Возвращает значение, указывающее, может ли данный преобразователь преобразовать
+    ''' объект с помощью контекста в заданный конечный тип
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="destType"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function CanConvertTo(ByVal context As ITypeDescriptorContext, ByVal destType As Type) As Boolean
         Return destType Is GetType(String)
     End Function
 
+    ''' <summary>
+    ''' Преобразовывает указанное значение объекта в указанный тип.
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="culture"></param>
+    ''' <param name="value"></param>
+    ''' <param name="destType"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function ConvertTo(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object, ByVal destType As Type) As Object
         Dim fi As FieldInfo = _EnumType.GetField([Enum].GetName(_EnumType, value)) ' Поиск открытого поля с заданным именем.
         ' Извлекает настраиваемый атрибут, примененный к члену типа. Параметры определяют член и тип настраиваемого атрибута для поиска.
@@ -385,11 +438,27 @@ Public Class EnumTypeConverter
         End If
     End Function
 
+    ''' <summary>
+    ''' Возвращает значение, показывающее, может ли этот преобразователь выполнить преобразование
+    ''' объекта заданного исходного типа в объект перечисления, используя заданный контекст.
+    ''' Значение true, если данный преобразователь может выполнить преобразование; в противном случае — значение false.
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="sourceType"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function CanConvertFrom(ByVal context As ITypeDescriptorContext, ByVal sourceType As Type) As Boolean
         'Значение true, если данный преобразователь может выполнить преобразование; в противном случае — значение false.
         Return sourceType Is GetType(String)
     End Function
 
+    ''' <summary>
+    ''' Возвращает значение, указывающее, может ли данный преобразователь преобразовать
+    ''' объект с помощью контекста в заданный конечный тип
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <param name="culture"></param>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function ConvertFrom(ByVal context As ITypeDescriptorContext, ByVal culture As CultureInfo, ByVal value As Object) As Object
         For Each fi As FieldInfo In _EnumType.GetFields() ' Поиск открытого поля с заданным именем.
             ' Извлекает настраиваемый атрибут, примененный к члену типа. Параметры определяют член и тип настраиваемого атрибута для поиска.
@@ -408,20 +477,30 @@ End Class
 
 #Region "Конверторы типа StringConverter"
 ''' <summary>
+''' Предоставляет преобразователь типов для преобразования строковых объектов в другие
+''' представления и обратно.
 ''' TypeConverter для списка частот сбора
 ''' </summary>
 Public Class ЧастотаСбораTypeConverter
     Inherits StringConverter
     ''' <summary>
-    ''' выбор из списка
+    ''' Возвращает значение, указывающее, требуется ли для изменения значения в этом
+    ''' объекте вызов System.ComponentModel.TypeConverter.CreateInstance(System.Collections.IDictionary),
+    ''' чтобы создать новое значение с помощью указанного контекста.
+    ''' Выбор из списка. 
     ''' </summary>
     Public Overloads Overrides Function GetStandardValuesSupported(ByVal context As ITypeDescriptorContext) As Boolean
         Return True
     End Function
 
     ''' <summary>
+    ''' Используя заданный контекст, возвращает значение, показывающее, является ли исчерпывающим
+    ''' списком возможных значений коллекция стандартных значений, возвращаемая методом
+    ''' System.ComponentModel.TypeConverter.GetStandardValues.
     ''' ... и только из списка
-    ''' </summary>
+    ''' false - можно вводить вручную
+    ''' true - только выбор из списка
+    ''' </summary
     Public Overloads Overrides Function GetStandardValuesExclusive(ByVal context As ITypeDescriptorContext) As Boolean
         ' false - можно вводить вручную
         ' true - только выбор из списка
@@ -429,7 +508,9 @@ Public Class ЧастотаСбораTypeConverter
     End Function
 
     ''' <summary>
-    ''' список
+    ''' Возвращает коллекцию стандартных значений для типа данных, для которого предназначен
+    ''' этот преобразователь типов при предоставлении с контекстом формата.
+    ''' Возвращает список строк.
     ''' </summary>
     Public Overloads Overrides Function GetStandardValues(ByVal context As ITypeDescriptorContext) As StandardValuesCollection
         ' возвращаем список строк 
@@ -442,12 +523,16 @@ End Class
 
 #Region "StendServerTypeConverter"
 ''' <summary>
+''' Предоставляет преобразователь типов для преобразования строковых объектов в другие
+''' представления и обратно.
 ''' TypeConverter для списка Property StendServer() As String
 ''' </summary>
 Public Class StendServerTypeConverter
     Inherits StringConverter
 
     ''' <summary>
+    ''' Получает значение, показывающее, поддерживает ли этот объект стандартный набор
+    ''' значений, которые можно выбрать из списка, используя заданную контекстную информацию.
     ''' Будем предоставлять выбор из списка
     ''' </summary>
     Public Overloads Overrides Function GetStandardValuesSupported(ByVal context As ITypeDescriptorContext) As Boolean
@@ -455,6 +540,9 @@ Public Class StendServerTypeConverter
     End Function
 
     ''' <summary>
+    ''' Используя заданный контекст, возвращает значение, показывающее, является ли исчерпывающим
+    ''' списком возможных значений коллекция стандартных значений, возвращаемая методом
+    ''' System.ComponentModel.TypeConverter.GetStandardValues.
     ''' ... и только из списка
     ''' </summary>
     Public Overloads Overrides Function GetStandardValuesExclusive(ByVal context As ITypeDescriptorContext) As Boolean
@@ -464,6 +552,8 @@ Public Class StendServerTypeConverter
     End Function
 
     ''' <summary>
+    ''' Возвращает коллекцию стандартных значений для типа данных, для которого предназначен
+    ''' этот преобразователь типов при предоставлении с контекстом формата.
     ''' А вот и список
     ''' </summary>
     Public Overloads Overrides Function GetStandardValues(ByVal context As ITypeDescriptorContext) As StandardValuesCollection
@@ -930,16 +1020,31 @@ End Class
 
 #Region "Property Order Sorter"
 
+''' <summary>
+''' Предоставляет преобразователь типа для преобразования расширяемых объектов в
+''' прочие представления и обратно.
+''' </summary>
 Public Class PropertySorter
     Inherits ExpandableObjectConverter
 
+    ''' <summary>
+    ''' Возвращает значение, показывающее, поддерживает ли свойства этот объект, используя
+    ''' заданный контекст.
+    ''' </summary>
+    ''' <param name="context"></param>
+    ''' <returns></returns>
     Public Overloads Overrides Function GetPropertiesSupported(ByVal context As ITypeDescriptorContext) As Boolean
         Return True
     End Function
 
     ''' <summary>
-    ''' Возвращает упорядоченный список свойств
+    ''' Возвращает упорядоченный список свойств.
+    ''' Возвращает коллекцию свойств для типа объекта, заданного параметром значения.
     ''' </summary>
+    ''' <param name="context">Объект System.ComponentModel.ITypeDescriptorContext, предоставляющий контекст формата.</param>
+    ''' <param name="value">Объект System.Object, задающий тип объекта, для которого нужно получить свойства.</param>
+    ''' <param name="attributes">Массив типа System.Attribute, который будет использоваться как фильтр.</param>
+    ''' <returns>Коллекция System.ComponentModel.PropertyDescriptorCollection со свойствами, предоставляемыми для компонента, или null в случае отсутствия свойств.</returns>
     Public Overloads Overrides Function GetProperties(ByVal context As ITypeDescriptorContext, ByVal value As Object, ByVal attributes As Attribute()) As PropertyDescriptorCollection
         Dim pdc As PropertyDescriptorCollection = TypeDescriptor.GetProperties(value, attributes)
         Dim orderedProperties As New ArrayList()
@@ -986,7 +1091,9 @@ Public Class PropertyOrderAttribute
 End Class
 
 ''' <summary>
-''' Пара имя/номер п/п с сортировкой по номеру
+''' Определяет метод сравнения, который реализуется типом значения или
+''' классом для упорядочения или сортировки экземпляров.
+''' Пара имя/номер п/п с сортировкой по номеру.
 ''' </summary>
 Public Class PropertyOrderPair
     Implements IComparable

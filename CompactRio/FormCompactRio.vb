@@ -447,7 +447,7 @@ Public Class FormCompactRio
     End Sub
 
     ''' <summary>
-    ''' Начальная инициализация массивов используемых в программе в зависимости от каналов
+    ''' Начальная инициализация массивов используемых в программе в зависимости от каналов.
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub Initialize()
@@ -487,7 +487,7 @@ Public Class FormCompactRio
     End Function
 
     ''' <summary>
-    ''' Инициализация интерфейса вызывается при загрузке приложения и при перезагрузке
+    ''' Инициализация интерфейса вызывается при загрузке приложения и при перезагрузке.
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub InitializeFormAgain()
@@ -586,6 +586,9 @@ Public Class FormCompactRio
         DownSwithTopMost()
     End Sub
 
+    ''' <summary>
+    ''' Работа приложения невозможна из-за проблем с корректным запуском шасси.
+    ''' </summary>
     Private Sub ShowErrorSSDRun()
         Const caption As String = NameOf(SSDRun)
         Const text As String = "Работа приложения невозможна из-за проблем с корректным запуском шасси"
@@ -1235,7 +1238,7 @@ Public Class FormCompactRio
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub DoMonitorConnections()
-        Const caption As String = NameOf(DoMonitorConnections)
+        'Const caption As String = NameOf(DoMonitorConnections)
         ' Создать делегат для обновления выходного дисплея
         Dim doAppendOutput As New Action(Of String, Integer, MessageBoxIcon)(AddressOf AppendMsgToRichTextBoxByKey)
         ' Создать делегат для обновления метки числа соединений
@@ -1359,14 +1362,13 @@ Public Class FormCompactRio
     ''' <param name="MsgFromClientBytes"></param>
     ''' <remarks></remarks>
     Private Sub DisassemblePackFromChassisAndAnswer(infoConnWithServer As ConnectionInfoServer, msgFromClientBytes As Byte())
-        Dim iCMD As Integer         ' номер команды
+        'Dim iCMD As Integer         ' номер команды
         Dim cmdSet As CommandSet    ' тип команды
         Dim bytesToRead As Integer  ' сколько байт прочитать для разбора
         Dim tempBytes As Byte()     ' временный буфер
         Dim CmdBodyLength As Integer ' длина тела данных
-        Dim arrayLength As Integer  ' размерность массива полученного буфера собранных данных из заголовка для контроля с размерностью буфера, при конфигурировании шасси
+        'Dim arrayLength As Integer  ' размерность массива полученного буфера собранных данных из заголовка для контроля с размерностью буфера, при конфигурировании шасси
         Dim offset As Integer       ' смещение позиции чтения
-        Dim inputMsgText As String  ' имя команды или текст сообщения
         Dim countItteration As Integer ' для разорванного пакета
         Dim msgFromClientLength As Integer
 
@@ -1403,8 +1405,8 @@ Public Class FormCompactRio
 
                 Array.Copy(msgFromClientBytes, offset, tempBytes, 0, bytesToRead)
                 offset += bytesToRead
-                iCMD = BitConverter.ToUInt16(tempBytes, 0) ' номер команды
-                cmdSet = TypeCastCmd(iCMD, infoConnWithServer.ModeWork)
+                'iCMD = BitConverter.ToUInt16(tempBytes, 0) ' номер команды
+                cmdSet = TypeCastCmd(BitConverter.ToUInt16(tempBytes, 0), infoConnWithServer.ModeWork)
                 ' выполнить действия в зависимости от типа команды или подготовить ответ
 
                 Select Case cmdSet
@@ -1419,14 +1421,14 @@ Public Class FormCompactRio
 
                         Array.Copy(msgFromClientBytes, offset, tempBytes, 0, bytesToRead)
                         offset += bytesToRead
-                        inputMsgText = ASCII_Encoding.GetString(tempBytes)
+                        'inputMsgText = ASCII_Encoding.GetString(tempBytes)
 
                         ' подготовить и отослать клиенту список разрешенных команд
                         SendAnyCommandToConcreteClient(infoConnWithServer, CommandSet.GetMeta_1, ResponseMetaXML(infoConnWithServer.ModeWork))
 
                         ManagerChassis.GetMetaChassisSuccess(infoConnWithServer.NameChassis, True)
                         ' Протоколирование действий закоментировать в релизе
-                        Invoke(doAppendOutput, inputMsgText, infoConnWithServer.IndexRow, MessageBoxIcon.Information)
+                        Invoke(doAppendOutput, ASCII_Encoding.GetString(tempBytes), infoConnWithServer.IndexRow, MessageBoxIcon.Information)
 
                         Exit Select
                     Case CommandSet.Acquisition_4
@@ -1449,7 +1451,7 @@ Public Class FormCompactRio
                         Re.Dim(tempBytes, bytesToRead - 1)
                         Array.Copy(msgFromClientBytes, offset, tempBytes, 0, bytesToRead)
                         offset += bytesToRead
-                        arrayLength = BitConverter.ToUInt16(tempBytes, 0) ' размерность массива
+                        Dim arrayLength As Integer = BitConverter.ToUInt16(tempBytes, 0) ' размерность массива полученного буфера собранных данных из заголовка для контроля с размерностью буфера, при конфигурировании шасси
 
                         If arrayLength <> infoConnWithServer.ArrayLength Then ' выдать предупреждение
                             ' Протоколирование действий
@@ -1513,7 +1515,7 @@ Public Class FormCompactRio
                         offset += bytesToRead
 
                         If IsRestartAllChassisSuccess Then ' чтобы не принимать команды оставшиеся после ручной перезагрузки шасси
-                            inputMsgText = ASCII_Encoding.GetString(tempBytes)
+                            Dim inputMsgText As String = ASCII_Encoding.GetString(tempBytes) ' имя команды или текст сообщения
                             Select Case cmdSet
                                 Case CommandSet.InitSuccess_7
                                     ManagerChassis.InitializeChassisSuccess(infoConnWithServer.NameChassis, True)
@@ -2907,25 +2909,25 @@ Public Class FormCompactRio
                 For Each itemChassis As Chassis In mCompactRioForm.ManagerChassis.Chassis.Values
                     Select Case StepCompleted
                         Case ChassisStepCompleted.IsConnected
-                            If itemChassis.IsConnected = False Then
+                            If Not itemChassis.IsConnected Then
                                 checkAllChassisCompleted = False
                                 strOutChassisError.AppendLine(itemChassis.HostName)
                             End If
                             Exit Select
                         Case ChassisStepCompleted.GetMetaSuccess
-                            If itemChassis.GetMetaSuccess = False Then
+                            If Not itemChassis.GetMetaSuccess Then
                                 checkAllChassisCompleted = False
                                 strOutChassisError.AppendLine(itemChassis.HostName)
                             End If
                             Exit Select
                         Case ChassisStepCompleted.InitSuccess
-                            If itemChassis.IsInitSuccess = False Then
+                            If Not itemChassis.IsInitSuccess Then
                                 checkAllChassisCompleted = False
                                 strOutChassisError.AppendLine(itemChassis.HostName)
                             End If
                             Exit Select
                         Case ChassisStepCompleted.LaunchSuccess
-                            If itemChassis.IsLaunchSuccess = False Then
+                            If Not itemChassis.IsLaunchSuccess Then
                                 checkAllChassisCompleted = False
                                 strOutChassisError.AppendLine(itemChassis.HostName)
                             End If
@@ -3034,9 +3036,9 @@ Public Class FormCompactRio
             If Not IsCreateManagerChassis() Then Return False ' создать менеджер шасси
 
 #If DEBUG_ClientTest = False Then ' для отладки без копирования и перезапуска
-            If Not CheckPingAllFtpClient() Then Return False ' проверить сетевое соединение шасси
-            If Not RunTasksCopyFileFromAllChassis() Then Return False ' скопировать файлы на шасси по FTP
-            If Not RunRestartAllChassis() Then Return False ' перезапустить все шасси
+            If Not IsCheckPingAllFtpClient() Then Return False ' проверить сетевое соединение шасси
+            If Not IsRunTasksCopyFileFromAllChassis() Then Return False ' скопировать файлы на шасси по FTP
+            If Not IsRunRestartAllChassis() Then Return False ' перезапустить все шасси
 #End If
             IsRestartAllChassisSuccess = True
             ' если дошли сюда, то OK
@@ -3140,7 +3142,7 @@ Public Class FormCompactRio
             results(I) = arrTask(I).Result ' Свойство Result блокирует вызывающий поток до завершения задачи. но уже используется  WaitAll
             Dim text As String = $"Результат пинга шасси: <{ManagerChassis.Chassis.ToArray(I).Value.HostName}> равен: {results(I)}"
             InvokeAppendMsgToRichTextBoxByKey(text, KeyRichTexServer, If(results(I), MessageBoxIcon.Question, MessageBoxIcon.Error))
-            RegistrationEventLog.EventLog_MSG_CONNECT($"<CheckPingAllFtpClient> {text}")
+            RegistrationEventLog.EventLog_MSG_CONNECT($"<{NameOf(IsCheckPingAllFtpClient)}> {text}")
         Next
 
         success = True

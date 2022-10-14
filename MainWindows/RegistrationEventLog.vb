@@ -1,5 +1,8 @@
 ﻿Imports System.IO
 
+''' <summary>
+''' Регистрация сообщений о системных и программных событиях Windows посредством EventLogRegistration.dll
+''' </summary>
 Public Class RegistrationEventLog
     Private Enum eventID As Integer
         AUDIT_SUCCESS_ID_3000 = 3000
@@ -28,46 +31,38 @@ Public Class RegistrationEventLog
     Public Shared evLog As EventLog
     Private Shared logName As String = "Registration_Log"
     Private Shared sourceName As String = "Registration_EventLog"
-    Private Shared Property resourceFile As String
+    Private Shared Property pathResourceFileDLL As String
 
-    Public Shared Sub CreateRegistrationEventLog(strПутьОпции As String)
-        Dim ResFileDLL As String = Path.Combine(PathResourses, "EventLogRegistration.dll")
-        If FileNotExists(ResFileDLL) Then
+    ''' <summary>
+    ''' Инициализирует экземпляр класса System.Diagnostics.EventSourceCreationData
+    ''' с заданным именем источника событий и журнала событий.
+    ''' </summary>
+    ''' <param name="pathOptions"></param>
+    Public Shared Sub CreateRegistrationEventLog(pathOptions As String)
+        pathResourceFileDLL = Path.Combine(PathResourses, "EventLogRegistration.dll")
+        If FileNotExists(pathResourceFileDLL) Then
             MessageBox.Show("В каталоге нет файла <EventLogRegistration.dll>!", "Запуск приложения", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Environment.Exit(0) 'End
         End If
 
-        If CBool(GetIni(strПутьОпции, "Options", "CreateEventSourceDeleteFirst", "False")) Then
-            ' удалить созданный до этого
-            CreateEventSourceDeleteFirst(ResFileDLL)
+        If CBool(GetIni(pathOptions, "Options", "CreateEventSourceDeleteFirst", "False")) Then
+            CreateEventSource(True) ' чтобы удалить созданный до этого
             ' вернуть True для последующего запуска новая регистрация уже будет проведена
-            WriteINI(strПутьОпции, "Options", "CreateEventSourceDeleteFirst", "False")
+            WriteINI(pathOptions, "Options", "CreateEventSourceDeleteFirst", "False")
         Else
-            CreateEventSource(ResFileDLL)
+            CreateEventSource(False) ' обычное первое обращение к классу
         End If
     End Sub
 
-    Private Shared Sub CreateEventSourceDeleteFirst(ResFileDLL As String)
-        resourceFile = ResFileDLL
-        CreateEventSource(True) ' чтобы удалить созданный до этого
-    End Sub
-
-    Private Shared Sub CreateEventSource(ResFileDLL As String)
-        resourceFile = ResFileDLL
-        CreateEventSource(False) ' обычное первое обращение к классу
-    End Sub
-
-    Private Shared Sub CreateEventSource(deletefirst As Boolean)
-        If deletefirst Then
+    Private Shared Sub CreateEventSource(isDeleteFirst As Boolean)
+        If isDeleteFirst Then
             EventLog.DeleteEventSource(sourceName)
             EventLog.Delete(logName)
         End If
 
-        'Dim resourceFile As String = "D:\Project\Saturn\Work\EventLogDemo\EventLogRegistration.dll"
-
         If Not EventLog.SourceExists(sourceName) Then ' определить, если источник существут на компьютере
-            If Not File.Exists(resourceFile) Then
-                MessageBox.Show("Ресурсный файл сообщений не существует", "CreateEventSource", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If Not File.Exists(pathResourceFileDLL) Then
+                MessageBox.Show("Ресурсный файл сообщений не существует", NameOf(CreateEventSource), MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
             ' Источник событий с локализованными ресурсами можно зарегистрировать для категории событий и строк сообщения.
@@ -84,10 +79,10 @@ Public Class RegistrationEventLog
 
             ' Данный метод создает источник событий, заданный в свойствах Source, регистрирует его в журнале событий, указанном в LogName
             Dim eventSource As New EventSourceCreationData(sourceName, logName) With {
-                .CategoryResourceFile = resourceFile, ' Возвращает или задает путь к файлу ресурсов, содержащему строки категорий источника.
+                .CategoryResourceFile = pathResourceFileDLL, ' Возвращает или задает путь к файлу ресурсов, содержащему строки категорий источника.
                 .CategoryCount = [Enum].GetNames(GetType(category)).Count, '5 ' Возвращает или задает число категорий в файле ресурсов категорий.
-                .MessageResourceFile = resourceFile, ' Возвращает или задает путь к файлу ресурсов сообщения, содержащему сообщение о форматировании строк источника.
-                .ParameterResourceFile = resourceFile ' Возвращает или задает путь к файлу ресурсов, содержащему строки параметров сообщения источника.
+                .MessageResourceFile = pathResourceFileDLL, ' Возвращает или задает путь к файлу ресурсов сообщения, содержащему сообщение о форматировании строк источника.
+                .ParameterResourceFile = pathResourceFileDLL ' Возвращает или задает путь к файлу ресурсов, содержащему строки параметров сообщения источника.
                 }
             ' Создать новый источник событий при установке приложения.
             ' Благодаря этому операционная система успевает обновить свой список зарегистрированных источников событий и их конфигурации.
@@ -103,7 +98,7 @@ Public Class RegistrationEventLog
         ' Регистрировать локализованное имя журнала событий
         'Dim evLog As New EventLog(logName, ".", sourceName)
         evLog = New EventLog(logName, ".", sourceName)
-        evLog.RegisterDisplayName(resourceFile, eventID.EVENT_LOG_DISPLAY_NAME_MSGID)
+        evLog.RegisterDisplayName(pathResourceFileDLL, eventID.EVENT_LOG_DISPLAY_NAME_MSGID)
 
         ''Использовать методы WriteEvent и WriteEntry, чтобы записать события в журнал событий. Для записи событий необходимо задать источник события. 
         'Using log = New EventLog(logName, ".", sourceName)
@@ -133,8 +128,13 @@ Public Class RegistrationEventLog
         'EventLog.WriteEntry("Registration_EventLog", "Message 3", EventLogEntryType.Error, 37);
     End Sub
 
+#Region "EventLog"
+    '     Инициализирует новый экземпляр класса System.Diagnostics.EventLog. Связывает
+    '     экземпляр с журналом на указанном компьютере и создает или присваивает заданный
+    '     источник классу System.Diagnostics.EventLog.
+
     ''' <summary>
-    ''' Сообщение об успешном действии входа пользователя
+    ''' Сообщение об успешном действии входа пользователя.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -151,7 +151,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    ''' Сообщение об успешной работе по протоколу TCP/IP
+    ''' Сообщение об успешной работе по протоколу TCP/IP.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -164,7 +164,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    '''  Сообщение о проблеме при работе по протоколу TCP/IP
+    '''  Сообщение о проблеме при работе по протоколу TCP/IP.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -177,7 +177,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    '''  Сообщение об успешном обновлении базы данных
+    '''  Сообщение об успешном обновлении базы данных.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -190,7 +190,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    ''' Сообщение о проблемах при работе с базой данных
+    ''' Сообщение о проблемах при работе с базой данных.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -203,7 +203,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    '''  Сообщение при исключительной ситуации
+    '''  Сообщение при исключительной ситуации.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -216,7 +216,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    '''  Сообщение об успешном записи файла
+    '''  Сообщение об успешном записи файла.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -229,7 +229,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    ''' Сообщение о проблемах при работе с файлом
+    ''' Сообщение о проблемах при работе с файлом.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -242,7 +242,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    ''' Сообщение об действиях пользователя
+    ''' Сообщение об действиях пользователя.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -255,7 +255,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    ''' Сообщение о том, что приложение что-то сообщает пользователю
+    ''' Сообщение о том, что приложение что-то сообщает пользователю.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -268,7 +268,7 @@ Public Class RegistrationEventLog
     End Sub
 
     ''' <summary>
-    ''' Сообщение о том, что приложение запрашивает действия от пользователя
+    ''' Сообщение о том, что приложение запрашивает действия от пользователя.
     ''' </summary>
     ''' <param name="values"></param>
     ''' <remarks></remarks>
@@ -279,4 +279,5 @@ Public Class RegistrationEventLog
             log.WriteEntry(CStr(values(0)), EventLogEntryType.Warning, eventID.MSG_RELEVANT_QUESTION_ID_3010, category.AUDIT_SUCCESS)
         End Using
     End Sub
+#End Region
 End Class

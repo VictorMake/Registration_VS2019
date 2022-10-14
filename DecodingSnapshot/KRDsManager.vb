@@ -192,6 +192,8 @@ Friend Class KRDsManager
                     clsKRD = New KRD_99_C
                 Case cCRD_99
                     clsKRD = New CRD_99
+                Case cESU_222
+                    clsKRD = New ESU_222
                 Case Else
                     Exit Select
             End Select

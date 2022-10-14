@@ -269,6 +269,7 @@ Module MainModule
     Public Const cEngineM1 As String = "M1"
     Public Const cEngineM1_25_1 As String = "M1 25.1"
     Public Const cEngine39_3 As String = "39 сер.3"
+    Public Const cEngine222 As String = "АИ-222-25"
 
     ''' <summary>
     ''' Тип изделия
@@ -287,6 +288,8 @@ Module MainModule
         EngineM1_25_1 = 16
         <Description(cEngine39_3)>
         Engine39_3 = 32
+        <Description(cEngine222)>
+        Engine222 = 64
     End Enum
 
     Public Const cKRD_A As String = "КРД-А"
@@ -294,6 +297,7 @@ Module MainModule
     Public Const cARD_39 As String = "АРД-39"
     Public Const cKRD_99_C As String = "КРД99Ц"
     Public Const cCRD_99 As String = "ЦРД99"
+    Public Const cESU_222 As String = "ЭСУ-222"
 
     ''' <summary>
     ''' Тип КРД
@@ -310,6 +314,8 @@ Module MainModule
         KRD_99_C = 8
         <Description(cCRD_99)>
         CRD_99 = 16
+        <Description(cESU_222)>
+        ESU_222 = 32
     End Enum
 
     ''' <summary>

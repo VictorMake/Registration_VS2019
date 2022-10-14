@@ -285,6 +285,9 @@
     <Content Include="Registration.ico" />
     <None Include="Resources\AcquisitionStart.png" />
     <None Include="Resources\AcquisitionStop.png" />
+    <None Include="Resources\Control.png" />
+    <None Include="Resources\Measurement.png" />
+    <None Include="Resources\Unknown1.png" />
     <Content Include="Trash\Git.txt" />
     <None Include="CompactRio\UnhandledExceptionBaseCode\SchemaForLogFile.xsd">
       <SubType>Designer</SubType>

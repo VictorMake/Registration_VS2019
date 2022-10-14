@@ -4,10 +4,13 @@ Imports System.Net
 Imports System.Text
 
 ''' <summary>
-''' Работа с файловой системой удалённого клиента по FTP протоколу
+''' Работа с файловой системой удалённого клиента по FTP протоколу.
 ''' </summary>
 ''' <remarks></remarks>
 Friend Class FtpClient
+    ''' <summary>
+    ''' Способ копирования файла на FTP-сервер.
+    ''' </summary>
     Public Enum MethodUpload
         ''' <summary>
         ''' По Частям
@@ -19,7 +22,10 @@ Friend Class FtpClient
         Fully
     End Enum
 
-    Public Enum MethodRefresh
+    ''' <summary>
+    ''' Удалить всё содержимое или делает снимок состава каталога после его копирования.
+    ''' </summary>
+    Private Enum MethodRefresh
         ''' <summary>
         ''' Очистить
         ''' </summary>
@@ -30,13 +36,16 @@ Friend Class FtpClient
         Snapshot
     End Enum
 
+    ''' <summary>
+    ''' Статус состояния FTPClient.
+    ''' </summary>
     Public Enum FTPClientManagerStatus
         Idle ' простой
         Uploading ' закачка
     End Enum
 
     <SerializableAttribute>
-    Public Class FtpClientException
+    Private Class FtpClientException
         Inherits Exception
 
         Public Sub New()
@@ -62,8 +71,8 @@ Friend Class FtpClient
     End Property
 
     Private ReadOnly mCompactRioForm As FormCompactRio
-    Public Const UserName As String = "Admin"
-    Public Const Password As String = ""
+    Private Const UserName As String = "Admin"
+    Private Const Password As String = ""
 
     Private ReadOnly mIPAddress As IPAddressTargetCRIO
     Private ReadOnly mHostName As String
@@ -86,7 +95,7 @@ Friend Class FtpClient
     End Sub
 
     ''' <summary>
-    ''' Создать запрос к Серверу
+    ''' Создать запрос к Серверу.
     ''' </summary>
     ''' <param name="uri"></param>
     ''' <param name="method"></param>
@@ -129,12 +138,12 @@ Friend Class FtpClient
     Public Event ErrorOccurred As EventHandler(Of ErrorEventArgs)
     Public Event StatusChanged As EventHandler
 
-#Region "Очистка целевой папки и копирование папки с проэктом из Хоста на Шасси"
+#Region "Очистка целевой папки и копирование папки с проектом из Хоста на Шасси"
     ''' <summary>
     ''' Этот класс просто расширяет класс TreeNode, добавляя поле FileStruct для поддержки.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class DirectoryNode
+    Private Class DirectoryNode
         Inherits TreeNode
 
         Public FileStruct As FileStruct
@@ -196,7 +205,7 @@ Friend Class FtpClient
     End Function
 
     ''' <summary>
-    ''' Копирование рабочих проектов в папку на целевом устройстве
+    ''' Копирование рабочих проектов в папку на целевом устройстве.
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
@@ -273,7 +282,7 @@ Friend Class FtpClient
     ''' <param name="source"></param>
     ''' <param name="targetDirectoryFTP"></param>
     ''' <remarks></remarks>
-    Public Sub CopyAll(source As DirectoryInfo, targetDirectoryFTP As String)
+    Private Sub CopyAll(source As DirectoryInfo, targetDirectoryFTP As String)
         targetDirectoryFTP = targetDirectoryFTP.Replace("\", "/")
 
         ' Проверить что текущая директория создана, и если нет, то создать
@@ -439,7 +448,7 @@ Friend Class FtpClient
     ''' <param name="directoryPath"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function GetDirectoryList(directoryPath As String) As FileStruct()
+    Private Function GetDirectoryList(directoryPath As String) As FileStruct()
         Return GetDirectoryParser(directoryPath).Directories
     End Function
 
@@ -449,10 +458,15 @@ Friend Class FtpClient
     ''' <param name="directoryPath"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function GetFileList(directoryPath As String) As FileStruct()
+    Private Function GetFileList(directoryPath As String) As FileStruct()
         Return GetDirectoryParser(directoryPath).Files
     End Function
 
+    ''' <summary>
+    ''' Состав папок в коллекции файловой структуры.
+    ''' </summary>
+    ''' <param name="directoryPath"></param>
+    ''' <returns></returns>
     Private Function GetDirectoryParser(directoryPath As String) As DirectoryListParser
         ' для корневой директории передать directoryPath = ""
         Dim request As FtpWebRequest = CreateFtpWebRequest(New Uri($"ftp://{mIPAddress.IP}/{directoryPath}"), WebRequestMethods.Ftp.ListDirectoryDetails)
@@ -468,7 +482,7 @@ Friend Class FtpClient
     ''' Просмотр содержимого каталога по протоколу FTP.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Sub GetListDirectoryDetails(directoryPath As String)
+    Private Sub GetListDirectoryDetails(directoryPath As String)
         Const caption As String = NameOf(GetListDirectoryDetails)
         Dim text As String
         ' Получить объект, используемый для связи с сервером
@@ -477,7 +491,7 @@ Friend Class FtpClient
         Try
             Dim listRequest As FtpWebRequest = DirectCast(WebRequest.Create(New Uri($"ftp://{mIPAddress.IP}/{directoryPath}")), FtpWebRequest)
             listRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails
-            ' This assumes the FTP site uses anonymous logon.
+            ' Это предполагает, что FTP-сайт использует анонимный вход в систему.
             listRequest.Credentials = New NetworkCredential(UserName, Password) '("anonymous", "janeDoe@contoso.com")
 
             Dim listResponse As FtpWebResponse = DirectCast(listRequest.GetResponse(), FtpWebResponse)
@@ -512,7 +526,7 @@ Friend Class FtpClient
     ''' <param name="sourceUri"></param>
     ''' <param name="destinationFile"></param>
     ''' <remarks></remarks>
-    Public Sub Download(sourceUri As String, destinationFile As String)
+    Private Sub Download(sourceUri As String, destinationFile As String)
         Const caption As String = NameOf(Download)
         Dim text As String
 
@@ -611,7 +625,7 @@ Friend Class FtpClient
     ''' <param name="destinationPath"></param>
     ''' <param name="method"></param>
     ''' <remarks></remarks>
-    Public Sub Upload(sourceFile As String, destinationPath As Uri, method As MethodUpload)
+    Private Sub Upload(sourceFile As String, destinationPath As Uri, method As MethodUpload)
         Const caption As String = NameOf(Upload)
         Dim text As String
         Dim requestStream As Stream = Nothing
@@ -803,7 +817,7 @@ Friend Class FtpClient
     ''' </summary>
     ''' <param name="fullDirectoryPath"></param>
     ''' <remarks></remarks>
-    Public Sub MakeDirectory(fullDirectoryPath As String)
+    Private Sub MakeDirectory(fullDirectoryPath As String)
         Dim serverUri As New Uri($"ftp://{mIPAddress.IP}/{fullDirectoryPath}")
         Try
             ' serverUri должен быть начинаться с ftp:// scheme.
@@ -867,11 +881,11 @@ Friend Class FtpClient
 
 #Region "DeleteFile RemoveDirectory"
     ''' <summary>
-    ''' Удаление директории на Сервере.
+    ''' Удаление файла по сетие.
     ''' </summary>
     ''' <param name="fullFileUri"></param>
     ''' <remarks></remarks>
-    Public Sub DeleteFile(fullFileUri As Uri)
+    Private Sub DeleteFile(fullFileUri As Uri)
         Try
             Dim request As FtpWebRequest = CreateFtpWebRequest(fullFileUri, WebRequestMethods.Ftp.DeleteFile)
             Dim response As WebResponse = request.GetResponse()
@@ -902,7 +916,7 @@ Friend Class FtpClient
     '    If serverUri.Scheme <> Uri.UriSchemeFtp Then
     '        Return False
     '    End If
-    '    ' Get the object used to communicate with the server.
+    '    ' Получить объект, используемый для связи с сервером. 
 
     '    Dim request As FtpWebRequest = DirectCast(WebRequest.Create(serverUri), FtpWebRequest)
     '    request.Method = WebRequestMethods.Ftp.DeleteFile
@@ -913,7 +927,11 @@ Friend Class FtpClient
     '    Return True
     'End Function
 
-    Public Sub RemoveDirectory(fullDirectoryPath As Uri)
+    ''' <summary>
+    ''' Удаление директории по сети.
+    ''' </summary>
+    ''' <param name="fullDirectoryPath"></param>
+    Private Sub RemoveDirectory(fullDirectoryPath As Uri)
         Try
             'Dim uri As New Uri("ftp://" & _IPAddress.IP & "/" & fullDirectoryPath)
             Dim request As FtpWebRequest = CreateFtpWebRequest(fullDirectoryPath, WebRequestMethods.Ftp.RemoveDirectory)
@@ -942,7 +960,7 @@ Friend Class FtpClient
     ''' <param name="senderString"></param>
     ''' <param name="destinationPathFile"></param>
     ''' <remarks></remarks>
-    Public Sub WriteFtpStringStream(senderString As String, destinationPathFile As String)
+    Private Sub WriteFtpStringStream(senderString As String, destinationPathFile As String)
         ' Получить объект используя коммуникацию с сервером
         Dim destinationFullPathFile As New Uri($"ftp://{mIPAddress.IP}/{destinationPathFile}")
         Dim request As FtpWebRequest = DirectCast(WebRequest.Create(destinationFullPathFile), FtpWebRequest)
@@ -963,7 +981,12 @@ Friend Class FtpClient
         response.Close()
     End Sub
 
-    Public Function ConvertUnicodeToSCIIByte(unicodeString As String) As Byte()
+    ''' <summary>
+    ''' Конвертировать строку в массив byte[].
+    ''' </summary>
+    ''' <param name="unicodeString"></param>
+    ''' <returns></returns>
+    Private Function ConvertUnicodeToSCIIByte(unicodeString As String) As Byte()
         ' Все строчки в .net хранятся в юникоде. 
         ' Надо взять строку, и с помощью метода GetBytes нужной кодировки получить представление строки в байтах для данной кодировки. 
         ' Ну а дальше берется этот массив байт и преобразуется в строку с помощью Encoding.GetString.

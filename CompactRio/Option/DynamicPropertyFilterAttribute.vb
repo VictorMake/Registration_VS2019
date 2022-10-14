@@ -1,7 +1,7 @@
 ﻿Imports System.ComponentModel
 
 ''' <summary>
-''' Атрибут для поддержки динамически показываемых свойств.
+''' Атрибут для поддержки динамически показываемых свойств (список).
 ''' </summary>
 <AttributeUsage(AttributeTargets.[Property], Inherited:=True)>
 Friend Class DynamicPropertyFilterAttribute
@@ -54,6 +54,7 @@ Public Class FilterablePropertyBase
 
     ''' <summary>
     ''' Возвращает свойства для этого экземпляра компонента, используя массив атрибутов в качестве фильтра.
+    ''' Используется для фильтрации свойств по аттрибуту ТипРаботыBooleanTypeConverter
     ''' </summary>
     ''' <param name="attributes">Массив типа System.Attribute, используемый в качестве фильтра.</param>
     ''' <returns>Коллекция System.ComponentModel.PropertyDescriptorCollection, представляющая фильтрованные свойства для этого экземпляра компонента.</returns>
